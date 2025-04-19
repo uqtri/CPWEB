@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRE_SQL_CONNECTION_STRING")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  username   String      @unique
+  password   String
+  email      String      @unique
+  avatarUrl  String?
+  role       String @default("user")
+  createdAt  DateTime    @default(now())
+  address String?
+  isBanned Boolean @default(false)
+  posts      Post[]
+  problems   Problem[]
+  submissions Submission[]
+  messagesSent     Message[] @relation("SentMessages")
+  messagesReceived Message[] @relation("ReceivedMessages")
+  comments   Comment[]
+}
+
+model Post {
+  id         Int       @id @default(autoincrement())
+  title      String
+  body       String
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+
+  comments   Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model Problem {
+  id         Int       @id @default(autoincrement())
+  title      String
+  content    String
+  createdAt  DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  submisions Submission[]
+  executionTime Float?
+  memory   Int?
+  contests   Contest[]  
+  testCases TestCase[]
+}
+
+model Submission {
+  id          Int       @id @default(autoincrement())
+  code        String
+  language    String
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  problem     Problem   @relation(fields: [problemId], references: [id])
+  problemId   Int
+  status      String?
+  executionTime Float?
+  memoryUsed      Int?
+  Score       Float?
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId Int
+}
+
+model Contest {
+  id         Int       @id @default(autoincrement())
+  title      String
+  createdAt  DateTime  @default(now())
+  beginAt    DateTime
+  endAt      DateTime
+  problems   Problem[]
+}
+model TestCase {
+  id         Int @id
+  input  String
+  output String
+
+  problem Problem @relation(fields: [problemId], references: [id])
+  problemId  Int
+}
+
+// add Category, Language
