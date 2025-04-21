@@ -52,11 +52,24 @@ const cppTestCaseWorker = new Worker("cpp-testcase", async (job) => {
   const code = submission.code;
   const input = testCase.input;
 
+<<<<<<< Updated upstream
   const command = `sudo docker run --rm -d \
     -v "$PWD":/code \
     -w /code \
     frolvlad/alpine-gxx \
     g++ ${filename}.cpp -o ${filename} && ./$filename < ${input}.txt`;
+=======
+  // const command = `sudo docker run --rm -d \
+  //   -v "$PWD":/code \
+  //   -w /code \
+  //   frolvlad/alpine-gxx \
+  //   g++ ${filename}.cpp -o ${filename} && ./$filename < ${input}.txt`;
+  const command = `docker run --rm -i ^
+  -v %cd%:/code ^
+  -w /code ^
+  frolvlad/alpine-gxx ^
+  sh -c "g++ ${filename}.cpp -o ${filename} && ./${filename} < ${inputFile}.txt"`;
+>>>>>>> Stashed changes
 
   try {
     await writeFileAsync(`./${filename}.cpp`, code);
