@@ -1,8 +1,11 @@
 import { exec } from "child_process";
+import { promisify } from "util";
+
+// const asyncExec = promisify(exec);
 
 const shellCommand = async (command) => {
   return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
+    asyncExec(command, (error, stdout, stderr) => {
       if (stderr) {
         // console.error(`stderr: ${stderr}`);
         reject(stderr);
@@ -15,3 +18,4 @@ const shellCommand = async (command) => {
     });
   });
 };
+export { shellCommand };

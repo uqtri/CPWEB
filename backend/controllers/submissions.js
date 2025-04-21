@@ -1,5 +1,7 @@
 import { HTTP_STATUS } from "../constants/httpStatusCode.js";
 import { prisma } from "../prisma/prisma-client.js";
+import { cppQueue } from "../jobs/queues/cpp.js";
+import { FlowProducer, Queue } from "bullmq";
 
 const getSubmissionsByUserId = async (req, res) => {
   const userId = parseInt(req.params.userId);
@@ -28,6 +30,7 @@ const getSubmissionsByUserId = async (req, res) => {
     });
   }
 };
+
 const createSubmission = async (req, res) => {
   const userId = parseInt(req.params.userId);
   const data = req.body;
@@ -43,6 +46,30 @@ const createSubmission = async (req, res) => {
   try {
     const submission = await prisma.submission.create({
       data,
+    });
+    const testcases = await prisma.testCase.findMany({
+      where: {
+        problemId: submission.problemId,
+      },
+      select: {
+        id: true,
+      },
+    });
+    const jobs = testcases.map((testcase) => {
+      return {
+        name: `testcase-${testcase.id}`,
+        data: {
+          submissionId: submission.id,
+          testcaseId: testcase.id,
+        },
+        queueName: "cpp-testcase",
+      };
+    });
+
+    const flow = await FlowProducer.add({
+      name: `submission-${submission.id}`,
+      queueName: "cpp-submissions",
+      children: jobs,
     });
     return res.status(HTTP_STATUS.OK.code).json({
       data: submission,
