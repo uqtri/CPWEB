@@ -4,7 +4,7 @@ import { connection } from "../ioredis/ioredis.js";
 const cppQueue = new Queue("cpp-submissions", {
   connection,
 });
-const cppTestCase = new Queue("cpp-testcase", {
+const cppTestCase = new Queue("cpp-testCases", {
   connection,
 });
 export { cppQueue };
