@@ -1,72 +1,67 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
-const createTestCase = async (req, res) => {
-  const data = req.body;
-  const { problemId } = req.params;
+const createRole = async (req, res) => {
+  const roleData = req.body;
   try {
-    const testCase = await prisma.testCase.create({
-      data: {
-        ...data,
-        problemId: parseInt(problemId),
-      },
+    const role = await prisma.role.create({
+      data: roleData,
     });
     return res.status(HTTP_STATUS.CREATED.code).json({
       success: true,
-      data: testCase,
+      data: role,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      status: HTTP_STATUS.BAD_REQUEST.message,
       success: false,
       message: err.toString(),
     });
   }
 };
-const deleteTestCase = async (req, res) => {
-  const { id } = req.params;
+const getRoles = async (req, res) => {
   try {
-    const testCase = await prisma.testCase.delete({
-      where: { id: parseInt(id) },
-    });
+    const roles = await prisma.role.findMany({});
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
-      data: testCase,
+      data: roles,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
-      success: false,
-      message: err.toString(),
-    });
-  }
-};
-const getTestCaseByProblemId = async (req, res) => {
-  const { problemId } = req.params;
-  try {
-    const testCases = await prisma.testCase.findMany({
-      where: { problemId: parseInt(problemId) },
-    });
-    return res.status(HTTP_STATUS.OK.code).json({
-      success: true,
-      data: testCases,
-    });
-  } catch (err) {
-    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      status: HTTP_STATUS.BAD_REQUEST.message,
       success: false,
       message: err.toString(),
     });
   }
 };
 
-const updateTestCase = async (req, res) => {
+const deleteRole = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const role = await prisma.role.delete({
+      where: { id: parseInt(id) },
+    });
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      data: role,
+    });
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
+const updateRole = async (req, res) => {
   const data = req.body;
   const { id } = req.params;
   try {
-    const testCase = await prisma.testCase.update({
+    const role = await prisma.role.update({
       where: { id: parseInt(id) },
       data,
     });
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
-      data: testCase,
+      data: role,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
@@ -77,8 +72,8 @@ const updateTestCase = async (req, res) => {
 };
 
 export default {
-  createTestCase,
-  deleteTestCase,
-  getTestCaseByProblemId,
-  updateTestCase,
+  createRole,
+  getRoles,
+  deleteRole,
+  updateRole,
 };

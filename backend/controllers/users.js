@@ -1,5 +1,5 @@
 import { prisma } from "../prisma/prisma-client.js";
-import { HTTP_STATUS } from "../constants/httpStatusCode.js";
+import { HTTP_STATUS } from "../constants/httpStatus.js";
 const getUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({});
@@ -42,7 +42,7 @@ const getUserById = async (req, res) => {
 };
 const createUser = async (req, res) => {
   const userData = req.body;
-  
+
   try {
     const user = await prisma.user.create({
       data: userData,

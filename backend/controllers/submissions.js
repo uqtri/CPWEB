@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from "../constants/httpStatusCode.js";
+import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import { flowProducer } from "../jobs/flow/flow.js";
 
