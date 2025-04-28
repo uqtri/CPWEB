@@ -4,13 +4,14 @@ import cors from "cors";
 import routeApp from "./routes/index.js";
 import "./jobs/workers/cpp.js";
 
+import cookieParser from "cookie-parser";
 const app = express();
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
 app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
 routeApp(app);
 
 server.listen(PORT, () => {

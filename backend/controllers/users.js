@@ -1,5 +1,6 @@
 import { prisma } from "../prisma/prisma-client.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
+import bcrypt from "bcrypt";
 const getUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({});
@@ -44,9 +45,13 @@ const createUser = async (req, res) => {
   const userData = req.body;
 
   try {
+    let password = userData.password;
+    password = await bcrypt.hash(password, 10);
+    userData.password = password;
     const user = await prisma.user.create({
       data: userData,
     });
+
     return res.status(HTTP_STATUS.CREATED.code).json({
       sucess: true,
       data: user,

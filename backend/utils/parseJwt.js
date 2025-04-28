@@ -9,7 +9,7 @@ const parseJwt = (token) => {
 
   const result = jwt.verify(token, process.env.JWT_SECRET);
   if (result) {
-    return payload;
+    return result;
   }
   return null;
 };
