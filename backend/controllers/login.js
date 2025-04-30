@@ -14,12 +14,10 @@ const login = async (req, res) => {
       message: "Email and password are required",
     });
   }
-
   try {
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: { OR: [{ email: email }, { username: email }] },
     });
-
     if (!user) {
       return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({
         success: false,
@@ -53,3 +51,4 @@ const login = async (req, res) => {
 };
 
 export default { login };
+ 

@@ -32,7 +32,7 @@ const getSubmissionResultsBySubmissionsId = async (req, res) => {
     });
     return res.status(HTTP_STATUS.OK.code).json({
       data: submissionResults,
-      sucess: true,
+      success: true,
     });
   } catch (error) {
     return res

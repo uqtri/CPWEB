@@ -6,7 +6,7 @@ const getUsers = async (req, res) => {
     const users = await prisma.user.findMany({});
 
     return res.status(HTTP_STATUS.OK.code).json({
-      sucess: true,
+      success: true,
       data: users,
     });
   } catch (err) {
@@ -26,17 +26,17 @@ const getUserById = async (req, res) => {
     if (!user) {
       return res.status(HTTP_STATUS.NOT_FOUND.code).json({
         message: "User not found",
-        sucess: false,
+        success: false,
       });
     }
 
     return res.status(HTTP_STATUS.OK.code).json({
-      sucess: true,
+      success: true,
       data: user,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
-      sucess: false,
+      success: false,
       message: err.toString(),
     });
   }
@@ -48,19 +48,19 @@ const createUser = async (req, res) => {
     let password = userData.password;
     password = await bcrypt.hash(password, 10);
     userData.password = password;
+    userData.roleId = 1;
     const user = await prisma.user.create({
       data: userData,
     });
-
     return res.status(HTTP_STATUS.CREATED.code).json({
-      sucess: true,
+      success: true,
       data: user,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       status: HTTP_STATUS.BAD_REQUEST.message,
-      sucess: false,
-      message: err.toString(),
+      success: false,
+      message: "Tên người dùng hoặc email đã tồn tại",
     });
   }
 };
@@ -73,12 +73,12 @@ const updateUser = async (req, res) => {
       data,
     });
     return res.status(HTTP_STATUS.OK.code).json({
-      sucess: true,
+      success: true,
       data: user,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
-      sucess: false,
+      success: false,
       message: err.toString(),
     });
   }
@@ -91,12 +91,12 @@ const deleteUser = async (req, res) => {
       data: { isBanned: true },
     });
     return res.status(HTTP_STATUS.OK.code).json({
-      sucess: true,
+      success: true,
       data: user,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
-      sucess: false,
+      success: false,
       message: err.toString(),
     });
   }
