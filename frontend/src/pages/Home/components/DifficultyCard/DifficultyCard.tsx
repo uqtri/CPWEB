@@ -22,7 +22,7 @@ export default function DifficultyCard({
       <p className="font-xl text-xl text-center font-bold my-4">
         {numberOfProblems} bài
       </p>
-      <Button label="Luyện tập" color={color} link="/" />
+      <Button label="Luyện tập" color={color} link="/" background="none" />
     </div>
   );
 }

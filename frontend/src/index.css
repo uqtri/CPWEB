@@ -1,10 +1,12 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-primary: hsl(221.2 83.2% 53.3%);
   --color-green: #2de370;
   --color-yellow: #f6a51a;
   --color-red: #ef2121;
+  --color-white: #ffffff;
   --animate-logo: logo 1.5s infinite;
   --animate-glitch: glitch 0.5s infinite;
   --animate-code-flow: code-flow 10s linear infinite;

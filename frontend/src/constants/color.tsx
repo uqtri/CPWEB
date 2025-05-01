@@ -5,6 +5,8 @@ const BG_COLORS = {
   yellow: "bg-yellow",
   blue: "bg-blue",
   purple: "bg-purple",
+  none: "",
+  white: "bg-white",
 };
 const TEXT_COLORS = {
   red: "text-red",
@@ -13,6 +15,8 @@ const TEXT_COLORS = {
   yellow: "text-yellow",
   blue: "text-blue",
   purple: "text-purple",
+  white: "text-white",
+  none: "",
 };
 const BORDER_COLORS = {
   red: "border-red",
@@ -21,5 +25,7 @@ const BORDER_COLORS = {
   yellow: "border-yellow",
   blue: "border-blue",
   purple: "border-purple",
+  none: "",
+  white: "border-white",
 };
 export { BG_COLORS, TEXT_COLORS, BORDER_COLORS };
