@@ -33,7 +33,7 @@ export default function Button({
   return (
     <Link to={link}>
       <button
-        className={`py-3 w-full border ${BORDER_COLORS[color]}  ${TEXT_COLORS[color]} ${BG_COLORS[background]} rounded-md text-center`}
+        className={`py-3 w-full border cursor-pointer ${BORDER_COLORS[color]}  ${TEXT_COLORS[color]} ${BG_COLORS[background]} rounded-md text-center`}
       >
         {label}
       </button>

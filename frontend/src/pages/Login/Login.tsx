@@ -1,13 +1,16 @@
 import { CodeIcon, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
-
+import { useAppStore } from "../../store/index";
 import { notification } from "antd";
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
+
+  const login = useAppStore((state) => state.login);
+  const user = useAppStore((state) => state.user);
   const fields = [
     {
       name: "username",
@@ -32,7 +35,13 @@ export default function Login() {
       placement: "topRight",
     });
   };
+  console.log("user", user);
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -41,29 +50,15 @@ export default function Login() {
     const username = data.username as string;
     const password = data.password as string;
 
-    const login = async (username: string, password: string) => {
-      const response = await fetch("http://localhost:5000/api/v1/login", {
-        method: "POST",
-        body: JSON.stringify({ email: username, password }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((response) => response.json());
-      if (response.success) {
-        navigate("/");
-      } else {
-        openNotification("error", response.message);
-      }
-      setIsLoading(false);
-    };
-    await login(username, password);
+    await login({ email: username, password });
+    setIsLoading(false);
   };
   return (
-    <>
+    <div className="mt-[62px]">
       {contextHolder}
       {isLoading && <WaitingScreen />}
 
-      <div className="my-10 mx-7 border border-gray-300 rounded-md py-10 px-5 shadow-xl">
+      <div className="my-10 mx-7 border border-gray-300 rounded-md py-5 px-5 shadow-xl relative ">
         <CodeIcon className="h-10 w-10 text-primary text-center mx-auto" />
         <h1 className="text-2xl font-bold text-center">Đăng nhập</h1>
         <p className="text-lg text-center mt-2 text-gray-500">
@@ -112,6 +107,6 @@ export default function Login() {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }

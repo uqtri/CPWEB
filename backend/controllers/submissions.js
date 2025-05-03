@@ -11,7 +11,6 @@ const getSubmissionsByUserId = async (req, res) => {
       message: "Invalid user ID",
     });
   }
-
   try {
     const submissions = await prisma.submission.findMany({
       where: {
@@ -34,7 +33,7 @@ const createSubmission = async (req, res) => {
   const userId = parseInt(req.params.userId);
   const data = req.body;
   data.userId = userId;
-
+  
   if (isNaN(userId)) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,

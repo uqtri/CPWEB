@@ -5,7 +5,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { Check, Clock, FileArchive, MenuIcon } from "lucide-react";
 import Button from "../../components/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 type Problem = {
   name: string;
@@ -68,6 +68,8 @@ Yes
 `;
 
 export default function ProblemDetail() {
+  const location = useLocation();
+  const { problemId } = useParams();
   const problem: Problem = {
     name: "Bài toán mẫu",
     description: "Đây là một bài toán mẫu để kiểm tra hệ thống.",
@@ -117,18 +119,15 @@ export default function ProblemDetail() {
           </p>
         </div>
         <div>
-          <Link to="/">
-            <Button
-              link="/"
-              color="white"
-              label="Nộp bài"
-              background="primary"
-            />
-          </Link>
+          <Button
+            link={`${location.pathname}/submit`}
+            color="white"
+            label="Nộp bài"
+            background="primary"
+          />
         </div>
       </div>
 
-      {/* Markdown display area */}
       <div className="prose max-w-none mt-6">
         <ReactMarkdown
           remarkPlugins={[remarkMath]}

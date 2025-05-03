@@ -17,7 +17,7 @@ const cppWorker = new Worker(
     const data = job.data;
     const submissionId = data.submissionId;
     const childrenValues = await job.getChildrenValues();
-    console.log(childrenValues);
+    console.log(childrenValues, "@@");
   },
   { connection }
 );
