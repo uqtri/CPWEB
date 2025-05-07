@@ -7,6 +7,7 @@ const BG_COLORS = {
   purple: "bg-purple",
   none: "",
   white: "bg-white",
+  gray: "bg-gray-400",
 };
 const TEXT_COLORS = {
   red: "text-red",
@@ -17,6 +18,7 @@ const TEXT_COLORS = {
   purple: "text-purple",
   white: "text-white",
   none: "",
+  gray: "text-gray-400",
 };
 const BORDER_COLORS = {
   red: "border-red",

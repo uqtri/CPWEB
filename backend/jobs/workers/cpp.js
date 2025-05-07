@@ -6,7 +6,8 @@ import { randomString } from "../../utils/randomString.js";
 import fs from "fs";
 import { promisify } from "util";
 import { rootPath } from "../../utils/path.js";
-
+import submissionResultsController from "../../controllers/submissionResults.js";
+import { emitTestResults } from "../../socket/emitters/submission.js";
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
@@ -74,10 +75,19 @@ const cppTestCaseWorker = new Worker(
       throw new Error("Error removing file");
     }
     // create result to db
+    await submissionResultsController.createSubmissionResult({
+      submissionId,
+      testCaseId: testcaseId,
+      result: result.trim() === testCase.output.trim() ? "passed" : "failed",
+    });
+    const responseForUser =
+      result.trim() === testCase.output.trim()
+        ? { testcaseId, result: "passed" }
+        : { testcaseId, result: "failed" };
 
-    return result.trim() === testCase.output.trim()
-      ? { testcaseId, result: "passed" }
-      : { testcaseId, result: "failed" };
+    emitTestResults(submissionId, responseForUser);
+
+    return responseForUser;
   },
   { connection }
 );

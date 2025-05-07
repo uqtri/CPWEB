@@ -6,6 +6,8 @@ import Home from "../../pages/Home/Home";
 import ProblemDetail from "../../pages/ProblemDetail/ProblemDetail";
 import Submit from "../../pages/Submit/Submit";
 import Profile from "../../pages/Profile/Profile";
+import SubmissionDetail from "../../pages/SubmissionDetail/SubmissionDetail";
+import Problemset from "../../pages/Problemset/Problemset";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "submission/:submissionId",
+        element: <SubmissionDetail />,
+      },
+      {
+        path: "problemset",
+        element: <Problemset />,
       },
     ],
   },

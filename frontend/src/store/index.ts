@@ -10,6 +10,9 @@ export const useAppStore = create<AppStore>()(
     })),
     {
       name: "user-storage",
+      partialize: (state) => ({
+        user: state.user,
+      }),
     }
   )
 );

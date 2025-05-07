@@ -9,7 +9,7 @@ const menuItems = [
   },
   {
     name: "Thử thách",
-    link: "/challenges",
+    link: "/problemset",
   },
   {
     name: "Cuộc thi",

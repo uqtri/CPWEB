@@ -37,7 +37,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ ...user, password: "" }, process.env.JWT_SECRET, {
       // expiresIn: "2d",
     });
-    res.setHeader("Set-Cookie", `token=${token}; HttpOnly; secure`); // 1 day
+    res.setHeader("Set-Cookie", `jwt=${token}`);
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
       data: { user, token },
@@ -51,4 +51,3 @@ const login = async (req, res) => {
 };
 
 export default { login };
- 

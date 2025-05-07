@@ -7,7 +7,7 @@
   --color-yellow: #f6a51a;
   --color-red: #ef2121;
   --color-white: #ffffff;
-  --animate-logo: logo 1.5s infinite;
+  --animate-logo: logo 1.5s alternate;
   --animate-glitch: glitch 0.5s infinite;
   --animate-code-flow: code-flow 10s linear infinite;
 
@@ -47,11 +47,11 @@
 
   @keyframes logo {
     from {
-      transform: scale(1);
+      transform: scale(0.7);
       opacity: 0;
     }
     to {
-      transform: scale(1.3);
+      transform: scale(1);
       opacity: 0.7;
     }
   }

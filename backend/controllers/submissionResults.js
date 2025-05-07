@@ -20,13 +20,14 @@ const createSubmissionResult = async (data) => {
 };
 const getSubmissionResultsBySubmissionsId = async (req, res) => {
   try {
-    const { submissionId } = req.params;
+    let { submissionId } = req.params;
+
     if (!submissionId) {
       return res
         .status(HTTP_STATUS.BAD_REQUEST.code)
         .json({ error: "Submission ID is required" });
     }
-
+    submissionId = parseInt(submissionId, 10);
     const submissionResults = await prisma.submissionResult.findMany({
       where: { submissionId },
     });

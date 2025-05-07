@@ -17,10 +17,10 @@ const routeApp = function (app) {
   app.use("/api/v1/submissions", submissionsRouter);
   // app.use("/api/v1/contests", isAdmin, contestsRouter);
   // app.use("/api/v1/messages", isUser, messagesRouter);
-  app.use("/api/v1/test-cases", isAdmin, testCasesRouter);
+  app.use("/api/v1/test-cases", testCasesRouter);
   app.use("/api/v1/roles", isAdmin, rolesRouter);
   app.use("/api/v1/login", loginRouter);
-  app.use("/api/v1/submissionsResult", submissionResultsRouter);
+  app.use("/api/v1/submission-results", submissionResultsRouter);
 };
 
 export default routeApp;

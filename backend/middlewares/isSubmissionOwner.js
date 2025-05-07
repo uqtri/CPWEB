@@ -2,8 +2,23 @@ import { parseJwt } from "../utils/parseJwt.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 const isSubmissionOwner = async (req, res, next) => {
-  const { submissionId } = req.params;
+  let { submissionId } = req.params;
 
+  if (!submissionId) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: "Submission ID is required",
+    });
+  }
+  submissionId = parseInt(submissionId, 10);
+  if (isNaN(submissionId)) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: "Submission ID must be a number",
+    });
+  }
+  console.log(req.cookie, "!!v");
+  console.log(req.cookies, "!!1");
   const payload = parseJwt(req.cookies.jwt);
 
   const user = await prisma.submission.findUnique({
@@ -25,7 +40,9 @@ const isSubmissionOwner = async (req, res, next) => {
     },
   });
   console.log(user);
-  if (!payload || payload.username !== user.username) {
+  console.log(payload);
+  if (!payload || payload.username !== user.user.username) {
+    console.log("FAILED");
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
       message: "You are not the owner of this submission",

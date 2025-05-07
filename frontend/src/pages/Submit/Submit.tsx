@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import Button from "../../components/Button/Button";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAppStore } from "../../store";
 type Problem = {
   name: string;
   description: string;
@@ -26,23 +27,29 @@ export default function Submit() {
     difficulty: 3,
   };
   const { problemId } = useParams();
+  const user = useAppStore((state) => state.user);
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     console.log(code.current);
     const language = "cpp"; // Replace with the selected language
     console.log(problemId);
-    const response = await fetch("http://localhost:5000/api/v1/submissions/1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        code: code.current,
-        language,
-        problemId: parseInt(problemId as string),
-      }),
-    });
-    const data = await response.json();
+    const response = await fetch(
+      `http://localhost:5000/api/v1/submissions/${user.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          code: code.current,
+          language,
+          problemId: parseInt(problemId as string),
+        }),
+      }
+    ).then((res) => res.json());
+    const submission = response.data;
+    navigate(`/submission/${submission.id}?problemId=${problemId}`);
   };
   const handleEditorChange = (value: string | undefined) => {
     if (value) {
@@ -51,7 +58,7 @@ export default function Submit() {
   };
 
   return (
-    <div className="mt-[62px] px-4">
+    <div className="mt-[62px] p-4">
       <p className="text-3xl font-semibold border-b pb-1">{problem.name}</p>
       <div className="flex justify-center mt-4 gap-3">
         <Editor
