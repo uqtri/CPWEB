@@ -8,6 +8,14 @@ import Submit from "../../pages/Submit/Submit";
 import Profile from "../../pages/Profile/Profile";
 import SubmissionDetail from "../../pages/SubmissionDetail/SubmissionDetail";
 import Problemset from "../../pages/Problemset/Problemset";
+import AdminLayout from "../../Layout/AdminLayout/AdminLayout";
+import Dashboard from "../../pages/admin/Dashboard/Dashboard";
+import Problem from "../../pages/admin/Problem/Problem";
+import Submission from "../../pages/admin/Submission/Submission";
+import Post from "../../pages/admin/Post/Post";
+import Contest from "../../pages/Home/partials/Contest/Contest";
+import Settings from "../../pages/admin/Settings/Settings";
+import User from "../../pages/admin/User/User";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -41,6 +49,42 @@ const router = createBrowserRouter([
       {
         path: "problemset",
         element: <Problemset />,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "/admin/dashboard",
+        element: <Dashboard />,
+      },
+      { path: "/admin/user", element: <User /> },
+
+      {
+        path: "/admin/problem",
+        element: <Problem />,
+      },
+      {
+        path: "/admin/submission",
+        element: <Submission />,
+      },
+      {
+        path: "/admin/post",
+        element: <Post />,
+      },
+      {
+        path: "/admin/contest",
+        element: <Contest />,
+      },
+      {
+        path: "/admin/comment",
+        element: <div>Admin Comment Section</div>,
+      },
+      {
+        path: "/admin/settings",
+        element: <Settings />,
       },
     ],
   },
