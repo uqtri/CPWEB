@@ -1,11 +1,11 @@
-export type category = {
+export type Category = {
   id: number;
   name: String;
 };
 
-export type createCategoryData = {
+export type CreateCategoryData = {
   name: string;
 };
-export type updateCategoryData = {
+export type UpdateCategoryData = {
   name: string;
 };

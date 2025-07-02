@@ -1,5 +1,5 @@
 import type { Submission } from "./submission";
-import type { category } from "./category";
+import type { Category } from "./category";
 export type Problem = {
   id: number;
   title: string;
@@ -7,12 +7,12 @@ export type Problem = {
   createdAt: Date;
   user: any;
   submissions: Submission[];
-  categories: category[];
+  categories: Category[];
   testCases: any[];
   executionTime: number;
   memory: number;
 };
-export type createProblemData = {
+export type CreateProblemData = {
   title: string;
   content: string;
   categories: number[];
@@ -20,7 +20,7 @@ export type createProblemData = {
   memory: number;
 };
 
-export type updateProblemData = {
+export type UpdateProblemData = {
   title: string;
   content: string;
   categories: number[];

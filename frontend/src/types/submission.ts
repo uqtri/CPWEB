@@ -9,3 +9,16 @@ export type Submission = {
   Score: number;
   createdAt: Date;
 };
+
+export type CreateSubmissionData = {
+  code: string;
+  languague: string;
+  userId: number;
+  problemId: number;
+};
+
+export type UpdateSubmissionData = {
+  code: string;
+  languague: string;
+  userId: number;
+};
