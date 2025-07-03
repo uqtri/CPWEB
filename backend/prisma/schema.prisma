@@ -50,7 +50,7 @@ model Comment {
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
   userId    Int
 }
 
@@ -63,12 +63,22 @@ model Problem {
   userId     Int
   submisions Submission[]
   executionTime Float?
-  memory   Int?
+  memoryLimit   Int?
+  points      Int?
   contests   Contest[]  
   testCases TestCase[]
   categories Category[]
+  problemCategories ProblemCategory[]
 }
+model ProblemCategory {
+  problem Problem @relation(fields: [problemId], references: [id])
+  problemId Int
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
 
+
+  @@id([problemId, categoryId])
+}
 model Submission {
   id          Int       @id @default(autoincrement())
   code        String
@@ -117,7 +127,9 @@ model TestCase {
 model Category {
   id         Int       @id @default(autoincrement())
   name       String
+  description String
   problems   Problem[]
+  problemCategories ProblemCategory[]
 }
 
 model Role {

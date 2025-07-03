@@ -3,10 +3,17 @@ import { prisma } from "../prisma/prisma-client.js";
 
 const createProblem = async (req, res) => {
   const problemData = req.body;
-
+  console.log("Problem Data:", problemData);
   try {
     const problem = await prisma.problem.create({
-      data: problemData,
+      data: {
+        ...problemData,
+        categories: {
+          connect: problemData.categories.map((category) => ({
+            name: category.name,
+          })),
+        },
+      },
     });
     return res.status(HTTP_STATUS.CREATED.code).json({
       success: true,
