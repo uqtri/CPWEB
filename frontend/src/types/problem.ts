@@ -1,29 +1,48 @@
 import type { Submission } from "./submission";
-import type { Category } from "./category";
+import type { Category, CreateCategoryData } from "./category";
 export type Problem = {
   id: number;
   title: string;
   content: string;
-  createdAt: Date;
   user: any;
   submissions: Submission[];
   categories: Category[];
   testCases: any[];
   executionTime: number;
-  memory: number;
+  memoryLimit: number;
+  points: number;
+  difficulty: "easy" | "medium" | "hard";
+};
+export type ProblemResponse = {
+  id?: number;
+  title?: string;
+  content?: string;
+  createdAt?: Date;
+  user?: any;
+  submissions: Submission[];
+  categories: Category[];
+  testCases: any[];
+  executionTime: number;
+  memoryLimit: number;
+  points: number;
+  difficulty: "easy" | "medium" | "hard";
 };
 export type CreateProblemData = {
   title: string;
   content: string;
-  categories: number[];
+  categories: CreateCategoryData[];
   executionTime: number;
-  memory: number;
+  memoryLimit: number;
+  points: number;
+  difficulty: "easy" | "medium" | "hard";
 };
 
 export type UpdateProblemData = {
   title: string;
   content: string;
-  categories: number[];
+  categories: Category[];
   executionTime: number;
-  memory: number;
+  memoryLimit: number;
+  points: number;
+  difficulty: "easy" | "medium" | "hard";
 };

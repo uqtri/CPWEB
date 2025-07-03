@@ -16,6 +16,7 @@ import Post from "../../pages/admin/Post/Post";
 import Contest from "../../pages/Home/partials/Contest/Contest";
 import Settings from "../../pages/admin/Settings/Settings";
 import User from "../../pages/admin/User/User";
+import Category from "@/pages/admin/Category/Category";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -86,6 +87,7 @@ const router = createBrowserRouter([
         path: "/admin/settings",
         element: <Settings />,
       },
+      { path: "/admin/category", element: <Category /> },
     ],
   },
   // {

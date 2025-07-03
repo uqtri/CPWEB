@@ -9,7 +9,7 @@ export const getCategoryList = async (params: any): Promise<Category[]> => {
   const response = await axiosInstance.get("/categories", { params });
   return response.data;
 };
-export const updateCategoryData = async (
+export const updateCategory = async (
   id: number,
   data: UpdateCategoryData
 ): Promise<Category> => {

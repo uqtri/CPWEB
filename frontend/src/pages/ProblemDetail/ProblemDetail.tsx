@@ -1,11 +1,16 @@
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import "katex/dist/katex.min.css";
+// import "katex/dist/katex.min.css";
 import { Check, Clock, FileArchive, MenuIcon } from "lucide-react";
 import Button from "../../components/Button/Button";
 import { Link, useLocation, useParams } from "react-router-dom";
+import Markdown from "../../components/Markdown/Markdown";
+import type { SelectProps } from "antd";
+
+const categories: SelectProps["options"] = [
+  { value: "Dynamic programming" },
+  { value: "Adhoc" },
+  { value: "Hình học" },
+  { value: "Số học" },
+];
 
 type Problem = {
   name: string;
@@ -129,12 +134,7 @@ export default function ProblemDetail() {
       </div>
 
       <div className="prose max-w-none mt-6">
-        <ReactMarkdown
-          remarkPlugins={[remarkMath]}
-          rehypePlugins={[rehypeKatex]}
-        >
-          {markdown}
-        </ReactMarkdown>
+        <Markdown markdown={markdown} />
       </div>
     </div>
   );
