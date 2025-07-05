@@ -16,6 +16,7 @@ const SidebarLinks = [
   { name: "Kì thi", path: "/admin/contest", icon: Trophy },
   { name: "Dạng bài tập", path: "/admin/category", icon: Type },
   { name: "Cài đặt", path: "/admin/settings", icon: Settings },
+  { name: "Testcase", path: "/admin/test-case", icon: CodeIcon },
 ];
 export default function Sidebar() {
   return (

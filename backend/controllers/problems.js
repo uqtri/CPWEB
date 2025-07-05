@@ -1,9 +1,16 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
+import { slug } from "../libs/slug.js";
 
 const createProblem = async (req, res) => {
-  const problemData = req.body;
+  let problemData = req.body;
   console.log("Problem Data:", problemData);
+  if (!problemData.userId) {
+    problemData.userId = 1; // Default to admin user for testing
+  }
+
+  problemData.slug = slug(problemData.title);
+  console.log("Problem Data after slug:", problemData);
   try {
     const problem = await prisma.problem.create({
       data: {
@@ -20,6 +27,7 @@ const createProblem = async (req, res) => {
       data: problem,
     });
   } catch (err) {
+    console.error("Error creating problem:", err);
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
       message: err.toString(),
@@ -52,9 +60,41 @@ const getProblemById = async (req, res) => {
     });
   }
 };
+const getProblemBySlug = async (req, res) => {
+  const { slug } = req.params;
+  try {
+    const problem = await prisma.problem.findUnique({
+      where: { slug },
+      include: {
+        categories: true,
+      },
+    });
+
+    if (!problem) {
+      return res.status(HTTP_STATUS.NOT_FOUND.code).json({
+        message: "Problem not found",
+        success: false,
+      });
+    }
+
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      data: problem,
+    });
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
 const getProblems = async (req, res) => {
   try {
-    const problems = await prisma.problem.findMany({});
+    const problems = await prisma.problem.findMany({
+      include: {
+        categories: true,
+      },
+    });
 
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
@@ -68,12 +108,25 @@ const getProblems = async (req, res) => {
   }
 };
 const updateProblem = async (req, res) => {
-  const data = req.body;
   const { id } = req.params;
+
+  let problemData = req.body;
+  console.log("Problem Data:", problemData);
+  if (!problemData.userId) {
+    problemData.userId = 1; // Default to admin user for testing
+  }
+  problemData.slug = slug(problemData.title);
   try {
     const problem = await prisma.problem.update({
       where: { id: parseInt(id) },
-      data,
+      data: {
+        ...problemData,
+        connect: {
+          categories: problemData.categories.map((category) => ({
+            name: category.name,
+          })),
+        },
+      },
     });
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
@@ -86,4 +139,10 @@ const updateProblem = async (req, res) => {
     });
   }
 };
-export default { createProblem, getProblems, getProblemById, updateProblem };
+export default {
+  createProblem,
+  getProblems,
+  getProblemById,
+  updateProblem,
+  getProblemBySlug,
+};

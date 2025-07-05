@@ -17,6 +17,8 @@ import Contest from "../../pages/Home/partials/Contest/Contest";
 import Settings from "../../pages/admin/Settings/Settings";
 import User from "../../pages/admin/User/User";
 import Category from "@/pages/admin/Category/Category";
+import TestCase from "@/pages/admin/TestCase/TestCase";
+import TestCaseDetail from "@/pages/admin/TestCase/partials/TestCaseDetail/TestCaseDetail";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -88,6 +90,8 @@ const router = createBrowserRouter([
         element: <Settings />,
       },
       { path: "/admin/category", element: <Category /> },
+      { path: "/admin/test-case", element: <TestCase /> },
+      { path: "/admin/test-case/:problemSlug", element: <TestCaseDetail /> },
     ],
   },
   // {

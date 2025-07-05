@@ -1,18 +1,13 @@
 import { CreateProblemData, Problem, UpdateProblemData } from "@/types/problem";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, ChangeEvent } from "react";
 import { useEscape } from "@/hooks/useEscape";
 import { Button } from "@/ui/Button";
 import { Select } from "antd";
-import type { SelectProps } from "antd";
 import Preview from "./Partials/Preview";
 import { useProblem } from "@/hooks/useProblem";
 import { toast } from "react-toastify";
-const categories: SelectProps["options"] = [
-  { value: "Dynamic programming" },
-  { value: "Adhoc" },
-  { value: "Hình học" },
-  { value: "Số học" },
-];
+import { useCategory } from "@/hooks/useCategory";
+
 export default function CreateAndUpdateProblemModal({
   problem,
   setModal,
@@ -32,16 +27,41 @@ export default function CreateAndUpdateProblemModal({
     categories: [],
   });
   useEffect(() => {
+    console.log(problem);
     if (problem) {
       setData(problem);
-      problem.categories.forEach((category) => {
-        setSelectedCategories((prev) => [...prev, category.name]);
-      });
+      const initialCategories = problem.categories.map(
+        (category) => category.name
+      );
+      setSelectedCategories(initialCategories);
     }
   }, [problem]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-
   const { createProblemMutation, updateProblemMutation } = useProblem({});
+  const { getCategoryListQuery } = useCategory();
+  const categories =
+    getCategoryListQuery.data?.map((category) => ({
+      label: category.name,
+      value: category.name,
+    })) || [];
+  console.log(selectedCategories, "selectedCategories");
+  const handleChange = (
+    e:
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+
+    console.log(name, value, type, "name, value, type");
+    // console.log(name, value, "name, value");
+    console.log(type, "type @@");
+    setData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? Number(value) : value,
+    }));
+  };
+  console.log(data);
   return (
     <div className="modal-overlay flex items-center justify-center">
       <form
@@ -60,7 +80,8 @@ export default function CreateAndUpdateProblemModal({
               className="w-full p-2 border rounded"
               required
               minLength={5}
-              defaultValue={problem ? problem.title : ""}
+              defaultValue={data.title}
+              onChange={handleChange}
             />
           </div>
           <div className="grid grid-cols-4 gap-4 mb-4">
@@ -69,9 +90,10 @@ export default function CreateAndUpdateProblemModal({
               <input
                 name="points"
                 type="number"
+                defaultValue={data.points}
                 className="w-full p-2 border rounded"
                 required
-                // defaultValue={problem ? problem.title : ""}
+                onChange={handleChange}
               />
             </div>
             <div>
@@ -80,18 +102,21 @@ export default function CreateAndUpdateProblemModal({
               </label>
               <input
                 type="number"
+                name="executionTime"
                 className="w-full p-2 border rounded"
                 required
-                // defaultValue={problem ? problem.title : ""}
+                onChange={handleChange}
               />
             </div>
             <div>
               <label className="block text-xl font-medium mb-2">Bộ nhớ</label>
               <input
                 type="number"
-                name="memory"
+                name="memoryLimit"
                 className="w-full p-2 border rounded"
                 required
+                defaultValue={data.memoryLimit}
+                onChange={handleChange}
                 // defaultValue={problem ? problem.title : ""}
               />
             </div>
@@ -101,11 +126,13 @@ export default function CreateAndUpdateProblemModal({
                 className="w-full p-2 border rounded"
                 required
                 name="difficulty"
+                defaultValue={data?.difficulty}
+                onChange={handleChange}
                 // defaultValue={problem ? problem.title : ""}
               >
-                <option value="easy">Dễ</option>
-                <option value="medium">Trung bình</option>
-                <option value="hard">Khó</option>
+                <option value="Dễ">Dễ</option>
+                <option value="Trung bình">Trung bình</option>
+                <option value="Khó">Khó</option>
               </select>
             </div>
           </div>
@@ -115,8 +142,9 @@ export default function CreateAndUpdateProblemModal({
               id="categories"
               className="w-full h-[40px]"
               mode="multiple"
-              defaultValue={selectedCategories}
+              value={selectedCategories}
               onChange={(value) => {
+                setSelectedCategories(value as string[]);
                 setData((prev) => ({
                   ...prev,
                   categories: value.map((category) => ({
@@ -130,8 +158,10 @@ export default function CreateAndUpdateProblemModal({
           </div>
           <textarea
             name="content"
+            defaultValue={data.content}
             className="w-[100%] border-1 border-gray-300 text-lg max-h-[300px]"
             rows={10}
+            onChange={handleChange}
           />
           <div className="mt-5 gap-4 flex justify-end">
             <Button
@@ -157,6 +187,7 @@ export default function CreateAndUpdateProblemModal({
                     );
                     toast.success("Tạo bài tập thành công");
                   }
+                  setModal();
                 } catch (error) {
                   console.log(error);
                   if (problem) {

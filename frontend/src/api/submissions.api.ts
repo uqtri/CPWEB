@@ -1,4 +1,4 @@
-import { axiosInstance } from "../libs/axios/axios";
+import { axiosInstance } from "../lib/axios";
 import type {
   Submission,
   CreateSubmissionData,
@@ -35,4 +35,3 @@ export const getSubmissionByUserId = async (
   const response = await axiosInstance.get(`/submissions/${userId}`);
   return response.data;
 };
-

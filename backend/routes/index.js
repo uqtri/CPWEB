@@ -19,7 +19,7 @@ const routeApp = function (app) {
   // app.use("/api/v1/messages", isUser, messagesRouter);
   app.use("/api/v1/categories", categoriesRouter);
   app.use("/api/v1/test-cases", testCasesRouter);
-  app.use("/api/v1/roles", isAdmin, rolesRouter);
+  app.use("/api/v1/roles", rolesRouter);
   app.use("/api/v1/login", loginRouter);
   app.use("/api/v1/submission-results", submissionResultsRouter);
 };

@@ -1,14 +1,11 @@
 import { useEffect } from "react";
+import { pushEscapeHandler, popEscapeHandler } from "../lib/escapeStackManager";
 export function useEscape(callback: () => void) {
+  console.log("useEscape hook initialized with callback:", callback);
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        callback();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
+    pushEscapeHandler(callback);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      popEscapeHandler();
     };
   }, [callback]);
 }

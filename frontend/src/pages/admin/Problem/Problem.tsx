@@ -20,7 +20,7 @@ export default function Problem() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { getProblemListQuery } = useProblem({ params: params.toString() });
 
-  const problems = getProblemListQuery.data;
+  const problems = getProblemListQuery.data || [];
   console.log(problems, "problems");
 
   return (
@@ -32,6 +32,7 @@ export default function Problem() {
             className=""
             content="Thêm bài tập"
             onClick={() => {
+              setEditingProblem(null);
               setIsOpenModal(true);
             }}
           />
@@ -41,7 +42,7 @@ export default function Problem() {
           <TableHeader>
             <TableRow>
               <TableHead>Tiêu đề</TableHead>
-              <TableHead>Dạng bài</TableHead>
+              {/* <TableHead>Dạng bài</TableHead> */}
               <TableHead>Bộ nhớ</TableHead>
               <TableHead>Thời gian chạy</TableHead>
               <TableHead>Độ khó</TableHead>
@@ -49,16 +50,22 @@ export default function Problem() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell>Nguyễn Văn A</TableCell>
-              <TableCell>12A1</TableCell>
-              <TableCell>9.0</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Trần Thị B</TableCell>
-              <TableCell>12A2</TableCell>
-              <TableCell>8.5</TableCell>
-            </TableRow>
+            {problems?.map((problem: Problem) => (
+              <TableRow
+                key={problem.id}
+                className="hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  setEditingProblem(problem);
+                  setIsOpenModal(true);
+                }}
+              >
+                <TableCell>{problem.title}</TableCell>
+                <TableCell>{problem.memoryLimit} MB</TableCell>
+                <TableCell>{problem.executionTime} ms</TableCell>
+                <TableCell>{problem.difficulty}</TableCell>
+                <TableCell>{problem.points}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

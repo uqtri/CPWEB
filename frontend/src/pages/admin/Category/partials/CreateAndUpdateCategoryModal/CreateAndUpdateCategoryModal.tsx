@@ -22,11 +22,7 @@ export default function CreateAndUpdateCategoryModal({
   });
   useEscape(callback);
 
-  const {
-    getCategoryListQuery,
-    updateCategoryMutation,
-    createCategoryMutation,
-  } = useCategory();
+  const { updateCategoryMutation, createCategoryMutation } = useCategory();
   const handleCreateAndUpdate = async () => {
     try {
       if (category) {
@@ -39,6 +35,11 @@ export default function CreateAndUpdateCategoryModal({
         await createCategoryMutation.mutateAsync(data);
         toast.success("Tạo dạng bài tập thành công");
       }
+      setData({
+        name: "",
+        description: "",
+      });
+      callback();
     } catch (error) {
       toast.error(
         category
@@ -80,6 +81,13 @@ export default function CreateAndUpdateCategoryModal({
           />
         </div>
         <div className="mt-5 gap-4 flex justify-end">
+          <Button
+            content="Đóng"
+            onClick={(e) => {
+              e.preventDefault();
+              callback();
+            }}
+          ></Button>
           <Button
             content={category ? "Cập nhật" : "Tạo mới"}
             onClick={(e) => {

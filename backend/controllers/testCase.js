@@ -1,8 +1,12 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
+import path from "path";
+
 const createTestCase = async (req, res) => {
   const data = req.body;
   const { problemId } = req.params;
+  const file = req.file;
+
   try {
     const testCase = await prisma.testCase.create({
       data: {

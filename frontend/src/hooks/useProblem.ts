@@ -1,19 +1,33 @@
 import {
   createProblem,
   deleteProblem,
+  getProblemBySlug,
   getProblemList,
   updateProblem,
 } from "@/api/problem.api";
 import { CreateProblemData, UpdateProblemData } from "@/types/problem";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function useProblem({ params }: { params?: string }) {
+export function useProblem({
+  params,
+  slug,
+}: {
+  params?: string;
+  slug?: string;
+}) {
   const queryClient = useQueryClient();
   const getProblemListQuery = useQuery({
     queryKey: ["problems", params],
     queryFn: () => {
       return getProblemList(params);
     },
+  });
+  const getProblemBySlugQuery = useQuery({
+    queryKey: ["problem", slug],
+    queryFn: () => {
+      return getProblemBySlug(slug!);
+    },
+    enabled: !!slug,
   });
   const createProblemMutation = useMutation({
     mutationFn: (data: CreateProblemData) => {
@@ -44,5 +58,6 @@ export function useProblem({ params }: { params?: string }) {
     createProblemMutation,
     updateProblemMutation,
     deleteProblemMutation,
+    getProblemBySlugQuery,
   };
 }

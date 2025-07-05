@@ -17,6 +17,7 @@ export default function Category() {
 
   const { getCategoryListQuery } = useCategory();
   const data = getCategoryListQuery.data || [];
+
   return (
     <div className="w-full px-10 py-10">
       <div className="flex justify-between items-center">
@@ -30,7 +31,12 @@ export default function Category() {
       </div>
       <div className="grid grid-cols-4 gap-4">
         {data?.map((category) => {
-          return <CategoryCard category={category} />;
+          return (
+            <CategoryCard
+              category={category}
+              // setEditingCategory={setEditingCategory}
+            />
+          );
         })}
       </div>
       {/* Modal for creating new category */}

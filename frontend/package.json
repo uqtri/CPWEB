@@ -36,6 +36,7 @@
     "rehype-katex": "^7.0.1",
     "rehype-mathjax": "^7.1.0",
     "remark-math": "^6.0.0",
+    "slugify": "^1.6.6",
     "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.4",

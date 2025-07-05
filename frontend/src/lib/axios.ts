@@ -8,3 +8,11 @@ export const axiosInstance = axios.create({
   },
   withCredentials: true,
 });
+
+export const axiosFormDataInstance = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_URL,
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+  withCredentials: true,
+});
