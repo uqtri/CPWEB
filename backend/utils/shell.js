@@ -1,19 +1,21 @@
 import { exec } from "child_process";
-import { promisify } from "util";
 
 // const asyncExec = promisify(exec);
 
 const shellCommand = async (command) => {
+  console.log("Executing command:", command);
   return new Promise((resolve, reject) => {
-    exec(command, { shell: "powershell.exe" }, (error, stdout, stderr) => {
+    exec(command, { shell: "/bin/bash" }, (error, stdout, stderr) => {
+      console.log(command);
       if (stderr) {
-        console.error(`exec stderr`, stderr);
-        reject(stderr);
+        console.log(`exec stderr`, stderr);
+        // reject(stderr);
       }
       if (error) {
-        console.error(`exec error`, error);
+        console.log(`exec error`, error);
         reject(error);
       }
+      console.log(stdout, "!!");
       resolve(stdout);
     });
   });

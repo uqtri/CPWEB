@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/:problemId", testCasesController.getTestCaseByProblemId);
 router.post(
   "/problemId/:problemId",
-  upload.single("test-cases"),
+upload.single("test-cases"),
   testCasesController.createTestCase
 );
 router.put("/:id", testCasesController.updateTestCase);
