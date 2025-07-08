@@ -7,7 +7,7 @@ export default function Challenge() {
       <p className="text-4xl text-center font-bold">
         Thử thách theo mức độ khó
       </p>
-      <div className="challenges grid grid-cols-1 gap-4 mt-4">
+      <div className="challenges grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
         <DifficultyCard
           color="green"
           title="Dễ"

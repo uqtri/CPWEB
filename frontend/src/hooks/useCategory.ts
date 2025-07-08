@@ -6,7 +6,6 @@ import {
 } from "@/api/category.api";
 import { CreateCategoryData, UpdateCategoryData } from "@/types/category";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { use } from "react";
 
 export function useCategory() {
   const queryClient = useQueryClient();

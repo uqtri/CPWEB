@@ -20,14 +20,18 @@ export default function TestCase() {
   const problems = getProblemListQuery.data || [];
 
   return (
-    <div>
-      {" "}
+    <div className="w-full p-10">
+      <h1 className="text-2xl mb-4 font-bold">Danh sách bài tập</h1>
+      <p className="text-gray-500 mb-4">
+        Dưới đây là danh sách các bài tập hiện có. Bạn có thể nhấp vào tiêu đề
+        của bài tập để xem chi tiết và chỉnh sửa các trường hợp kiểm tra (test
+        case) của bài tập đó.
+      </p>
       <Table className="border-collapse">
         <TableCaption>Danh sách bài tập</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Tiêu đề</TableHead>
-            {/* <TableHead>Dạng bài</TableHead> */}
             <TableHead>Bộ nhớ</TableHead>
             <TableHead>Thời gian chạy</TableHead>
             <TableHead>Độ khó</TableHead>

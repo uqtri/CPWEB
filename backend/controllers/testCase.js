@@ -3,6 +3,8 @@ import { prisma } from "../prisma/prisma-client.js";
 import path from "path";
 import { rootPath } from "../utils/path.js";
 import testCaseService from "../services/testCases.js";
+import archiver from "archiver";
+
 import {
   mkdirAsync,
   writeFileAsync,
@@ -130,12 +132,13 @@ const deleteTestCase = async (req, res) => {
     });
   }
 };
-const getTestCaseByProblemId = async (req, res) => {
-  const { problemId } = req.params;
+const getTestCaseByProblemSlug = async (req, res) => {
+  const { problemSlug } = req.params;
 
-  const testCases = await testCaseService.getTestCaseByProblemId(problemId);
+  const testCases = await testCaseService.getTestCaseByProblemSlug(problemSlug);
   const testCasesPath = path.join(savedFilePath, testCases.problem.slug);
 
+  console.log("Test cases path:", testCasesPath);
   if (!testCases) {
     return res.status(HTTP_STATUS.NOT_FOUND.code).json({
       success: false,
@@ -146,7 +149,7 @@ const getTestCaseByProblemId = async (req, res) => {
   const testCasePath = path.join(
     savedFilePath,
     testCases.problem.slug,
-    testCases.path
+    testCases.path.replace(/\.zip$/, "")
   );
   const testCasesDir = await readdirAsync(testCasePath, {
     withFileTypes: true,
@@ -169,8 +172,8 @@ const getTestCaseByProblemId = async (req, res) => {
 
 const downloadTestCaseByIndex = async (req, res) => {
   const { index } = req.params;
-  const { problemId } = req.params;
-  const testCases = await testCaseService.getTestCaseByProblemId(problemId);
+  const { problemSlug } = req.params;
+  const testCases = await testCaseService.getTestCaseByProblemSlug(problemSlug);
   if (!testCases) {
     return res.status(HTTP_STATUS.NOT_FOUND.code).json({
       success: false,
@@ -180,23 +183,32 @@ const downloadTestCaseByIndex = async (req, res) => {
   const testCasePath = path.join(
     savedFilePath,
     testCases.problem.slug,
-    testCases.path
+    testCases.path.replace(/\.zip$/, "")
   );
   const testCasesDir = await readdirAsync(testCasePath, {
     withFileTypes: true,
   });
-  try {
-    return res.download(path.join(testCasePath, testCasesDir[index]));
-  } catch (err) {
-    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+
+  const archive = archiver("zip", {
+    zlib: { level: 2 },
+  });
+  archive.directory(path.join(testCasePath, testCasesDir[index].name), false);
+
+  archive.on("error", (err) => {
+    console.error("Error creating archive:", err);
+    return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR.code).json({
       success: false,
-      message: err.toString(),
+      message: "Error creating archive",
     });
-  }
+  });
+  res.setHeader("Content-Type", "application/zip");
+  archive.pipe(res);
+  archive.finalize();
 };
 const downloadZipTestCase = async (req, res) => {
-  const { problemId } = req.params;
-  const testCases = await testCaseService.getTestCaseByProblemId(problemId);
+  const { problemSlug } = req.params;
+  const testCases = await testCaseService.getTestCaseByProblemSlug(problemSlug);
+
   if (!testCases) {
     return res.status(HTTP_STATUS.NOT_FOUND.code).json({
       success: false,
@@ -209,7 +221,9 @@ const downloadZipTestCase = async (req, res) => {
     testCases.path
   );
   try {
-    return res.download(testCasePath + ".zip");
+    return res.download(testCasePath, testCases.path, (err) => {
+      if (err) console.error("Error downloading file:", err);
+    });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
@@ -241,7 +255,7 @@ const updateTestCase = async (req, res) => {
 export default {
   createTestCase,
   deleteTestCase,
-  getTestCaseByProblemId,
+  getTestCaseByProblemSlug,
   updateTestCase,
   downloadZipTestCase,
   downloadTestCaseByIndex,

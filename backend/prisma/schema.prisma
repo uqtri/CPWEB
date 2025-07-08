@@ -130,7 +130,7 @@ model TestCase {
   
   path      String
   problem Problem @relation(fields: [problemId], references: [id]) 
-  problemId  Int @unique
+  problemId  Int 
   
   isDeleted Boolean @default(false)
 

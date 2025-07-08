@@ -1,17 +1,32 @@
 import {
   createTestCase,
+  getTestCaseByProblemSlug,
   getTestCaseList,
   updateTestCase,
 } from "@/api/testCase.api";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-export function useTestCases({ problemId }: { problemId?: number }) {
+export function useTestCase({
+  problemId,
+  slug,
+}: {
+  problemId?: number;
+  slug?: string;
+}) {
   const queryClient = useQueryClient();
-  const getTestCaseListQuery = useQuery({
-    queryKey: ["test-cases", problemId],
+
+  const getTestCaseByProblemSlugQuery = useQuery({
+    queryKey: ["test-cases", slug],
     queryFn: () => {
-      return getTestCaseList(problemId!);
+      return getTestCaseByProblemSlug(slug!);
     },
+    enabled: !!slug,
   });
+  // const getTestCaseListQuery = useQuery({
+  //   queryKey: ["test-cases", problemId],
+  //   queryFn: () => {
+  //     return getTestCaseList(problemId!);
+  //   },
+  // });
 
   const createTestCaseMutation = useMutation({
     mutationFn: (data: FormData) => {
@@ -30,7 +45,7 @@ export function useTestCases({ problemId }: { problemId?: number }) {
       queryClient.invalidateQueries({ queryKey: ["test-cases"] });
     },
   });
-
+  
   // const deleteTestCaseMutation = useMutation({
   //   mutationFn: (id: number) => {
   //     return deleteTestCase(id);
@@ -41,8 +56,9 @@ export function useTestCases({ problemId }: { problemId?: number }) {
   // });
 
   return {
-    getTestCaseListQuery,
+    // getTestCaseListQuery,
     createTestCaseMutation,
     updateTestCaseMutation,
+    getTestCaseByProblemSlugQuery,
   };
 }

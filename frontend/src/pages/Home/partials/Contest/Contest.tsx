@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import ContestCard from "../../../../components/ContestCard/ContestCard";
-import Button from "../../../../components/Button/Button";
+import { Button } from "@/ui/Button";
 
 export default function Contest() {
   return (
@@ -10,7 +10,7 @@ export default function Contest() {
         Tham gia các cuộc thi lập trình để thử thách bản thân, nâng cao kỹ năng
         và cơ hội thắng giải thưởng hấp dẫn.
       </p>
-      <div className="contests grid grid-cols-1 gap-4 mt-4">
+      <div className="contests grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-4">
         <ContestCard
           status="Đang diễn ra"
           title="CodeForge Cup 2025"
@@ -48,12 +48,10 @@ export default function Contest() {
           participants={1000}
         />
       </div>
-      <div className="mt-6 p-4 font-bold">
-        <Button
-          label="Tham gia tất cả cuộc thi"
-          link="/contest"
-          color="primary"
-        />
+      <div className="mt-6 p-4 font-bold flex">
+        <Link to={"/contest"} className="mx-auto">
+          <Button content="Tham gia tất cả cuộc thi" />
+        </Link>
       </div>
     </div>
   );

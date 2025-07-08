@@ -9,9 +9,17 @@ export const getTestCaseList = async (
   problemId: number
 ): Promise<TestCase[]> => {
   const response = await axiosInstance.get(
-    `/test-cases/problemId:/${problemId}`
+    `/test-cases/problemId/${problemId}`
   );
   return response.data;
+};
+export const getTestCaseByProblemSlug = async (
+  problemSlug: string
+): Promise<any> => {
+  const response = await axiosInstance.get(
+    `/test-cases/problemSlug/${problemSlug}`
+  );
+  return response.data.data;
 };
 export const getTestCaseById = async (id: number): Promise<TestCase> => {
   const response = await axiosInstance.get(`/test-cases/${id}`);

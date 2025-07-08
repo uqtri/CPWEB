@@ -1,8 +1,15 @@
 import { useProblem } from "@/hooks/useProblem";
-import { useTestCases } from "@/hooks/useTestCases";
+import { useTestCase } from "@/hooks/useTestCases";
 import { Problem } from "@/types/problem";
 import { Button } from "@/ui/Button";
-import { Table, TableHead, TableRow } from "@/ui/Table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/ui/Table";
 import { Newspaper, Settings } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -14,16 +21,20 @@ export default function TestCaseDetail() {
   const { getProblemBySlugQuery } = useProblem({ slug: slug });
   const problem = getProblemBySlugQuery.data as Problem;
 
-  console.log("Problem data:", problem);
-  const { createTestCaseMutation } = useTestCases({
+  const { getTestCaseByProblemSlugQuery } = useTestCase({
+    slug: slug,
+  });
+
+  const testCasesData = getTestCaseByProblemSlugQuery.data || {};
+
+  const { createTestCaseMutation } = useTestCase({
     problemId: problem?.id,
   });
   const handleUpload = async () => {
     const form = document.getElementById("test-cases-form") as HTMLFormElement;
-    console.log("Form element:", form);
+
     const formData = new FormData(form);
 
-    console.log("Form data:", formData.get("test-cases"));
     if (!formData.has("test-cases")) {
       toast.error("Vui lòng chọn file zip để tải lên.");
       return;
@@ -63,7 +74,10 @@ export default function TestCaseDetail() {
             <h2 className="font-serif">Tải zip file lên</h2>
             <div className="flex items-center gap-4">
               <p className="p-3 rounded-md shadow-md bg-gray-100">
-                Hiện tại: <span className="font-light">testcase.zip</span>
+                Hiện tại:{" "}
+                <span className="font-light">
+                  {testCasesData?.testCases?.path || "default.zip"}
+                </span>
               </p>
               <form id="test-cases-form" className="">
                 <input
@@ -80,24 +94,57 @@ export default function TestCaseDetail() {
               >
                 Tải lên
               </label>
+              <a
+                href={
+                  import.meta.env.VITE_BACKEND_URL +
+                  "/test-cases/problemSlug/" +
+                  slug +
+                  "/download"
+                }
+              >
+                <Button content="Tải zip file" className="px-7 py-4"></Button>
+              </a>
             </div>
           </div>
         </div>
       </div>
       <div className="shadow-md rounded-lg mt-5 p-3">
-        <h1 className="flex gap-4 font-semibold">
+        <h1 className="flex gap-4 font-semibold mb-4">
           <Newspaper />
           Danh sách testcase
         </h1>
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
               <TableHead>STT</TableHead>
-              <TableHead>Input</TableHead>
-              <TableHead>Output</TableHead>
+              <TableHead>Tên thư mục</TableHead>
               <TableHead>Thao tác</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
+          <TableBody>
+            {testCasesData?.directories?.map((testCase: any, index: number) => (
+              <TableRow key={index}>
+                <TableCell className="font-semibold">{index + 1}</TableCell>
+                <TableCell>
+                  <span className="font-light">{testCase.name}</span>
+                </TableCell>
+                <TableCell>
+                  <a
+                    href={
+                      import.meta.env.VITE_BACKEND_URL +
+                      "/test-cases/problemSlug/" +
+                      slug +
+                      "/download" +
+                      "/" +
+                      index.toString()
+                    }
+                  >
+                    <Button content={"Tải testcase"}></Button>
+                  </a>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
       </div>
     </div>

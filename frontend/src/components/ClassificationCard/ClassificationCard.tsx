@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
-import Button from "../Button/Button";
+import { Button } from "@/ui/Button";
+import { Link } from "react-router-dom";
 
 type ClassificationCardProps = {
   title: string;
@@ -11,6 +12,7 @@ type ClassificationCardProps = {
   numberOfProblems: number;
   link: string;
 };
+
 export default function ClassificationCard({
   title,
   icon,
@@ -29,7 +31,7 @@ export default function ClassificationCard({
       className="rounded-md  shadow-xl w-full overflow-hidden"
     >
       <div
-        className={`w-full rounded-md py-3 px-4 flex items-center bg-[var(${color})] text-white justify-between`}
+        className={`w-full rounded-md py-3 px-4 flex items-center bg-[var(${color})] text-black justify-between`}
       >
         <p className="font-bold text-xl">{title}</p>
         {icon}
@@ -57,7 +59,9 @@ export default function ClassificationCard({
           ))}
         </div>
         <div className="mt-4">
-          <Button label="Xem chi tiết" color="primary" link={link} />
+          <Link to={link}>
+            <Button content="Xem chi tiết" className="w-full" />
+          </Link>
         </div>
       </div>
     </motion.div>

@@ -1,7 +1,12 @@
-const getTestCaseByProblemId = async (problemId) => {
+import { prisma } from "../prisma/prisma-client.js";
+const getTestCaseByProblemSlug = async (problemSlug) => {
   try {
-    const testCases = await prisma.testCase.findUnique({
-      where: { problemId: parseInt(problemId) },
+    const testCases = await prisma.testCase.findFirst({
+      where: {
+        problem: {
+          slug: problemSlug,
+        },
+      },
       include: {
         problem: true,
       },
@@ -13,5 +18,5 @@ const getTestCaseByProblemId = async (problemId) => {
 };
 
 export default {
-  getTestCaseByProblemId,
+  getTestCaseByProblemSlug,
 };

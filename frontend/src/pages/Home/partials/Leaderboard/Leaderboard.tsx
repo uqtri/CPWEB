@@ -57,7 +57,7 @@ export default function Leaderboard() {
         Vinh danh những lập trình viên xuất sắc nhất trên CodeForge với thành
         tích đáng nể.
       </p>
-      <div className="contests grid grid-cols-1 gap-4 mt-4">
+      <div className="contests grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
         <RankingCard user="" color="yellow" ranking={1} icon={<Trophy />} />
         <RankingCard user="" color="green" ranking={2} icon={<Trophy />} />
         <RankingCard user="" color="primary" ranking={3} icon={<Trophy />} />

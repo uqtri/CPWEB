@@ -1,18 +1,15 @@
 // components/ui/table.tsx
 import * as React from "react";
-import { cn } from "@/lib/utils"; // Nếu bạn đã có hàm cn, nếu chưa có có thể bỏ.
+import { cn } from "@/lib/utils";
 
 export function Table({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="w-full overflow-auto border rounded-lg">
+    <div className="w-full overflow-auto rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
       <table
-        className={cn(
-          "w-full caption-bottom text-sm text-left border-collapse",
-          className
-        )}
+        className={cn("w-full text-sm text-left border-collapse", className)}
         {...props}
       />
     </div>
@@ -25,7 +22,10 @@ export function TableHeader({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
-      className={cn("bg-gray-50 dark:bg-gray-800", className)}
+      className={cn(
+        "bg-gray-100 dark:bg-gray-800 sticky top-0 z-10",
+        className
+      )}
       {...props}
     />
   );
@@ -44,7 +44,7 @@ export function TableFooter({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tfoot
-      className={cn("bg-gray-50 font-medium dark:bg-gray-800", className)}
+      className={cn("bg-gray-100 dark:bg-gray-800 font-medium", className)}
       {...props}
     />
   );
@@ -57,7 +57,7 @@ export function TableRow({
   return (
     <tr
       className={cn(
-        "border-b hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors",
+        "border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
         className
       )}
       {...props}
@@ -72,7 +72,7 @@ export function TableHead({
   return (
     <th
       className={cn(
-        "px-4 py-2 text-gray-700 dark:text-gray-300 font-semibold",
+        "px-6 py-3 text-gray-700 dark:text-gray-300 font-bold font-bold whitespace-nowrap",
         className
       )}
       {...props}
@@ -86,7 +86,10 @@ export function TableCell({
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("px-4 py-2 text-gray-800 dark:text-gray-200", className)}
+      className={cn(
+        "px-6 py-3 text-gray-800 dark:text-gray-200 whitespace-nowrap",
+        className
+      )}
       {...props}
     />
   );
