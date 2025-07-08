@@ -113,8 +113,11 @@ const updateProblem = async (req, res) => {
   const { id } = req.params;
 
   let problemData = req.body;
+
+  const payload = parseJwt(req.cookies.jwt);
+
   if (!problemData.userId) {
-    problemData.userId = 1; // Default to admin user for testing
+    problemData.userId = payload.id;
   }
   problemData.slug = slug(problemData.title);
   try {

@@ -1,6 +1,7 @@
 import submissionService from "./submisison.js";
 import problemService from "./problems.js";
 import submissionResultsService from "./submissionResults.js";
+import userSolvedProblemService from "./userSolvedProblem.js";
 import fs from "fs";
 import { promisify } from "util";
 import { rootPath } from "../utils/path.js";
@@ -65,6 +66,7 @@ export const judgeSubmission = async (submissionId) => {
   }
 
   let index = 0;
+  let accepted = true;
   for (const testCase of testCases) {
     const inputFile = path.join("..", "test-cases", testCase, "input.INP");
     const outputFile = path.join("..", "test-cases", testCase, "output.OUT");
@@ -80,6 +82,7 @@ export const judgeSubmission = async (submissionId) => {
       emitTestResults("submission-" + submission.id.toString(), data);
       await submissionResultsService.createSubmissionResult(data);
     } catch (error) {
+      accepted = false;
       let data = {
         index: index + 1,
         submissionId: submission.id,
@@ -99,7 +102,12 @@ export const judgeSubmission = async (submissionId) => {
     }
     index++;
   }
-
+  if (accepted) {
+    await userSolvedProblemService.createUserSolvedProblem({
+      userId: submission.userId,
+      problemId: submission.problemId,
+    });
+  }
   // remove the container
   await shellCommand(`docker rm -f submission-${submissionId}`);
 };

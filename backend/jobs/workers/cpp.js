@@ -10,10 +10,6 @@ import submissionResultsController from "../../controllers/submissionResults.js"
 import { emitTestResults } from "../../socket/emitters/submission.js";
 import judgeService from "../../services/judge.js";
 
-const readFileAsync = promisify(fs.readFile);
-const writeFileAsync = promisify(fs.writeFile);
-const readDirAsync = promisify(fs.readdir);
-
 const cppWorker = new Worker(
   "cpp-submissions",
   async (job) => {
@@ -21,8 +17,7 @@ const cppWorker = new Worker(
     const submissionId = data.submissionId;
     try {
       await judgeService.judgeSubmission(submissionId);
-    } catch (error) {
-    }
+    } catch (error) {}
   },
   { connection }
 );

@@ -19,7 +19,18 @@ const getProblemById = async (id) => {
     throw new Error("Error fetching problem by ID: " + error.message);
   }
 };
+const deleteProblemByProblemId = async (problemId) => {
+  try {
+    const problem = await prisma.problem.delete({
+      where: { id: parseInt(problemId) },
+    });
+    return problem;
+  } catch (error) {
+    throw new Error("Error deleting problem by ID: " + error.message);
+  }
+};
 export default {
   getProblemBySlug,
   getProblemById,
+  deleteProblemByProblemId,
 };
