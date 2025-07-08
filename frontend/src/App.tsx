@@ -6,8 +6,14 @@ import { useAppStore } from "./store/index";
 import { ToastContainer } from "react-toastify";
 function App() {
   const connectSocket = useAppStore((state) => state.connectSocket);
+  const login = useAppStore((state) => state.login);
+
   useEffect(() => {
-    connectSocket();
+    const init = async () => {
+      await login({ email: "", password: "" });
+      connectSocket();
+    };
+    init();
   }, []);
   return (
     <>

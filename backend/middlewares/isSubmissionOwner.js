@@ -17,8 +17,6 @@ const isSubmissionOwner = async (req, res, next) => {
       message: "Submission ID must be a number",
     });
   }
-  console.log(req.cookie, "!!v");
-  console.log(req.cookies, "!!1");
   const payload = parseJwt(req.cookies.jwt);
 
   const user = await prisma.submission.findUnique({
@@ -39,10 +37,7 @@ const isSubmissionOwner = async (req, res, next) => {
       },
     },
   });
-  console.log(user);
-  console.log(payload);
   if (!payload || payload.username !== user.user.username) {
-    console.log("FAILED");
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
       message: "You are not the owner of this submission",

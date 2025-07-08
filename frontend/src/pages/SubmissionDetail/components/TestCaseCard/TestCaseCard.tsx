@@ -29,11 +29,11 @@ export default function TestCaseCard({
 }: TestCaseCardProps) {
   const [expanded, setExpanded] = useState(false);
   let color: "green" | "red" | "yellow" | "gray" = "green";
-  if (result === "WA") {
+  if (result === "Wrong Answer" || result === "WA") {
     color = "red";
-  } else if (result === "RE") {
+  } else if (result === "RE" || result === "Runtime Error") {
     color = "yellow";
-  } else if (result === "TLE") {
+  } else if (result === "TLE" || result === "Time Limit Exceeded") {
     color = "gray";
   }
 
@@ -44,21 +44,21 @@ export default function TestCaseCard({
           {expanded ? (
             <ChevronDown
               onClick={() => {
-                setExpanded(!expanded);
+                // setExpanded(!expanded);
               }}
             />
           ) : (
             <ChevronRight
               onClick={() => {
-                setExpanded(!expanded);
+                // setExpanded(!expanded);
               }}
             />
           )}{" "}
           {result === "Accepted" ? (
             <CircleCheckBig color="green" />
-          ) : result === "WA" ? (
+          ) : result === "Wrong Answer" ? (
             <CircleX color="red" />
-          ) : result === "RE" ? (
+          ) : result === "Runtime Error" ? (
             <TriangleAlert color="orange" />
           ) : (
             <Timer color="gray" />
@@ -73,14 +73,14 @@ export default function TestCaseCard({
             </span>
           </span>
         </div>
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <span className="text-sm font-semibold text-gray-500">{time} ms</span>
           <span className="text-sm font-semibold text-gray-500">
             {space} MB
           </span>
-        </div>
+        </div> */}
       </div>
-      {expanded && (
+      {/* {expanded && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <p className="text-sm font-semibold text-gray-500">Input</p>
@@ -95,7 +95,7 @@ export default function TestCaseCard({
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

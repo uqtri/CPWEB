@@ -4,7 +4,7 @@ import { isSubmissionOwner } from "../middlewares/isSubmissionOwner.js";
 const router = express.Router();
 
 router.get(
-  "/:submissionId",
+  "/submissionId/:submissionId",
   isSubmissionOwner,
   submissionResultsController.getSubmissionResultsBySubmissionsId
 );

@@ -3,10 +3,19 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import * as dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import { parseJwt } from "../utils/parseJwt.js";
 dotenv.config();
 
 const login = async (req, res) => {
   const { email, password } = req.body;
+  const token = req.cookies.jwt;
+
+  const payload = parseJwt(token);
+  if (payload)
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      data: payload,
+    });
 
   if (!email || !password) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
@@ -37,10 +46,13 @@ const login = async (req, res) => {
     const token = jwt.sign({ ...user, password: "" }, process.env.JWT_SECRET, {
       // expiresIn: "2d",
     });
-    res.setHeader("Set-Cookie", `jwt=${token}`);
+
+    res.setHeader(
+      "Set-Cookie",
+      `jwt=${token}; HttpOnly; Path=/; Max-Age=432000; SameSite=None; Secure`
+    );
     return res.status(HTTP_STATUS.OK.code).json({
-      success: true,
-      data: { user, token },
+      data: user,
     });
   } catch (err) {
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR.code).json({
@@ -50,4 +62,14 @@ const login = async (req, res) => {
   }
 };
 
-export default { login };
+const logout = async (req, res) => {
+  res.setHeader(
+    "Set-Cookie",
+    "jwt=; HttpOnly; Path=/; Max-Age=0; SameSite=None; Secure"
+  );
+  return res.status(HTTP_STATUS.OK.code).json({
+    success: true,
+    message: "Logged out successfully",
+  });
+};
+export default { login, logout };

@@ -1,3 +1,5 @@
+import { useProblem } from "@/hooks/useProblem";
+import { Problem } from "@/types/problem";
 import { Select, Tag, Slider } from "antd";
 import type { SelectProps } from "antd";
 import { CircleCheck } from "lucide-react";
@@ -9,7 +11,7 @@ const categories: SelectProps["options"] = [
   { value: "Số học" },
 ];
 
-const problemset: any[] = [
+const problems: any[] = [
   {
     id: 1,
     title: "Two Sum",
@@ -234,9 +236,12 @@ const problemset: any[] = [
 // const fields = []
 export default function Problemset() {
   const navigate = useNavigate();
+  const { getProblemListQuery } = useProblem({});
+  const problems = getProblemListQuery?.data || [];
+  console.log(problems);
   return (
     <div className="mt-[62px] px-10 py-5 lg:py-5 lg:px-10">
-      <p className="text-3xl font-semibold border-b pb-1">Problemset</p>
+      <p className="text-3xl font-semibold border-b pb-1">problems</p>
       <div className="flex flex-col lg:flex-row lg:gap-4 justify-center mt-4">
         <div className="grow order-2 lg:order-1 sm:mt-10 lg:mt-0">
           <table className="w-full">
@@ -249,14 +254,14 @@ export default function Problemset() {
               </tr>
             </thead>
             <tbody>
-              {problemset &&
-                problemset.map((value, index) => {
+              {problems &&
+                problems.map((value: Problem, index: number) => {
                   return (
                     // <Link to={`/problem/${value.id}`}>
                     <tr
                       className="hover:bg-gray-100 bg-white hover:cursor-pointer"
                       onClick={() => {
-                        navigate(`/problem/${value.id}`);
+                        navigate(`/problem/${value.slug}`);
                       }}
                     >
                       <td className="font-bold py-4">{value.title}</td>
@@ -308,7 +313,7 @@ export default function Problemset() {
                 }}
               />
             </div>
-            <a href="/problemset">
+            <a href="/problems">
               <button className="text-primary border border-primary rounded-md px-4 py-2 mt-4 w-full cursor-pointer">
                 Go
               </button>

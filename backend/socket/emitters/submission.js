@@ -1,9 +1,8 @@
 import { socketServer } from "../socket.js";
 
-const emitTestResults = (id, data) => {
-  console.log("EMITTING TEST RESULTS", id, data);
-  let room = id.toString();
-  socketServer.to(room).emit("getSubmissionResult", { result: data });
+const emitTestResults = (roomId, data) => {
+  console.log("Emitting test results to room:", roomId, "with data:", data);
+  socketServer.to(roomId).emit("getSubmissionResult", { result: data });
 };
 
 export { emitTestResults };

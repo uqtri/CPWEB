@@ -4,6 +4,7 @@ import Button from "../../components/Button/Button";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Markdown from "../../components/Markdown/Markdown";
 import type { SelectProps } from "antd";
+import { useProblem } from "@/hooks/useProblem";
 
 const categories: SelectProps["options"] = [
   { value: "Dynamic programming" },
@@ -74,54 +75,57 @@ Yes
 
 export default function ProblemDetail() {
   const location = useLocation();
-  const { problemId } = useParams();
-  const problem: Problem = {
-    name: "Bài toán mẫu",
-    description: "Đây là một bài toán mẫu để kiểm tra hệ thống.",
-    timeLimit: 2,
-    memoryLimit: 256,
-    input: "stdin",
-    output: "stdout",
-    points: 100,
-    difficulty: 3,
-  };
+  const { problemSlug } = useParams();
+  const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
 
+  // const problem: Problem = {
+  //   name: "Bài toán mẫu",
+  //   description: "Đây là một bài toán mẫu để kiểm tra hệ thống.",
+  //   timeLimit: 2,
+  //   memoryLimit: 256,
+  //   input: "stdin",
+  //   output: "stdout",
+  //   points: 100,
+  //   difficulty: 3,
+  // };
+  const problem = getProblemBySlugQuery?.data;
+  console.log("Problem:", problem);
   return (
     <div className="problem-detail mt-20 p-4">
-      <p className="text-3xl font-semibold border-b pb-1">{problem.name}</p>
+      <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 p-4 bg-yellow/20 rounded-md gap-4 mt-4">
         <div className="flex items-center gap-2">
           <Check />
           <p>
-            <span className="font-bold">Points:</span> {problem.points}
+            <span className="font-bold">Điểm số:</span> {problem?.points}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Clock />
           <p>
-            <span className="font-bold">Time limit:</span> {problem.timeLimit}{" "}
-            giây
+            <span className="font-bold">Giới hạn thời gian:</span>{" "}
+            {problem?.executionTime} giây
           </p>
         </div>
         <div className="flex items-center gap-2">
           <MenuIcon />
           <p>
             <span className="font-bold">Memory limit:</span>{" "}
-            {problem.memoryLimit} MB
+            {problem?.memoryLimit} MB
           </p>
         </div>
         <div className="flex items-center gap-2">
           <FileArchive />
-          <p>
+          {/* <p>
             <span className="font-bold">Input:</span> {problem.input}
-          </p>
+          </p> */}
         </div>
         <div className="flex items-center gap-2">
           <FileArchive />
-          <p>
+          {/* <p>
             <span className="font-bold">Output:</span> {problem.output}
-          </p>
+          </p> */}
         </div>
         <div>
           <Button
@@ -134,7 +138,7 @@ export default function ProblemDetail() {
       </div>
 
       <div className="prose max-w-none mt-6">
-        <Markdown markdown={markdown} />
+        <Markdown markdown={problem?.content || ""} />
       </div>
     </div>
   );

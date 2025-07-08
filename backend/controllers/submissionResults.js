@@ -21,7 +21,6 @@ const createSubmissionResult = async (data) => {
 const getSubmissionResultsBySubmissionsId = async (req, res) => {
   try {
     let { submissionId } = req.params;
-
     if (!submissionId) {
       return res
         .status(HTTP_STATUS.BAD_REQUEST.code)

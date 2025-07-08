@@ -8,18 +8,20 @@ export const getSubmissionByProblemId = async (
   problemId: number,
   params: any
 ): Promise<Submission[]> => {
-  const response = await axiosInstance.get(
-    `/submissions/problemId:${problemId}`,
-    { params }
-  );
+  const response = await axiosInstance.get(`/submissions`, { params });
   return response.data;
 };
-
+export const getSubmissionById = async (
+  submissionId: number
+): Promise<Submission> => {
+  const response = await axiosInstance.get(`/submissions/${submissionId}`);
+  return response.data.data;
+};
 export const createSubmissions = async (
   data: CreateSubmissionData
 ): Promise<Submission> => {
   const response = await axiosInstance.post("/submissions", data);
-  return response.data;
+  return response.data.data;
 };
 export const updateSubmission = async (
   id: number,

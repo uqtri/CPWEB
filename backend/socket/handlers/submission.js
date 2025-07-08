@@ -3,11 +3,11 @@ export const handleSubmission = ({ socket, io }) => {
     console.log("JOINED SUBMISSION", data);
     const submissionId = data.submissionId;
     const userId = socket.handshake.query.userId;
-    socket.join(data.submissionId.toString());
+    socket.join(`submission-${data.submissionId.toString()}`);
   });
   socket.on("submission:leave", async (data) => {
     console.log("LEFT SUBMISSION", data);
     const submissionId = data.submissionId;
-    socket.leave(data.submissionId);
+    socket.leave(`submission + ${data.submissionId.toString()}`);
   });
 };

@@ -25,23 +25,14 @@ export default function Login() {
       label: "Password",
     },
   ];
-  const openNotification = (
-    type: "success" | "info" | "warning" | "error",
-    message: string
-  ) => {
-    api[type]({
-      message: `Notification`,
-      description: `${message}`,
-      placement: "topRight",
-    });
-  };
+
   console.log("user", user);
 
   useEffect(() => {
     if (user) {
       navigate("/");
     }
-  }, [user]);
+  });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);

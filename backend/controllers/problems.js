@@ -1,16 +1,18 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import { slug } from "../libs/slug.js";
+import { parseJwt } from "../utils/parseJwt.js";
 
 const createProblem = async (req, res) => {
   let problemData = req.body;
-  console.log("Problem Data:", problemData);
+
+  const payload = parseJwt(req.cookies.jwt);
+
   if (!problemData.userId) {
-    problemData.userId = 1; // Default to admin user for testing
+    problemData.userId = payload.id;
   }
 
   problemData.slug = slug(problemData.title);
-  console.log("Problem Data after slug:", problemData);
   try {
     const problem = await prisma.problem.create({
       data: {
@@ -111,7 +113,6 @@ const updateProblem = async (req, res) => {
   const { id } = req.params;
 
   let problemData = req.body;
-  console.log("Problem Data:", problemData);
   if (!problemData.userId) {
     problemData.userId = 1; // Default to admin user for testing
   }

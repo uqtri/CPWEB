@@ -59,6 +59,7 @@ CREATE TABLE "Problem" (
 CREATE TABLE "ProblemCategory" (
     "problemId" INTEGER NOT NULL,
     "categoryId" INTEGER NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "ProblemCategory_pkey" PRIMARY KEY ("problemId","categoryId")
 );
@@ -107,9 +108,9 @@ CREATE TABLE "Contest" (
 -- CreateTable
 CREATE TABLE "TestCase" (
     "id" SERIAL NOT NULL,
-    "input" TEXT NOT NULL,
-    "output" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
     "problemId" INTEGER NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "TestCase_pkey" PRIMARY KEY ("id")
 );

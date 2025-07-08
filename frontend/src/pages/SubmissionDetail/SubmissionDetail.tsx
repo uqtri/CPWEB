@@ -3,23 +3,19 @@ import { useEffect, useState } from "react";
 import { useAppStore } from "../../store/index";
 import { useParams, useSearchParams } from "react-router-dom";
 import TestCaseCard from "./components/TestCaseCard/TestCaseCard";
+import { getSubmissionById } from "@/api/submissions.api";
+import { getSubmissionResultBySubmissionId } from "@/api/submissionResult.api";
+import { Submission } from "@/types/submission";
 export default function SubmissionDetail() {
   const socket = useAppStore((state) => state.socket);
-
+  const [submission, setSubmission] = useState<Submission | null>(null);
   const [submissionResult, setSubmissionResult] = useState<any[]>([]);
-  const [testCases, setTestCases] = useState<[]>([]);
+  const [status, setStatus] = useState<string>("pending");
+
   let { submissionId } = useParams();
   submissionId = parseInt(submissionId as string) as any;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const problemId = searchParams.get("problemId");
-
   useEffect(() => {
-    console.log("KKKK");
     if (socket) {
-      console.log("ZO ROI");
-      socket.emit("submission:join", {
-        submissionId: submissionId,
-      });
       socket.on("getSubmissionResult", (data: any) => {
         console.log("getSubmissionResult", data.result);
         console.log("submissionResult", [...submissionResult, data.result]);
@@ -31,134 +27,82 @@ export default function SubmissionDetail() {
       };
     }
   }, [socket]);
-  // useEffect(() => {
-  //   const fetchSubmissionResult = async () => {
-  //     const response = await fetch(
-  //       `http://localhost:5000/api/v1/submission-results/${submissionId}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //       }
-  //     ).then((res) => res.json());
-  //     if (response.success) {
-  //       setSubmissionResult(response.data);
-  //     }
-  //   };
-  //   const fetchTestCases = async () => {
-  //     const response = await fetch(
-  //       `http://localhost:5000/api/v1/test-cases/${problemId}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     ).then((res) => res.json());
-  //     if (response.success) {
-  //       setTestCases(response.data);
-  //     }
-  //   };
-  //   fetchSubmissionResult();
-  // }, []);
+
   useEffect(() => {
-    const fetchTestCases = async () => {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/test-cases/${problemId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      ).then((res) => res.json());
-      if (response.success) {
-        setTestCases(response.data);
+    const fetchSubmissionResultAndSubmission = async () => {
+      try {
+        console.log("submissionId", submissionId);
+        const submissionResult = await getSubmissionResultBySubmissionId(
+          parseInt(submissionId!)
+        );
+        const submission = await getSubmissionById(parseInt(submissionId!));
+        console.log("submissionId vv", submission);
+        console.log("submissionResult vv", submissionResult);
+
+        setSubmission(submission);
+        setSubmissionResult(submissionResult);
+      } catch (error) {
+        console.error("Error fetching submission:", error);
       }
     };
-
-    fetchTestCases();
-  }, []);
-  const submission = {
-    id: 12345,
-    user: "coder123",
-    problem: "A - Sum It Up",
-    language: "C++17",
-    verdict: "Accepted",
-    time: "46 ms",
-    memory: "12 MB",
-    submittedAt: "2025-05-06 14:32",
-    testcaseResults: [
-      { id: 1, verdict: "Accepted", time: "10 ms", memory: "3 MB" },
-      { id: 2, verdict: "Accepted", time: "12 ms", memory: "4 MB" },
-      { id: 3, verdict: "Accepted", time: "24 ms", memory: "5 MB" },
-      { id: 4, verdict: "WA", time: "24 ms", memory: "5 MB" },
-      { id: 3, verdict: "TLE", time: "24 ms", memory: "5 MB" },
-      { id: 3, verdict: "RE", time: "24 ms", memory: "5 MB" },
-    ],
-    sourceCode: `#include <iostream>
-using namespace std;
-int main() {
-  int a, b;
-  cin >> a >> b;
-  cout << a + b << endl;
-  return 0;
-}`,
-  };
+    fetchSubmissionResultAndSubmission();
+  }, [submissionId]);
+  console.log();
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Title */}
-      <h1 className="text-2xl font-bold mb-6">Submission #{submission.id}</h1>
+      <h1 className="text-2xl font-bold mb-6">Submission #{submission?.id}</h1>
 
       {/* Submission Info */}
       <div className="bg-white rounded-xl shadow p-4 mb-6 border">
         <h2 className="text-lg font-semibold mb-4">Submission Info</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
           <div>
-            <span className="font-medium">User:</span> {submission.user}
+            <span className="font-medium">User:</span>{" "}
+            {submission?.user?.username}
           </div>
           <div>
-            <span className="font-medium">Problem:</span> {submission.problem}
+            <span className="font-medium">Problem:</span>{" "}
+            {submission?.problem?.title}
           </div>
           <div>
-            <span className="font-medium">Language:</span> {submission.language}
+            <span className="font-medium">Language:</span>{" "}
+            {submission?.language}
           </div>
           <div>
-            <span className="font-medium">Verdict:</span>
+            <span className="font-medium">Kết quả:</span>
             <span
               className={`ml-2 px-2 py-1 rounded text-white text-xs ${
-                submission.verdict === "Accepted"
-                  ? "bg-green-600"
-                  : "bg-red-600"
+                status === "Accepted" ? "bg-green-600" : "bg-red-600"
               }`}
             >
-              {submission.verdict}
+              {status}
             </span>
           </div>
           <div>
-            <span className="font-medium">Time:</span> {submission.time}
+            <span className="font-medium">Thời gian:</span>{" "}
+            {submission?.problem?.executionTime} giây
           </div>
           <div>
-            <span className="font-medium">Memory:</span> {submission.memory}
+            <span className="font-medium">Memory:</span>{" "}
+            {submission?.problem?.memoryLimit} MB
           </div>
-          <div>
+          {/* <div>
             <span className="font-medium">Submitted at:</span>{" "}
             {submission.submittedAt}
-          </div>
+          </div> */}
         </div>
       </div>
 
       {/* Testcase Results */}
       <div className="bg-white rounded-xl shadow p-4 mb-6 border">
-        <h2 className="text-lg font-semibold mb-4">Testcase Results</h2>
+        <h2 className="text-lg font-semibold mb-4">Kết quả chấm bài</h2>
         <div className="divide-y">
-          {submission.testcaseResults.map((test) => (
+          {submissionResult.map((test) => (
             <div key={test.id} className="py-2 flex justify-between text-sm">
               <TestCaseCard
-                id={test.id}
-                result={test.verdict}
+                id={test.index}
+                result={test.result}
                 input={`5\n1 2 3 4 5`}
                 output="15"
                 time={0.25}
@@ -174,7 +118,7 @@ int main() {
         <h2 className="text-lg font-semibold mb-4">Source Code</h2>
         <div className="bg-gray-100 p-3 rounded overflow-auto max-h-96">
           <pre className="text-sm text-gray-800 whitespace-pre-wrap">
-            {submission.sourceCode}
+            {submission?.code}
           </pre>
         </div>
       </div>

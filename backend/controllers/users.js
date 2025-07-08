@@ -48,9 +48,16 @@ const createUser = async (req, res) => {
     let password = userData.password;
     password = await bcrypt.hash(password, 10);
     userData.password = password;
-    userData.roleId = 2;
+
     const user = await prisma.user.create({
-      data: userData,
+      data: {
+        ...userData,
+        role: {
+          connect: {
+            name: userData.role || "user",
+          },
+        },
+      },
     });
 
     return res.status(HTTP_STATUS.CREATED.code).json({

@@ -49,7 +49,6 @@ const getCategoryById = async (req, res) => {
   }
 };
 const getCategories = async (req, res) => {
-  console.log("TRI");
   try {
     const categories = await prisma.category.findMany({});
 

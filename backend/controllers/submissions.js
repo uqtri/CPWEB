@@ -1,7 +1,43 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import { flowProducer } from "../jobs/flow/flow.js";
+import { parseJwt } from "../utils/parseJwt.js";
 
+const getSubmissionById = async (req, res) => {
+  const submissionId = parseInt(req.params.submissionId);
+  if (isNaN(submissionId)) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: "Invalid submission ID",
+    });
+  }
+  try {
+    const submission = await prisma.submission.findUnique({
+      where: {
+        id: submissionId,
+      },
+      include: {
+        problem: true,
+        user: true,
+      },
+    });
+    if (!submission) {
+      return res.status(HTTP_STATUS.NOT_FOUND.code).json({
+        success: false,
+        message: "Submission not found",
+      });
+    }
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      data: submission,
+    });
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
 const getSubmissionsByUserId = async (req, res) => {
   const userId = parseInt(req.params.userId);
 
@@ -30,10 +66,17 @@ const getSubmissionsByUserId = async (req, res) => {
 };
 
 const createSubmission = async (req, res) => {
-  const userId = parseInt(req.params.userId);
   const data = req.body;
+  const payload = parseJwt(req.cookies.jwt);
+  if (!payload) {
+    return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({
+      success: false,
+      message: "Unauthorized. Please log in.",
+    });
+  }
+  const userId = payload.id;
   data.userId = userId;
-  
+
   if (isNaN(userId)) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
@@ -45,34 +88,14 @@ const createSubmission = async (req, res) => {
     const submission = await prisma.submission.create({
       data,
     });
-    const testcases = await prisma.testCase.findMany({
-      where: {
-        problemId: submission.problemId,
-      },
-      select: {
-        id: true,
-      },
-    });
-    const jobs = testcases.map((testcase) => {
-      return {
-        name: `testcase-${testcase.id}`,
-        data: {
-          submissionId: submission.id,
-          testcaseId: testcase.id,
-        },
-        queueName: "cpp-testCases",
-      };
-    });
 
-    const flow = await flowProducer.add({
+    await flowProducer.add({
       name: `submission-${submission.id}`,
       data: {
         submissionId: submission.id,
       },
       queueName: "cpp-submissions",
-      children: jobs,
     });
-    console.log("Flow created:");
 
     return res.status(HTTP_STATUS.OK.code).json({
       data: submission,
@@ -85,4 +108,4 @@ const createSubmission = async (req, res) => {
     });
   }
 };
-export default { createSubmission, getSubmissionsByUserId };
+export default { createSubmission, getSubmissionsByUserId, getSubmissionById };

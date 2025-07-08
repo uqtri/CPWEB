@@ -11,6 +11,7 @@ export type Problem = {
   executionTime: number;
   memoryLimit: number;
   points: number;
+  slug: string;
   difficulty: "easy" | "medium" | "hard";
 };
 export type ProblemResponse = {

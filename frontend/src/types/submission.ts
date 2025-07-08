@@ -1,9 +1,12 @@
+import { Problem } from "./problem";
+
 export type Submission = {
   id: number;
   code: string;
-  languague: string;
+  language: string;
   status: string;
-  problemId: number;
+  problem: Problem;
+  user: any;
   executionTime: number;
   memoryUser: number;
   Score: number;
@@ -12,7 +15,7 @@ export type Submission = {
 
 export type CreateSubmissionData = {
   code: string;
-  languague: string;
+  language: string;
   userId: number;
   problemId: number;
 };

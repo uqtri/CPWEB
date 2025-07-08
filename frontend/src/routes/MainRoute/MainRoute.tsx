@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         path: "/",
       },
       {
-        path: "/problem/:problemId",
+        path: "/problem/:problemSlug",
         element: <ProblemDetail />,
       },
       {
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
-      { path: "/problem/:problemId/submit", element: <Submit /> },
+      { path: "/problem/:problemSlug/submit", element: <Submit /> },
       {
         path: "/profile",
         element: <Profile />,

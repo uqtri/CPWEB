@@ -129,11 +129,13 @@ model TestCase {
   id         Int @id @default(autoincrement())
   
   path      String
-  problem Problem @relation(fields: [problemId], references: [id])
-  problemId  Int
+  problem Problem @relation(fields: [problemId], references: [id]) 
+  problemId  Int @unique
   
   isDeleted Boolean @default(false)
-  result SubmissionResult[]
+
+  quantity Int @default(0)
+  // result SubmissionResult[]
 }
 
 model Category {
@@ -153,8 +155,10 @@ model SubmissionResult {
   id         Int       @id @default(autoincrement())
   submission Submission @relation(fields: [submissionId], references: [id])
   submissionId Int
-  testCase TestCase @relation(fields: [testCaseId], references: [id])
-  testCaseId Int
+  // testCase TestCase @relation(fields: [testCaseId], references: [id])
+  // testCaseId Int
   result     String
+
+  index     Int  
   createdAt  DateTime  @default(now())
 }

@@ -63,8 +63,8 @@ export default function Preview({
   // const title = (problem.get("title") as string) || "";
   // const content = (problem.get("content") as string) || "";
   return (
-    <div className="fixed inset-0 bg-white">
-      <div className="max-w-screen-2xl py-3 px-5">
+    <div className="fixed w-[100vw] bg-white overflow-y-auto h-[100vh]">
+      <div className="max-w-screen-xl py-3">
         <h1 className="text-2xl font-bold text-white">{problem.title}</h1>
         <div className="w-[100%] h-[2px] bg-gray-100"></div>
         <div className="prose max-w-none mt-6">

@@ -2,29 +2,27 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import path from "path";
 import { rootPath } from "../utils/path.js";
-import fs from "fs";
-import { promisify } from "util";
+import {
+  mkdirAsync,
+  writeFileAsync,
+  rmFileAsync,
+  rmdirAsync,
+  readdirAsync,
+} from "../utils/fs.js";
 import { shellCommand } from "../utils/shell.js";
 const savedFilePath = path.join(rootPath, "..", "/test-cases");
-
-const mkdirAsync = promisify(fs.mkdir);
-const writeFileAsync = promisify(fs.writeFile);
-const rmdirAsync = promisify(fs.rm);
-const rmFileAsync = promisify(fs.unlink);
 
 const createTestCase = async (req, res) => {
   const data = req.body;
   const { problemId } = req.params;
   const file = req.file;
 
-  console.log("Received file:@@", file);
   if (!file) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
       message: "File is required",
     });
   }
-  console.log("File received:", file);
   if (!file.originalname) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
@@ -47,9 +45,9 @@ const createTestCase = async (req, res) => {
         message: "Problem not found",
       });
     }
-    console.log(savedFilePath + `/${problem.slug}`);
     await rmdirAsync(savedFilePath + `/${problem.slug}`, {
       recursive: true,
+      force: true,
     });
     await mkdirAsync(savedFilePath + `/${problem.slug}`, {
       recursive: true,
@@ -64,7 +62,6 @@ const createTestCase = async (req, res) => {
       `unzip -o ${savedFilePath}/${problem.slug}/${file.originalname} -d ${savedFilePath}/${problem.slug}`
     );
     await rmFileAsync(savedFilePath + `/${problem.slug}/${file.originalname}`);
-
     if (!problem) {
       return res.status(HTTP_STATUS.NOT_FOUND.code).json({
         success: false,
@@ -79,11 +76,19 @@ const createTestCase = async (req, res) => {
     });
     let testCase;
 
+    const testCases = await readdirAsync(
+      savedFilePath + `/${problem.slug}/${problem.slug}`,
+      {
+        withFileTypes: true,
+      }
+    );
+
     if (existingTestCase) {
       testCase = await prisma.testCase.update({
         where: { id: existingTestCase.id },
         data: {
           path: file.originalname,
+          quantity: testCases.length,
         },
       });
     } else {
@@ -91,6 +96,7 @@ const createTestCase = async (req, res) => {
         data: {
           problemId: parseInt(problemId),
           path: file.originalname,
+          quantity: testCases.length,
         },
       });
     }
@@ -125,6 +131,23 @@ const deleteTestCase = async (req, res) => {
 };
 const getTestCaseByProblemId = async (req, res) => {
   const { problemId } = req.params;
+
+  const testCases = await prisma.testCase.findFirst({
+    where: { problemId: parseInt(problemId) },
+  });
+  if (!testCases) {
+    return res.status(HTTP_STATUS.NOT_FOUND.code).json({
+      success: false,
+      message: "Test cases not found for this problem",
+      data: [],
+    });
+  }
+
+  const testCasePath = path.join(
+    savedFilePath,
+    testCases.problem.slug,
+    testCases.path
+  );
   try {
     const testCases = await prisma.testCase.findMany({
       where: { problemId: parseInt(problemId) },

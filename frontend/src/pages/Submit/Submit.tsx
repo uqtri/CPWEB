@@ -4,6 +4,9 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import Button from "../../components/Button/Button";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAppStore } from "../../store";
+import { createSubmissions } from "@/api/submissions.api";
+import { useProblem } from "@/hooks/useProblem";
+import { toast } from "react-toastify";
 type Problem = {
   name: string;
   description: string;
@@ -16,41 +19,36 @@ type Problem = {
 };
 export default function Submit() {
   let code = useRef<string>("");
-  const problem: Problem = {
-    name: "Bài toán mẫu",
-    description: "Đây là một bài toán mẫu để kiểm tra hệ thống.",
-    timeLimit: 2,
-    memoryLimit: 256,
-    input: "stdin",
-    output: "stdout",
-    points: 100,
-    difficulty: 3,
-  };
-  const { problemId } = useParams();
+
+  const { problemSlug } = useParams();
+  const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
+  const problem = getProblemBySlugQuery?.data;
   const user = useAppStore((state) => state.user);
+  const socket = useAppStore((state) => state.socket);
   const navigate = useNavigate();
+
   const handleSubmit = async () => {
-    console.log(code.current);
-    const language = "cpp"; // Replace with the selected language
-    console.log(problemId);
-    const response = await fetch(
-      `http://localhost:5000/api/v1/submissions/${user.id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          code: code.current,
-          language,
-          problemId: parseInt(problemId as string),
-        }),
+    const language = "cpp";
+
+    try {
+      const submission = await createSubmissions({
+        code: code.current,
+        language: language,
+        problemId: problem!.id,
+        userId: user.id,
+      });
+      if (socket) {
+        socket.emit("submission:join", {
+          submissionId: submission.id,
+        });
       }
-    ).then((res) => res.json());
-    const submission = response.data;
-    navigate(`/submission/${submission.id}?problemId=${problemId}`);
+      navigate(`/submission/${submission.id}?problemId=${problem!.id}`);
+    } catch (error) {
+      console.log(error);
+      toast.error("Nộp bài không thành công. Vui lòng thử lại sau.");
+    }
   };
+
   const handleEditorChange = (value: string | undefined) => {
     if (value) {
       code.current = value.replace("Editor content: ", "");
@@ -59,7 +57,7 @@ export default function Submit() {
 
   return (
     <div className="mt-[62px] p-4">
-      <p className="text-3xl font-semibold border-b pb-1">{problem.name}</p>
+      <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
       <div className="flex justify-center mt-4 gap-3">
         <Editor
           theme="vs-dark"

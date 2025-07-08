@@ -1,6 +1,8 @@
-import { create, StateCreator } from "zustand";
+import { StateCreator } from "zustand";
 import { UserSlice } from "../type";
 import { io } from "socket.io-client";
+import { login, logout } from "@/api/auth.api";
+import { toast } from "react-toastify";
 
 export const createUserSlice: StateCreator<
   UserSlice,
@@ -16,32 +18,34 @@ export const createUserSlice: StateCreator<
   //   });
   // },
   login: async (user) => {
-    console.log("LOGIN FUNCTION");
     try {
-      const response = await fetch("http://localhost:5000/api/v1/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(user),
-      }).then((res) => res.json());
+      const response = await login(user || {});
 
-      console.log("response", response.data.user);
-      if (response.success) {
-        set((state) => {
-          state.user = response.data.user;
-        });
-      }
+      set((state) => {
+        state.user = response.data;
+      });
+      console.log("Login successful @@", response.data);
+      toast.success("Đăng nhập thành công!");
+      // }
     } catch (error) {
-      // toast.error("Login failed. Please try again.");
+      console.log("Login failed", error);
+      if (user)
+        toast.error(
+          "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập."
+        );
     }
   },
-  logout: () => {
-    set((state) => {
-      state.user = null;
-      state.socket = null;
-    });
+  logout: async () => {
+    try {
+      await logout();
+      set((state) => {
+        state.user = null;
+        state.socket = null;
+      });
+      toast.success("Đăng xuất thành công!");
+    } catch (error) {
+      toast.error("Đăng xuất thất bại. Vui lòng thử lại sau.");
+    }
   },
   updateUser: (user) => {
     // set((state) => {
@@ -52,20 +56,18 @@ export const createUserSlice: StateCreator<
   connectSocket: () => {
     console.log("Connect to socket function");
     const user = get().user;
-    console.log("user", user);
+    console.log("User in connectSocket:", user);
     console.log(get().socket);
-    // if (get().socket) return;
     if (!user) return;
-    const socket = io("http://localhost:5000", {
+    console.log("Connecting to socket...", import.meta.env.VITE_BACKEND_SOCKET);
+    const socket = io(import.meta.env.VITE_BACKEND_SOCKET, {
       query: {
         userId: user.id,
       },
     });
-    socket.connect();
-    console.log("Socket connected", socket);
+    console.log("Socket connected:", socket);
     set((state) => {
       state.socket = socket;
     });
-    console.log(socket, "@@");
   },
 });

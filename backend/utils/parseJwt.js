@@ -8,6 +8,7 @@ const parseJwt = (token) => {
   if (!payload || !signature) return null;
 
   const result = jwt.verify(token, process.env.JWT_SECRET);
+
   if (result) {
     return result;
   }
