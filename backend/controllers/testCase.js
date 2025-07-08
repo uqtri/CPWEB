@@ -62,7 +62,7 @@ const createTestCase = async (req, res) => {
     await shellCommand(
       `unzip -o ${savedFilePath}/${problem.slug}/${file.originalname} -d ${savedFilePath}/${problem.slug}`
     );
-    await rmFileAsync(savedFilePath + `/${problem.slug}/${file.originalname}`);
+    // await rmFileAsync(savedFilePath + `/${problem.slug}/${file.originalname}`);
     if (!problem) {
       return res.status(HTTP_STATUS.NOT_FOUND.code).json({
         success: false,
@@ -137,16 +137,9 @@ const getTestCaseByProblemId = async (req, res) => {
   const testCasesPath = path.join(savedFilePath, testCases.problem.slug);
 
   if (!testCases) {
-    const testCaseDir = await readdirAsync(testCasesPath, {
-      withFileTypes: true,
-    });
     return res.status(HTTP_STATUS.NOT_FOUND.code).json({
       success: false,
       message: "Test cases not found for this problem",
-      data: {
-        testCases: testCases,
-        directories: testCaseDir,
-      },
     });
   }
 
@@ -161,8 +154,62 @@ const getTestCaseByProblemId = async (req, res) => {
   try {
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
-      data: testCases,
+      data: {
+        testCases: testCases,
+        directories: testCasesDir,
+      },
     });
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
+
+const downloadTestCaseByIndex = async (req, res) => {
+  const { index } = req.params;
+  const { problemId } = req.params;
+  const testCases = await testCaseService.getTestCaseByProblemId(problemId);
+  if (!testCases) {
+    return res.status(HTTP_STATUS.NOT_FOUND.code).json({
+      success: false,
+      message: "Test cases not found for this problem",
+    });
+  }
+  const testCasePath = path.join(
+    savedFilePath,
+    testCases.problem.slug,
+    testCases.path
+  );
+  const testCasesDir = await readdirAsync(testCasePath, {
+    withFileTypes: true,
+  });
+  try {
+    return res.download(path.join(testCasePath, testCasesDir[index]));
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
+const downloadZipTestCase = async (req, res) => {
+  const { problemId } = req.params;
+  const testCases = await testCaseService.getTestCaseByProblemId(problemId);
+  if (!testCases) {
+    return res.status(HTTP_STATUS.NOT_FOUND.code).json({
+      success: false,
+      message: "Test cases not found for this problem",
+    });
+  }
+  const testCasePath = path.join(
+    savedFilePath,
+    testCases.problem.slug,
+    testCases.path
+  );
+  try {
+    return res.download(testCasePath + ".zip");
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
@@ -196,4 +243,6 @@ export default {
   deleteTestCase,
   getTestCaseByProblemId,
   updateTestCase,
+  downloadZipTestCase,
+  downloadTestCaseByIndex,
 };
