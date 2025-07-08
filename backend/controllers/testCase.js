@@ -2,6 +2,7 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import path from "path";
 import { rootPath } from "../utils/path.js";
+import testCaseService from "../services/testCases.js";
 import {
   mkdirAsync,
   writeFileAsync,
@@ -132,14 +133,20 @@ const deleteTestCase = async (req, res) => {
 const getTestCaseByProblemId = async (req, res) => {
   const { problemId } = req.params;
 
-  const testCases = await prisma.testCase.findFirst({
-    where: { problemId: parseInt(problemId) },
-  });
+  const testCases = await testCaseService.getTestCaseByProblemId(problemId);
+  const testCasesPath = path.join(savedFilePath, testCases.problem.slug);
+
   if (!testCases) {
+    const testCaseDir = await readdirAsync(testCasesPath, {
+      withFileTypes: true,
+    });
     return res.status(HTTP_STATUS.NOT_FOUND.code).json({
       success: false,
       message: "Test cases not found for this problem",
-      data: [],
+      data: {
+        testCases: testCases,
+        directories: testCaseDir,
+      },
     });
   }
 
@@ -148,10 +155,10 @@ const getTestCaseByProblemId = async (req, res) => {
     testCases.problem.slug,
     testCases.path
   );
+  const testCasesDir = await readdirAsync(testCasePath, {
+    withFileTypes: true,
+  });
   try {
-    const testCases = await prisma.testCase.findMany({
-      where: { problemId: parseInt(problemId) },
-    });
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
       data: testCases,
