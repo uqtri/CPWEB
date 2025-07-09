@@ -9,8 +9,10 @@ export default function MainLayout() {
   return (
     <div>
       {user ? <Header /> : <HeaderForAnonymous />}
-      <Outlet />
-      <Footer />
+      <div className="mt-22">
+        <Outlet />
+        <Footer />
+      </div>
     </div>
   );
 }

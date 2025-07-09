@@ -19,6 +19,7 @@ import User from "../../pages/admin/User/User";
 import Category from "@/pages/admin/Category/Category";
 import TestCase from "@/pages/admin/TestCase/TestCase";
 import TestCaseDetail from "@/pages/admin/TestCase/partials/TestCaseDetail/TestCaseDetail";
+import Leaderboard from "@/pages/Leaderboard/Leaderboard";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: "problemset",
         element: <Problemset />,
+      },
+      {
+        path: "/leaderboard",
+        element: <Leaderboard />,
       },
     ],
   },

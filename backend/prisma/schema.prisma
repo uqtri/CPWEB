@@ -161,13 +161,3 @@ model UserSolvedProblem {
 
   @@id([userId, problemId])
 }
-
-model test {
-  id           Int        @id @default(autoincrement())
-  value        Int 
-
-}
-model TEST {
-  id           Int        @id @default(autoincrement())
-  value        Int 
-}

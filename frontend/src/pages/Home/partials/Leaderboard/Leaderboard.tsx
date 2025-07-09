@@ -4,7 +4,7 @@ import { Trophy } from "lucide-react";
 
 export default function Leaderboard() {
   const { getAllUsersQuery } = useUser({
-    params: "sort=score&order=desc&limit=10",
+    params: "limit=10",
   });
   const users = getAllUsersQuery.data || [];
 
@@ -55,10 +55,10 @@ export default function Leaderboard() {
               Chuỗi ngày
             </th>
           </tr>
-          {users.map((user, index) => (
+          {users.slice(3).map((user, index) => (
             <tr key={user.id} className="table-row hover:bg-gray-50 transition">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium">#{index}</div>
+                <div className="text-sm font-medium">#{index + 4}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">

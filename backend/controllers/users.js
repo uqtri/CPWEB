@@ -2,8 +2,24 @@ import { prisma } from "../prisma/prisma-client.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import bcrypt from "bcrypt";
 const getUsers = async (req, res) => {
+  const { order, sort } = req.query;
+  const { page = 1, limit = 100 } = req.query;
   try {
-    const users = await prisma.user.findMany({});
+    const users = await prisma.user.findMany({
+      include: {
+        solvedProblems: true,
+      },
+      orderBy: [
+        {
+          points: "desc",
+        },
+      ],
+      where: {
+        isBanned: false,
+      },
+      skip: (page - 1) * limit,
+      take: parseInt(limit),
+    });
     users.map((user) => {
       delete user.password; // Remove password from the response
       return user;

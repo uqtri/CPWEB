@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { X, CodeIcon, Menu } from "lucide-react";
 import { useAppStore } from "../../store/index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Dropdown, Space } from "antd";
+import type { MenuProps } from "antd";
 const menuItems = [
   {
     name: "Trang chủ",
@@ -24,10 +26,38 @@ const menuItems = [
     link: "/community",
   },
 ];
-export default function HeaderForAnonymous() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logout = useAppStore((state) => state.logout);
+  const user = useAppStore((state) => state.user);
+  const [items, setItems] = useState<any[]>([
+    {
+      key: "profile",
+      label: <Link to="/profile">Trang cá nhân</Link>,
+    },
+    {
+      key: "submissions",
+      label: <Link to="/submissions">Các bài đã nộp</Link>,
+    },
+  ]);
+
+  useEffect(() => {
+    if (user?.role.name === "admin") {
+      setItems((prev) => {
+        if (prev.some((item) => item.key === "admin")) {
+          return prev;
+        }
+        return [
+          ...prev,
+          {
+            key: "admin",
+            label: <Link to="/admin">Quản trị</Link>,
+          },
+        ];
+      });
+    }
+  }, [user]);
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
       <div className="flex justify-between items-center bg-white p-4 shadow-md">
@@ -50,6 +80,13 @@ export default function HeaderForAnonymous() {
               </Link>
             );
           })}
+          <Dropdown
+            menu={{ items }}
+            trigger={["click"]}
+            className="flex cursor-pointer"
+          >
+            <a onClick={(e) => e.preventDefault()}>Người dùng</a>
+          </Dropdown>
           <button
             className="px-4 py-2 rounded-md bg-primary text-white transition hover:bg-primary-600"
             onClick={() => {
@@ -82,6 +119,11 @@ export default function HeaderForAnonymous() {
               );
             })}
           </div>
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>Hover me</Space>
+            </a>
+          </Dropdown>
           <div className="flex flex-col space-y-2 mt-4">
             {/* <button className="w-full px-4 py-2 rounded-md text-primary-700 border border-primary-200 transition hover:bg-primary">
               Đăng xuất

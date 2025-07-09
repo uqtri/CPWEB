@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
 import { useAppStore } from "../../store/index";
+import { Calendar, Edit3, Mail, MapPin, Medal } from "lucide-react";
+import ProfileHeader from "./Partials/ProfileHeader/ProfileHeader";
+import Bio from "./Partials/Bio/Bio";
+import Activity from "./Partials/Activity/Activity";
+
 type User = {
   id: number;
   username: string;
@@ -12,16 +16,12 @@ type User = {
 
 export default function Profile() {
   const user = useAppStore((state) => state.user);
-  console.log("user", user);
+
   return (
-    <div className="mt-[62px] flex flex-col items-center justify-center h-screen">
-      {user && (
-        <div>
-          {" "}
-          <p>{user.username}</p>
-          <p>{user.email}</p>
-        </div>
-      )}
+    <div className="items-center justify-center h-screen max-w-screen-xl mx-auto">
+      <ProfileHeader user={user} />
+      <Bio user={user} />
+      <Activity user={user} />
     </div>
   );
 }

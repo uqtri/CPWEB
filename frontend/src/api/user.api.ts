@@ -4,5 +4,8 @@ export const getAllUsers = async (params: string): Promise<any[]> => {
   const response = await axiosInstance.get(`/users?${params}`);
   return response.data.data;
 };
-
+export const getUserById = async (userId: string): Promise<any> => {
+  const response = await axiosInstance.get(`/users/${userId}`);
+  return response.data.data;
+};
 // export const getUserById = async ():

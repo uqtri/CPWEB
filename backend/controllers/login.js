@@ -26,6 +26,9 @@ const login = async (req, res) => {
   try {
     const user = await prisma.user.findFirst({
       where: { OR: [{ email: email }, { username: email }] },
+      include: {
+        role: true,
+      },
     });
     if (!user) {
       return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({
