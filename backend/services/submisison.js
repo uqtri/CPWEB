@@ -12,7 +12,22 @@ export const getSubmissionById = async (submissionId) => {
     throw new Error("Error fetching submission by ID: " + error.message);
   }
 };
+export const updateSubmission = async (submissionId, data) => {
+  if (isNaN(submissionId)) {
+    throw new Error("Invalid submission ID");
+  }
+  try {
+    const updatedSubmission = await prisma.submission.update({
+      where: { id: submissionId },
+      data,
+    });
+    return updatedSubmission;
+  } catch (error) {
+    throw new Error("Error updating submission: " + error.message);
+  }
+};
 
 export default {
   getSubmissionById,
+  updateSubmission,
 };

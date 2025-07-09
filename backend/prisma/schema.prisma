@@ -1,176 +1,173 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("POSTGRE_SQL_CONNECTION_STRING")
 }
 
 model User {
-
-  id         Int         @id @default(autoincrement())
-  username   String      @unique
-  password   String
-  email      String      @unique
-  avatarUrl  String?
-  createdAt  DateTime    @default(now())
-  address String?
-  isBanned Boolean @default(false)
-  posts      Post[]
-  problems   Problem[]
-  submissions Submission[]
-  messagesSent     Message[] @relation("SentMessages")
-  messagesReceived Message[] @relation("ReceivedMessages")
-  comments   Comment[]
-  isDeleted Boolean @default(false)
-  points Int @default(0)
-  role       Role      @relation(fields: [roleId], references: [id])
-  roleId    Int
-  solvedProblems UserSolvedProblem[]
-
+  id               Int                 @id @default(autoincrement())
+  username         String              @unique
+  password         String
+  email            String              @unique
+  avatarUrl        String?
+  createdAt        DateTime            @default(now())
+  address          String?
+  isBanned         Boolean             @default(false)
+  isDeleted        Boolean             @default(false)
+  points           Int                 @default(0)
+  roleId           Int
+  comments         Comment[]
+  messagesReceived Message[]           @relation("ReceivedMessages")
+  messagesSent     Message[]           @relation("SentMessages")
+  posts            Post[]
+  problems         Problem[]
+  submissions      Submission[]
+  role             Role                @relation(fields: [roleId], references: [id])
+  solvedProblems   UserSolvedProblem[]
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  title      String
-  body       String
-  createdAt  DateTime  @default(now())
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  isDeleted Boolean @default(false)
-  
-  comments   Comment[]
+  id        Int       @id @default(autoincrement())
+  title     String
+  body      String
+  createdAt DateTime  @default(now())
+  userId    Int
+  isDeleted Boolean   @default(false)
+  comments  Comment[]
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
-  post      Post     @relation(fields: [postId], references: [id])
   postId    Int
-  user      User       @relation(fields: [userId], references: [id])
   userId    Int
-  isDeleted Boolean @default(false)
+  isDeleted Boolean  @default(false)
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Problem {
-  id         Int       @id @default(autoincrement())
-  title      String
-  content    String
-  createdAt  DateTime  @default(now())
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  submisions Submission[]
-  executionTime Float?
-  memoryLimit   Int?
-  points      Int?
-  contests   Contest[]  
-  testCases TestCase[]
-  categories Category[]
+  id                Int                 @id @default(autoincrement())
+  title             String
+  content           String
+  createdAt         DateTime            @default(now())
+  userId            Int
+  executionTime     Float?
+  memoryLimit       Int?
+  points            Int?
+  slug              String              @unique
+  difficulty        String?
+  isDeleted         Boolean             @default(false)
+  user              User                @relation(fields: [userId], references: [id])
   problemCategories ProblemCategory[]
-  slug        String @unique
-  difficulty String?
-  isDeleted Boolean @default(false) 
-  SolvedBy UserSolvedProblem[]
+  submisions        Submission[]
+  testCases         TestCase[]
+  SolvedBy          UserSolvedProblem[]
+  categories        Category[]          @relation("CategoryToProblem")
+  contests          Contest[]           @relation("ContestToProblem")
 }
+
 model ProblemCategory {
-  problem Problem @relation(fields: [problemId], references: [id])
-  problemId Int
-  category Category @relation(fields: [categoryId], references: [id])
+  problemId  Int
   categoryId Int
-  isDeleted Boolean @default(false)
-  
+  isDeleted  Boolean  @default(false)
+  category   Category @relation(fields: [categoryId], references: [id])
+  problem    Problem  @relation(fields: [problemId], references: [id])
+
   @@id([problemId, categoryId])
 }
+
 model Submission {
-  id          Int       @id @default(autoincrement())
-  code        String
-  language    String
-  createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-  problem     Problem   @relation(fields: [problemId], references: [id])
-  problemId   Int
-  status      String?
+  id            Int                @id @default(autoincrement())
+  code          String
+  language      String
+  createdAt     DateTime           @default(now())
+  userId        Int
+  problemId     Int
+  status        String?
   executionTime Float?
-  memoryUsed      Int?
-  Score       Float?
-  isDeleted Boolean @default(false)
-  
-  result SubmissionResult[]
+  memoryUsed    Int?
+  Score         Float?
+  isDeleted     Boolean            @default(false)
+  problem       Problem            @relation(fields: [problemId], references: [id])
+  user          User               @relation(fields: [userId], references: [id])
+  result        SubmissionResult[]
 }
 
 model Message {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
   senderId   Int
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
   receiverId Int
-  isDeleted Boolean @default(false)
+  isDeleted  Boolean  @default(false)
   content    String
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
 }
 
 model Contest {
-  id         Int       @id @default(autoincrement())
-  title      String
-  createdAt  DateTime  @default(now())
-  beginAt    DateTime
-  endAt      DateTime
-  problems   Problem[]
-  isDeleted Boolean @default(false)
-  
+  id        Int       @id @default(autoincrement())
+  title     String
+  createdAt DateTime  @default(now())
+  beginAt   DateTime
+  endAt     DateTime
+  isDeleted Boolean   @default(false)
+  problems  Problem[] @relation("ContestToProblem")
 }
-model TestCase {
-  id         Int @id @default(autoincrement())
-  
-  path      String
-  problem Problem @relation(fields: [problemId], references: [id]) 
-  problemId  Int 
-  
-  isDeleted Boolean @default(false)
 
-  quantity Int @default(0)
-  // result SubmissionResult[]
+model TestCase {
+  id        Int     @id @default(autoincrement())
+  path      String
+  problemId Int
+  isDeleted Boolean @default(false)
+  quantity  Int     @default(0)
+  problem   Problem @relation(fields: [problemId], references: [id])
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
-  name       String @unique
-  description String
-  problems   Problem[]
+  id                Int               @id @default(autoincrement())
+  name              String            @unique
+  description       String
   problemCategories ProblemCategory[]
+  problems          Problem[]         @relation("CategoryToProblem")
 }
 
 model Role {
-  id         Int       @id @default(autoincrement())
-  name       String @unique
-  users      User[]
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[]
 }
-model SubmissionResult {
-  id         Int       @id @default(autoincrement())
-  submission Submission @relation(fields: [submissionId], references: [id])
-  submissionId Int
-  // testCase TestCase @relation(fields: [testCaseId], references: [id])
-  // testCaseId Int
-  result     String
 
-  index     Int  
-  createdAt  DateTime  @default(now())
+model SubmissionResult {
+  id           Int        @id @default(autoincrement())
+  submissionId Int
+  result       String
+  index        Int
+  createdAt    DateTime   @default(now())
+  submission   Submission @relation(fields: [submissionId], references: [id])
 }
 
 model UserSolvedProblem {
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  problem Problem @relation(fields: [problemId], references: [id])
+  userId    Int
   problemId Int
   isDeleted Boolean @default(false)
+  problem   Problem @relation(fields: [problemId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 
   @@id([userId, problemId])
+}
+
+model test {
+  id           Int        @id @default(autoincrement())
+  value        Int 
+
+}
+model TEST {
+  id           Int        @id @default(autoincrement())
+  value        Int 
 }

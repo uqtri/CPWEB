@@ -21,8 +21,9 @@ const getProblemById = async (id) => {
 };
 const deleteProblemByProblemId = async (problemId) => {
   try {
-    const problem = await prisma.problem.delete({
+    const problem = await prisma.problem.update({
       where: { id: parseInt(problemId) },
+      data: { isDeleted: true },
     });
     return problem;
   } catch (error) {

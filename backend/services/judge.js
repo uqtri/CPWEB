@@ -48,7 +48,10 @@ export const judgeSubmission = async (submissionId) => {
     `--memory ${problem.memoryLimit}M ` +
     `frolvlad/alpine-gxx tail -f /dev/null`;
 
+  // remove the container if it exists
+  await shellCommand(`docker rm -f submission-${submissionId}`);
   // run container
+
   try {
     await shellCommand(command);
   } catch (error) {
@@ -61,6 +64,15 @@ export const judgeSubmission = async (submissionId) => {
   try {
     await shellCommand(compileCommand);
   } catch (error) {
+    await submissionService.updateSubmission(submissionId, {
+      status: "Compilation Error",
+    });
+    emitTestResults("submission-" + submission.id.toString(), {
+      index: 0,
+      result: "Compilation Error",
+      submissionId: submission.id,
+    });
+
     await shellCommand(`docker rm -f submission-${submissionId}`);
     throw error;
   }
@@ -102,14 +114,26 @@ export const judgeSubmission = async (submissionId) => {
     }
     index++;
   }
-  if (accepted) {
-    await userSolvedProblemService.createUserSolvedProblem({
-      userId: submission.userId,
-      problemId: submission.problemId,
-    });
+  try {
+    if (accepted) {
+      await userSolvedProblemService.createUserSolvedProblem({
+        userId: submission.userId,
+        problemId: submission.problemId,
+      });
+
+      await submissionService.updateSubmission(submissionId, {
+        status: "Accepted",
+      });
+    } else {
+      await submissionService.updateSubmission(submissionId, {
+        status: "Wrong Answer",
+      });
+    }
+    // remove the container
+    await shellCommand(`docker rm -f submission-${submissionId}`);
+  } catch (error) {
+    throw error;
   }
-  // remove the container
-  await shellCommand(`docker rm -f submission-${submissionId}`);
 };
 
 export default {

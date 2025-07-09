@@ -4,7 +4,10 @@ import bcrypt from "bcrypt";
 const getUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany({});
-
+    users.map((user) => {
+      delete user.password; // Remove password from the response
+      return user;
+    });
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
       data: users,

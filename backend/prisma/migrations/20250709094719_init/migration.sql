@@ -9,6 +9,7 @@ CREATE TABLE "User" (
     "address" TEXT,
     "isBanned" BOOLEAN NOT NULL DEFAULT false,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "points" INTEGER NOT NULL DEFAULT 0,
     "roleId" INTEGER NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -111,6 +112,7 @@ CREATE TABLE "TestCase" (
     "path" TEXT NOT NULL,
     "problemId" INTEGER NOT NULL,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "quantity" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "TestCase_pkey" PRIMARY KEY ("id")
 );
@@ -136,11 +138,20 @@ CREATE TABLE "Role" (
 CREATE TABLE "SubmissionResult" (
     "id" SERIAL NOT NULL,
     "submissionId" INTEGER NOT NULL,
-    "testCaseId" INTEGER NOT NULL,
     "result" TEXT NOT NULL,
+    "index" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "SubmissionResult_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserSolvedProblem" (
+    "userId" INTEGER NOT NULL,
+    "problemId" INTEGER NOT NULL,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "UserSolvedProblem_pkey" PRIMARY KEY ("userId","problemId")
 );
 
 -- CreateTable
@@ -220,7 +231,10 @@ ALTER TABLE "TestCase" ADD CONSTRAINT "TestCase_problemId_fkey" FOREIGN KEY ("pr
 ALTER TABLE "SubmissionResult" ADD CONSTRAINT "SubmissionResult_submissionId_fkey" FOREIGN KEY ("submissionId") REFERENCES "Submission"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "SubmissionResult" ADD CONSTRAINT "SubmissionResult_testCaseId_fkey" FOREIGN KEY ("testCaseId") REFERENCES "TestCase"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserSolvedProblem" ADD CONSTRAINT "UserSolvedProblem_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSolvedProblem" ADD CONSTRAINT "UserSolvedProblem_problemId_fkey" FOREIGN KEY ("problemId") REFERENCES "Problem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_ContestToProblem" ADD CONSTRAINT "_ContestToProblem_A_fkey" FOREIGN KEY ("A") REFERENCES "Contest"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -234,58 +248,59 @@ ALTER TABLE "_CategoryToProblem" ADD CONSTRAINT "_CategoryToProblem_A_fkey" FORE
 -- AddForeignKey
 ALTER TABLE "_CategoryToProblem" ADD CONSTRAINT "_CategoryToProblem_B_fkey" FOREIGN KEY ("B") REFERENCES "Problem"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-------
-CREATE OR REPLACE FUNCTION update_user_points()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF TG_OP = 'INSERT' THEN
-        UPDATE "User"
-        SET points = points + (SELECT points FROM "Problem" WHERE id = NEW.problemId)
-        WHERE id = NEW.userId;
-    ELSIF TG_OP = 'DELETE' THEN
 
-        if OLD.isDeleted THEN
-            RETURN OLD;
-        END IF;
 
-        UPDATE "User"
-        SET points = points - (SELECT points FROM "Problem" WHERE id = OLD.problemId)
-        WHERE id = OLD.userId;
-    ELSIF TG_OP = 'UPDATE' THEN
-        IF NEW.isDeleted AND NOT OLD.isDeleted THEN 
-            UPDATE "User"
-            SET points = points - (SELECT points FROM "Problem" WHERE id = OLD.problemId)
-            WHERE id = OLD.userId;
-        ELSIF NOT NEW.isDeleted AND OLD.isDeleted THEN
-            UPDATE "User"
-            SET points = points + (SELECT points FROM "Problem" WHERE id = NEW.problemId)
-            WHERE id = NEW.userId;
-		END IF;
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION update_user_points()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     IF TG_OP = 'INSERT' THEN
+--         UPDATE "User"
+--         SET points = points + (SELECT points FROM "Problem" WHERE id = NEW.problemId)
+--         WHERE id = NEW.userId;
+--     ELSIF TG_OP = 'DELETE' THEN
 
-CREATE TRIGGER "User_points_update"
-AFTER INSERT OR UPDATE ON "UserSolvedProblem"
-FOR EACH ROW
-EXECUTE FUNCTION update_user_points();
+--         if OLD.isDeleted THEN
+--             RETURN OLD;
+--         END IF;
 
----------
-CREATE OR REPLACE FUNCTION update_problem_points()
-RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE "User"
-    SET points = points - OLD.points + NEW.points
-    WHERE id IN (
-        SELECT userId FROM "UserSolvedProblem" WHERE (problemId = OLD.id AND isDeleted = false)
-    );
-END;
-$$ LANGUAGE plpgsql;
+--         UPDATE "User"
+--         SET points = points - (SELECT points FROM "Problem" WHERE id = OLD.problemId)
+--         WHERE id = OLD.userId;
+--     ELSIF TG_OP = 'UPDATE' THEN
+--         IF NEW.isDeleted AND NOT OLD.isDeleted THEN 
+--             UPDATE "User"
+--             SET points = points - (SELECT points FROM "Problem" WHERE id = OLD.problemId)
+--             WHERE id = OLD.userId;
+--         ELSIF NOT NEW.isDeleted AND OLD.isDeleted THEN
+--             UPDATE "User"
+--             SET points = points + (SELECT points FROM "Problem" WHERE id = NEW.problemId)
+--             WHERE id = NEW.userId;
+-- 		END IF;
+--     END IF;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER "Problem_points_update"
-BEFORE UPDATE on "Problem"
-FOR EACH ROW
-EXECUTE FUNCTION update_problem_points();
+-- CREATE TRIGGER "User_points_update"
+-- AFTER INSERT OR UPDATE ON "UserSolvedProblem"
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_user_points();
+
+-- ---------
+-- CREATE OR REPLACE FUNCTION update_problem_points()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     UPDATE "User"
+--     SET points = points - OLD.points + NEW.points
+--     WHERE id IN (
+--         SELECT userId FROM "UserSolvedProblem" WHERE (problemId = OLD.id AND isDeleted = false)
+--     );
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- CREATE TRIGGER "Problem_points_update"
+-- BEFORE UPDATE on "Problem"
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_problem_points();
 
 

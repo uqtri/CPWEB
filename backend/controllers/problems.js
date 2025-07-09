@@ -2,6 +2,8 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import { slug } from "../libs/slug.js";
 import { parseJwt } from "../utils/parseJwt.js";
+import problemService from "../services/problems.js";
+import userSolvedProblem from "../services/userSolvedProblem.js";
 
 const createProblem = async (req, res) => {
   let problemData = req.body;
@@ -11,7 +13,6 @@ const createProblem = async (req, res) => {
   if (!problemData.userId) {
     problemData.userId = payload.id;
   }
-
   problemData.slug = slug(problemData.title);
   try {
     const problem = await prisma.problem.create({
@@ -29,7 +30,7 @@ const createProblem = async (req, res) => {
       data: problem,
     });
   } catch (err) {
-    console.error("Error creating problem:", err);
+    console.log("Error creating problem:", err);
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
       message: err.toString(),
@@ -120,13 +121,14 @@ const updateProblem = async (req, res) => {
     problemData.userId = payload.id;
   }
   problemData.slug = slug(problemData.title);
+  console.log(problemData);
   try {
     const problem = await prisma.problem.update({
       where: { id: parseInt(id) },
       data: {
         ...problemData,
-        connect: {
-          categories: problemData.categories.map((category) => ({
+        categories: {
+          connect: problemData.categories.map((category) => ({
             name: category.name,
           })),
         },
@@ -137,12 +139,30 @@ const updateProblem = async (req, res) => {
       data: problem,
     });
   } catch (err) {
+    console.log("Error updating problem:", err.toString());
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
       message: err.toString(),
     });
   }
 };
+export const deleteProblemByProblemId = async (req, res) => {
+  const { problemId } = req.params;
+  try {
+    await problemService.deleteProblemByProblemId(problemId);
+    await userSolvedProblem.deleteUserSolvedProblemByProblemId(problemId);
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      message: "Problem deleted successfully",
+    });
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
+
 export default {
   createProblem,
   getProblems,

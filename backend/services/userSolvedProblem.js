@@ -15,7 +15,19 @@ const getUserSolvedProblemsByUserId = async (userId) => {
     );
   }
 };
+const deleteUserSolvedProblemByProblemId = async (problemId) => {
+  try {
+    await prisma.userSolvedProblem.updateMany({
+      where: { problemId: parseInt(problemId) },
+      data: { isDeleted: true },
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 const createUserSolvedProblem = async ({ userId, problemId }) => {
+  console.log(userId, problemId);
+
   try {
     const existingRecord = await prisma.userSolvedProblem.findFirst({
       where: {
@@ -24,11 +36,13 @@ const createUserSolvedProblem = async ({ userId, problemId }) => {
         isDeleted: false,
       },
     });
+    console.log(userId, problemId);
 
     if (existingRecord) {
       return existingRecord;
     }
-
+    console.log(existingRecord);
+    console.log(parseInt(userId), parseInt(problemId));
     const newRecord = await prisma.userSolvedProblem.create({
       data: {
         userId: parseInt(userId),
@@ -36,14 +50,14 @@ const createUserSolvedProblem = async ({ userId, problemId }) => {
       },
     });
 
+    console.log(newRecord);
     return newRecord;
   } catch (error) {
-    throw new Error(
-      "Error creating user solved problem record: " + error.message
-    );
+    throw error;
   }
 };
 export default {
   getUserSolvedProblemsByUserId,
   createUserSolvedProblem,
+  deleteUserSolvedProblemByProblemId,
 };

@@ -17,6 +17,8 @@ const isAdmin = async (req, res, next) => {
       name: true,
     },
   });
+  console.log("Role:", role);
+
   if (role.name !== "admin" && payload.username !== "admin") {
     return res
       .status(HTTP_STATUS.UNAUTHORIZED.code)

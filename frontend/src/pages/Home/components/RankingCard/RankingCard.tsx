@@ -1,7 +1,14 @@
 import React from "react";
 import { motion } from "motion/react";
-import { BG_COLORS } from "../../../../constants/color";
-import Button from "../../../../components/Button/Button";
+import {
+  BG_COLORS,
+  BORDER_COLORS,
+  HOVER_TEXT_COLORS,
+  TEXT_COLORS,
+} from "../../../../constants/color";
+import { Button } from "@/ui/Button";
+import { Link } from "react-router-dom";
+// import Button from "../../../../components/Button/Button";
 type RankingCardProps = {
   user: any;
   color: "red" | "green" | "yellow" | "blue" | "purple" | "primary";
@@ -29,7 +36,7 @@ export default function RankingCard({
           {icon}
           <p className="font-bold text-xl">#{ranking}</p>
         </div>
-        <p className="font-bold text-xl">9,875 điểm</p>
+        <p className="font-bold text-xl">{user?.points} điểm </p>
       </div>
       <div className="p-4 text-center">
         <img
@@ -37,7 +44,7 @@ export default function RankingCard({
           className="w-[100px] h-[100px] text-center rounded-full object-cover mx-auto"
           alt="user"
         />
-        <p className="font-bold text-lg">{user.name}</p>
+        <p className="font-bold text-lg">{user?.username}</p>
         <div className="flex gap-3 mt-4 justify-center">
           <div className="bg-gray-50 p-3 rouned-md ">
             <p className="text-center text-sm"> Đã giải</p>
@@ -49,7 +56,13 @@ export default function RankingCard({
           </div>
         </div>
         <div className="mt-4">
-          <Button link="" label="Xemh hồ sơ" color="primary" />
+          <Link to={`/user/${user?.id}`}>
+            <Button
+              content="Xem hồ sơ"
+              className={`${BG_COLORS[color]} ${BORDER_COLORS[color]} ${HOVER_TEXT_COLORS[color]}`}
+            />
+            {/* <Button link="" label="Xem hồ sơ" color="primary" className={``}/> */}
+          </Link>
         </div>
       </div>
     </motion.div>

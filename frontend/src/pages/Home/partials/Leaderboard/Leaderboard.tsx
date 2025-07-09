@@ -1,54 +1,13 @@
+import useUser from "@/hooks/useUser";
 import RankingCard from "../../components/RankingCard/RankingCard";
 import { Trophy } from "lucide-react";
-type User = {
-  id: number;
-  name: string;
-  avatar: string;
-  score: number;
-  rank: number;
-  solved: number;
-  streak: number;
-  badge?: string;
-};
-const users: User[] = [
-  {
-    id: 4,
-    name: "Phạm Thanh Dung",
-    avatar: "https://i.pravatar.cc/150?img=9",
-    score: 8932,
-    rank: 4,
-    solved: 417,
-    streak: 56,
-  },
-  {
-    id: 5,
-    name: "Hoàng Văn Em",
-    avatar: "https://i.pravatar.cc/150?img=4",
-    score: 8754,
-    rank: 5,
-    solved: 398,
-    streak: 92,
-  },
-  {
-    id: 6,
-    name: "Đỗ Thị Phương",
-    avatar: "https://i.pravatar.cc/150?img=8",
-    score: 8621,
-    rank: 6,
-    solved: 376,
-    streak: 45,
-  },
-  {
-    id: 7,
-    name: "Vũ Quang Huy",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    score: 8435,
-    rank: 7,
-    solved: 362,
-    streak: 72,
-  },
-];
+
 export default function Leaderboard() {
+  const { getAllUsersQuery } = useUser({
+    params: "sort=score&order=desc&limit=10",
+  });
+  const users = getAllUsersQuery.data || [];
+
   return (
     <div className="contest-section mt-10 shadow-lg rounded-xl relative w-full">
       <div className="absolute top-0 right-0 w-[20%] h-[20%] filter bg-primary blur-xl opacity-30"></div>
@@ -58,9 +17,24 @@ export default function Leaderboard() {
         tích đáng nể.
       </p>
       <div className="contests grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-        <RankingCard user="" color="yellow" ranking={1} icon={<Trophy />} />
-        <RankingCard user="" color="green" ranking={2} icon={<Trophy />} />
-        <RankingCard user="" color="primary" ranking={3} icon={<Trophy />} />
+        <RankingCard
+          user={users?.[0]}
+          color="yellow"
+          ranking={1}
+          icon={<Trophy />}
+        />
+        <RankingCard
+          user={users?.[1]}
+          color="green"
+          ranking={2}
+          icon={<Trophy />}
+        />
+        <RankingCard
+          user={users?.[2]}
+          color="primary"
+          ranking={3}
+          icon={<Trophy />}
+        />
       </div>
       <div className="overflow-x-auto mt-10 border border-gray-500 rounded-lg">
         <table className="w-full divide-gray-200 divide-y">
@@ -84,7 +58,7 @@ export default function Leaderboard() {
           {users.map((user, index) => (
             <tr key={user.id} className="table-row hover:bg-gray-50 transition">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium">#{user.rank}</div>
+                <div className="text-sm font-medium">#{index}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
@@ -96,13 +70,13 @@ export default function Leaderboard() {
                     />
                   </div>
                   <div className="ml-4">
-                    <div className="text-sm font-medium">{user.name}</div>
+                    <div className="text-sm font-medium">{user.username}</div>
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-bold">
-                  {user.score.toLocaleString()}
+                  {user?.points?.toLocaleString()}
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">

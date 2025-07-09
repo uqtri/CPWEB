@@ -30,4 +30,43 @@ const BORDER_COLORS = {
   none: "",
   white: "border-white",
 };
-export { BG_COLORS, TEXT_COLORS, BORDER_COLORS };
+const HOVER_BG_COLORS = {
+  red: "hover:bg-red",
+  primary: "hover:bg-primary",
+  green: "hover:bg-green",
+  yellow: "hover:bg-yellow",
+  blue: "hover:bg-blue",
+  purple: "hover:bg-purple",
+  none: "",
+  white: "hover:bg-white",
+  gray: "hover:bg-gray-400",
+};
+const HOVER_TEXT_COLORS = {
+  red: "hover:text-red",
+  primary: "hover:text-primary",
+  green: "hover:text-green",
+  yellow: "hover:text-yellow",
+  blue: "hover:text-blue",
+  purple: "hover:text-purple",
+  white: "hover:text-white",
+  none: "",
+  gray: "hover:text-gray-400",
+};
+const HOVER_BORDER_COLORS = {
+  red: "hover:border-red",
+  primary: "hover:border-primary",
+  green: "hover:border-green",
+  yellow: "hover:border-yellow",
+  blue: "hover:border-blue",
+  purple: "hover:border-purple",
+  none: "",
+  white: "hover:border-white",
+};
+export {
+  BG_COLORS,
+  TEXT_COLORS,
+  BORDER_COLORS,
+  HOVER_BG_COLORS,
+  HOVER_TEXT_COLORS,
+  HOVER_BORDER_COLORS,
+};

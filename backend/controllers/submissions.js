@@ -85,10 +85,12 @@ const createSubmission = async (req, res) => {
   }
 
   try {
+    console.log("START");
     const submission = await prisma.submission.create({
       data,
     });
 
+    console.log("START");
     await flowProducer.add({
       name: `submission-${submission.id}`,
       data: {
@@ -97,6 +99,7 @@ const createSubmission = async (req, res) => {
       queueName: "cpp-submissions",
     });
 
+    console.log("START");
     return res.status(HTTP_STATUS.OK.code).json({
       data: submission,
       success: true,

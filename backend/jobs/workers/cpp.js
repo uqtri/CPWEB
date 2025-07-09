@@ -17,7 +17,9 @@ const cppWorker = new Worker(
     const submissionId = data.submissionId;
     try {
       await judgeService.judgeSubmission(submissionId);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   },
   { connection }
 );
