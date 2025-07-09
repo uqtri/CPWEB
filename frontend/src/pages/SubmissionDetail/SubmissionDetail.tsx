@@ -1,53 +1,83 @@
 import { useEffect, useState } from "react";
-
+import { cn } from "@/lib/utils";
 import { useAppStore } from "../../store/index";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import TestCaseCard from "./components/TestCaseCard/TestCaseCard";
 import { getSubmissionById } from "@/api/submissions.api";
 import { getSubmissionResultBySubmissionId } from "@/api/submissionResult.api";
 import { Submission } from "@/types/submission";
+
+import { getTestCaseByProblemSlug } from "@/api/testCase.api";
+
 export default function SubmissionDetail() {
   const socket = useAppStore((state) => state.socket);
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [submissionResult, setSubmissionResult] = useState<any[]>([]);
-  const [status, setStatus] = useState<string>("pending");
-
+  const [status, setStatus] = useState<string>("Pending");
+  const [testCases, setTestCases] = useState<any>(null);
   let { submissionId } = useParams();
   submissionId = parseInt(submissionId as string) as any;
+
+  useEffect(() => {
+    const fetchTestCase = async () => {
+      try {
+        if (submission) {
+          const submissionResult = await getSubmissionResultBySubmissionId(
+            parseInt(submissionId!)
+          );
+
+          const data = await getTestCaseByProblemSlug(
+            submission?.problem?.slug!
+          );
+          if (data.directories.length === submissionResult.length) {
+            setSubmissionResult(submissionResult);
+            setStatus(submission.status);
+          }
+          setTestCases(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchTestCase();
+  }, [submission]);
   useEffect(() => {
     if (socket) {
       socket.on("getSubmissionResult", (data: any) => {
-        console.log("getSubmissionResult", data.result);
-        console.log("submissionResult", [...submissionResult, data.result]);
-        setSubmissionResult((prev) => [...prev, data.result]);
-        console.log("submissionResult", submissionResult);
+        setSubmissionResult((prev) => {
+          console.log(prev.length);
+          if (data.result.result !== "Accepted") {
+            if (data.result.result === "Compilation Error") {
+              setStatus(data.result.result);
+              return prev;
+            } else setStatus("Wrong Answer");
+          } else if (
+            testCases &&
+            testCases.directories.length === prev.length + 1
+          ) {
+            setStatus("Accepted");
+          }
+          return [...prev, data.result];
+        });
       });
       return () => {
         socket.off("getSubmissionResult");
       };
     }
-  }, [socket]);
+  }, [socket, testCases]);
 
   useEffect(() => {
     const fetchSubmissionResultAndSubmission = async () => {
       try {
-        console.log("submissionId", submissionId);
-        const submissionResult = await getSubmissionResultBySubmissionId(
-          parseInt(submissionId!)
-        );
         const submission = await getSubmissionById(parseInt(submissionId!));
-        console.log("submissionId vv", submission);
-        console.log("submissionResult vv", submissionResult);
-
         setSubmission(submission);
-        setSubmissionResult(submissionResult);
       } catch (error) {
         console.error("Error fetching submission:", error);
       }
     };
     fetchSubmissionResultAndSubmission();
   }, [submissionId]);
-  console.log();
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Title */}
@@ -72,9 +102,13 @@ export default function SubmissionDetail() {
           <div>
             <span className="font-medium">Kết quả:</span>
             <span
-              className={`ml-2 px-2 py-1 rounded text-white text-xs ${
-                status === "Accepted" ? "bg-green-600" : "bg-red-600"
-              }`}
+              className={cn(
+                `ml-2 px-2 py-1 rounded text-white text-xs`,
+                status === "Accepted" && "bg-green-600",
+                status === "Wrong Answer" && "bg-red-600",
+                (status === "Pending" || status === "Compilation Error") &&
+                  "bg-yellow-600"
+              )}
             >
               {status}
             </span>

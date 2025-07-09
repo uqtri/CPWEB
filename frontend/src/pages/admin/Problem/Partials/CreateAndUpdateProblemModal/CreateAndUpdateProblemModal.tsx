@@ -7,7 +7,7 @@ import Preview from "./Partials/Preview";
 import { useProblem } from "@/hooks/useProblem";
 import { toast } from "react-toastify";
 import { useCategory } from "@/hooks/useCategory";
-
+import { omit } from "lodash";
 export default function CreateAndUpdateProblemModal({
   problem,
   setModal,
@@ -44,7 +44,6 @@ export default function CreateAndUpdateProblemModal({
       label: category.name,
       value: category.name,
     })) || [];
-  console.log(selectedCategories, "selectedCategories");
   const handleChange = (
     e:
       | ChangeEvent<HTMLInputElement>
@@ -178,7 +177,7 @@ export default function CreateAndUpdateProblemModal({
                   if (problem) {
                     await updateProblemMutation.mutateAsync({
                       id: problem.id,
-                      data: data as UpdateProblemData,
+                      data: omit(data, "id") as UpdateProblemData,
                     });
                     toast.success("Cập nhật bài tập thành công");
                   } else {
