@@ -91,7 +91,7 @@ export default function ProblemDetail() {
   const problem = getProblemBySlugQuery?.data;
   console.log("Problem:", problem);
   return (
-    <div className="problem-detail mt-20 p-4">
+    <div className="problem-detail">
       <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 p-4 bg-yellow/20 rounded-md gap-4 mt-4">

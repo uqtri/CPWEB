@@ -70,7 +70,7 @@ export default function Problemset() {
     setSearchQuery(query);
   };
   return (
-    <div className="mt-[62px] px-10 py-5 lg:py-5 lg:px-10">
+    <div className="">
       <p className="text-3xl font-semibold border-b pb-1">Các thử thách</p>
       <div className="flex flex-col lg:flex-row lg:gap-4 justify-center mt-4">
         <div className="grow order-2 lg:order-1 sm:mt-10 lg:mt-0">
