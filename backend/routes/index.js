@@ -13,7 +13,7 @@ import { isUser } from "../middlewares/isUser.js";
 import submissionResultsRouter from "./submissionResults.js";
 const routeApp = function (app) {
   app.use("/api/v1/users", usersRouter);
-  app.use("/api/v1/problems", isAdmin, problemsRouter);
+  app.use("/api/v1/problems", problemsRouter);
   app.use("/api/v1/submissions", submissionsRouter);
   // app.use("/api/v1/contests", isAdmin, contestsRouter);
   // app.use("/api/v1/messages", isUser, messagesRouter);

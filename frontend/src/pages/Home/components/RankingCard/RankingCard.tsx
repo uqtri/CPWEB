@@ -7,8 +7,9 @@ import {
   TEXT_COLORS,
 } from "../../../../constants/color";
 import { Button } from "@/ui/Button";
-import { Link } from "react-router-dom";
-// import Button from "../../../../components/Button/Button";
+import { Link, useNavigate } from "react-router-dom";
+import UserAvatar from "@/assets/user.png";
+
 type RankingCardProps = {
   user: any;
   color: "red" | "green" | "yellow" | "blue" | "purple" | "primary";
@@ -21,6 +22,8 @@ export default function RankingCard({
   ranking,
   icon,
 }: RankingCardProps) {
+  const navigate = useNavigate();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -40,7 +43,7 @@ export default function RankingCard({
       </div>
       <div className="p-4 text-center">
         <img
-          src="https://dongvat.edu.vn/upload/2025/01/capybara-meme-45.webp"
+          src={user?.avatarUrl || UserAvatar}
           className="w-[100px] h-[100px] text-center rounded-full object-cover mx-auto"
           alt="user"
         />
@@ -56,13 +59,13 @@ export default function RankingCard({
           </div>
         </div>
         <div className="mt-4">
-          <Link to={`/user/${user?.id}`}>
-            <Button
-              content="Xem hồ sơ"
-              className={`${BG_COLORS[color]} ${BORDER_COLORS[color]} ${HOVER_TEXT_COLORS[color]}`}
-            />
-            {/* <Button link="" label="Xem hồ sơ" color="primary" className={``}/> */}
-          </Link>
+          <Button
+            content="Xem hồ sơ"
+            className={`${BG_COLORS[color]} ${BORDER_COLORS[color]} ${HOVER_TEXT_COLORS[color]}`}
+            onClick={() => {
+              navigate(`/profile/${user?.id}`);
+            }}
+          />
         </div>
       </div>
     </motion.div>

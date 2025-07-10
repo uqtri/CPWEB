@@ -1,13 +1,14 @@
 import useUser from "@/hooks/useUser";
 import RankingCard from "../../components/RankingCard/RankingCard";
 import { Trophy } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
+import UserAvatar from "@/assets/user.png";
 export default function Leaderboard() {
   const { getAllUsersQuery } = useUser({
     params: "limit=10",
   });
-  const users = getAllUsersQuery.data || [];
-
+  const users = getAllUsersQuery?.data?.users || [];
+  const navigate = useNavigate();
   return (
     <div className="contest-section mt-10 shadow-lg rounded-xl relative w-full">
       <div className="absolute top-0 right-0 w-[20%] h-[20%] filter bg-primary blur-xl opacity-30"></div>
@@ -55,22 +56,27 @@ export default function Leaderboard() {
               Chuỗi ngày
             </th>
           </tr>
-          {users.slice(3).map((user, index) => (
+          {users.slice(3).map((user: any, index: number) => (
             <tr key={user.id} className="table-row hover:bg-gray-50 transition">
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-medium">#{index + 4}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() => {
+                    navigate(`/profile/${user?.id}`);
+                  }}
+                >
                   <div className="h-10 w-10 rounded-full overflow-hidden">
                     <img
-                      src={user.avatar}
-                      alt={user.name}
+                      src={user?.avatarUrl || UserAvatar}
+                      alt={user?.fullName}
                       className="h-full w-full object-cover"
                     />
                   </div>
                   <div className="ml-4">
-                    <div className="text-sm font-medium">{user.username}</div>
+                    <div className="text-sm font-medium">{user?.username}</div>
                   </div>
                 </div>
               </td>

@@ -25,11 +25,10 @@ export default function Profile() {
     return <NotFound />;
   }
   console.log(isUserLoading, currentUser);
-  if (!isUserLoading && currentUser === null) {
+  if (!isUserLoading && !params?.userId && currentUser === null) {
     toast.error("Bạn cần đăng nhập để xem trang cá nhân.");
     navigate("/login");
   }
-  console.log(params?.userId, "!!@#");
   return (
     <div className="items-center justify-center h-screen max-w-screen-xl mx-auto">
       <ProfileHeader

@@ -13,23 +13,23 @@ const login = async (req, res) => {
   const payload = parseJwt(token);
   const userId = payload?.id;
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    include: {
-      role: true,
-      solvedProblems: {
-        include: {
-          problem: true,
+  if (payload) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        role: true,
+        solvedProblems: {
+          include: {
+            problem: true,
+          },
         },
       },
-    },
-  });
-  if (payload)
+    });
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
       data: user,
     });
-
+  }
   if (!email || !password) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
@@ -76,6 +76,7 @@ const login = async (req, res) => {
       data: user,
     });
   } catch (err) {
+    console.log(err.toString(), "error in login controller");
     return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR.code).json({
       success: false,
       message: err.toString(),

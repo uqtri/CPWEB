@@ -7,6 +7,6 @@ const router = express.Router();
 router.get("/", problemsController.getProblems);
 // router.get("/:id", problemsController);
 router.get("/:slug", problemsController.getProblemBySlug);
-router.post("/", problemsController.createProblem);
+router.post("/", isAdmin, problemsController.createProblem);
 router.put("/:id", isAdmin, problemsController.updateProblem);
 export default router;

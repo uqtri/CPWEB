@@ -1,12 +1,17 @@
 import { prisma } from "../prisma/prisma-client.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import bcrypt from "bcrypt";
-
+import userService from "../services/user.js";
 import { uploadStream } from "../libs/cloudinary.js";
 const getUsers = async (req, res) => {
   const { order, sort } = req.query;
   const { page = 1, limit = 100 } = req.query;
   try {
+    const totalUsers = await prisma.user.count({
+      where: {
+        isBanned: false,
+      },
+    });
     const users = await prisma.user.findMany({
       include: {
         solvedProblems: true,
@@ -28,7 +33,10 @@ const getUsers = async (req, res) => {
     });
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
-      data: users,
+      data: {
+        users,
+        totalUsers,
+      },
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
@@ -134,6 +142,22 @@ const updateUser = async (req, res) => {
     });
   }
 };
+export const getUsersByUsername = async (req, res) => {
+  const { username } = req.params;
+  try {
+    const users = await userService.getUsersByUsername(username);
+
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      data: users,
+    });
+  } catch (err) {
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: err.toString(),
+    });
+  }
+};
 const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -156,6 +180,7 @@ const deleteUser = async (req, res) => {
 export default {
   getUsers,
   getUserById,
+  getUsersByUsername,
   createUser,
   updateUser,
   deleteUser,

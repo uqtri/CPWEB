@@ -4,6 +4,7 @@ import { upload } from "../middlewares/multer.js";
 const router = express.Router();
 router.get("/", usersController.getUsers);
 router.get("/:id", usersController.getUserById);
+router.get("/username/:username", usersController.getUsersByUsername);
 router.post("/", usersController.createUser);
 router.put("/:id", upload.single("avatar-upload"), usersController.updateUser);
 export default router;
