@@ -10,9 +10,8 @@ import {
 } from "@/ui/Table";
 import { useState } from "react";
 import { useProblem } from "@/hooks/useProblem";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import type { Problem } from "@/types/problem";
-import { p } from "framer-motion/client";
 import CreateAndUpdateProblemModal from "./Partials/CreateAndUpdateProblemModal/CreateAndUpdateProblemModal";
 export default function Problem() {
   const [params, setParams] = useSearchParams();
@@ -20,7 +19,7 @@ export default function Problem() {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { getProblemListQuery } = useProblem({ params: params.toString() });
 
-  const problems = getProblemListQuery.data || [];
+  const problems = getProblemListQuery.data?.problems || [];
   console.log(problems, "problems");
 
   return (

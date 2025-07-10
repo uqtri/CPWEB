@@ -17,7 +17,7 @@ export default function TestCase() {
   const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
   const { getProblemListQuery } = useProblem({ params: params.toString() });
   const navigate = useNavigate();
-  const problems = getProblemListQuery.data || [];
+  const problems = getProblemListQuery.data?.problems || [];
 
   return (
     <div className="w-full p-10">

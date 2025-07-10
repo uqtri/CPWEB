@@ -5,7 +5,7 @@ import type {
   UpdateProblemData,
 } from "../types/problem";
 export const getProblemList = async (params: any) => {
-  const response = await axiosInstance.get("/problems", { params });
+  const response = await axiosInstance.get(`/problems?${params || ""}`);
   return response.data.data;
 };
 

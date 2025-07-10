@@ -23,7 +23,7 @@ export default function CreateAndUpdateProblemModal({
     executionTime: 0,
     memoryLimit: 0,
     points: 0,
-    difficulty: "easy",
+    difficulty: "Dễ",
     categories: [],
   });
   useEffect(() => {

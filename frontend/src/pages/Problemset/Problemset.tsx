@@ -1,27 +1,80 @@
 import { useCategory } from "@/hooks/useCategory";
 import { useProblem } from "@/hooks/useProblem";
+import { useAppStore } from "@/store";
 import { Category } from "@/types/category";
 import { Problem } from "@/types/problem";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/ui/Table";
-import { Select, Tag, Slider } from "antd";
-import type { SelectProps } from "antd";
-import { get } from "http";
-import { CircleCheck } from "lucide-react";
-import { useNavigate, Link } from "react-router-dom";
+import { Select, Slider, Pagination } from "antd";
 
+import { CircleCheck } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+const difficulty = [
+  { label: "Tất cả", value: "" },
+  { label: "Dễ", value: "Dễ" },
+  { label: "Trung bình", value: "Trung bình" },
+  { label: "Khó", value: "Khó" },
+];
+const size = 10;
 export default function Problemset() {
+  const [query, setSearchQuery] = useSearchParams();
   const navigate = useNavigate();
-  const { getProblemListQuery } = useProblem({});
+  const { getProblemListQuery } = useProblem({ params: query.toString() });
   const { getCategoryListQuery } = useCategory();
-  const problems = getProblemListQuery?.data || [];
+  const problems = getProblemListQuery?.data?.problems || [];
   const categories = getCategoryListQuery?.data || [];
-  console.log(categories);
+  const user = useAppStore((state) => state.user);
+  const [searchTerm, setSearchTerm] = useState({
+    title: "",
+    difficulty: "",
+    categories: [],
+    pointRange: [0, 500],
+    hideSolved: false,
+    userId: null,
+    page: 1,
+    limit: size,
+  });
+  useEffect(() => {
+    if (user) {
+      setSearchTerm((prev) => ({
+        ...prev,
+        userId: user?.id,
+      }));
+    }
+  }, [user]);
+
+  const handleSeachProblems = () => {
+    const query: any = {};
+    if (searchTerm.title) {
+      query.title = searchTerm.title;
+    }
+    if (searchTerm.difficulty) {
+      query.difficulty = searchTerm.difficulty;
+    }
+    if (searchTerm.categories.length > 0) {
+      query.categories = searchTerm.categories.join(",");
+    }
+    if (searchTerm.pointRange) {
+      query.pointRange = searchTerm.pointRange.join(",");
+    }
+    if (searchTerm.hideSolved) {
+      query.hideSolved = 1;
+    }
+
+    if (searchTerm.userId) {
+      query.userId = searchTerm.userId;
+    }
+    query.page = searchTerm.page;
+    query.limit = searchTerm.limit;
+
+    setSearchQuery(query);
+  };
   return (
     <div className="mt-[62px] px-10 py-5 lg:py-5 lg:px-10">
       <p className="text-3xl font-semibold border-b pb-1">Các thử thách</p>
       <div className="flex flex-col lg:flex-row lg:gap-4 justify-center mt-4">
         <div className="grow order-2 lg:order-1 sm:mt-10 lg:mt-0">
-          <Table>
+          <Table className="">
             <TableHeader>
               <TableRow>
                 <TableCell>Tên bài</TableCell>
@@ -55,6 +108,20 @@ export default function Problemset() {
                 })}
             </TableBody>
           </Table>
+          <div className="mt-4">
+            <Pagination
+              className="flex items-center justify-center"
+              total={getProblemListQuery?.data?.totalProblems || 0}
+              pageSize={size}
+              onChange={(page) => {
+                setSearchTerm((prev) => ({
+                  ...prev,
+                  page: page,
+                }));
+                handleSeachProblems();
+              }}
+            />
+          </div>
         </div>
         <div className="overflow-hidden order-1 lg:w-[300px] border border-gray-300 h-min rounded-md">
           <p className="text-lg font-light text-center text-white bg-primary py-1">
@@ -65,9 +132,25 @@ export default function Problemset() {
               type="text"
               placeholder="Tên bài tập..."
               className="border border-gray-500 outline-none rounded-md px-2 py-1 w-full"
+              name="title"
+              onChange={(e) => {
+                setSearchTerm((prev) => ({
+                  ...prev,
+                  title: e.target.value,
+                }));
+              }}
             />
             <div className="mt-4">
-              <input type="checkbox" id="hideSolvedProblems" />
+              <input
+                type="checkbox"
+                id="hideSolvedProblems"
+                onChange={() => {
+                  setSearchTerm((prev) => ({
+                    ...prev,
+                    hideSolved: !prev.hideSolved,
+                  }));
+                }}
+              />
               <label htmlFor="hideSolvedProblem"> Ẩn các bài đã giải</label>
             </div>
             <div className="mt-4">
@@ -78,9 +161,32 @@ export default function Problemset() {
                 id="category"
                 mode="multiple"
                 style={{ width: "100%" }}
+                onChange={(value) => {
+                  setSearchTerm((prev) => ({
+                    ...prev,
+                    categories: value,
+                  }));
+                }}
                 options={categories.map((category: Category) => {
                   return { label: category.name, value: category.name };
                 })}
+              />
+            </div>
+            <div className="mt-4">
+              <label className="" htmlFor="category">
+                Chọn độ khó
+              </label>
+              <Select
+                id="difficulty"
+                defaultValue={"Tất cả"}
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setSearchTerm((prev) => ({
+                    ...prev,
+                    difficulty: value,
+                  }));
+                }}
+                options={difficulty}
               />
             </div>
             <div className="mt-4">
@@ -89,17 +195,23 @@ export default function Problemset() {
               </label>
               <Slider
                 range
-                defaultValue={[0, 100]}
+                defaultValue={[0, 500]}
+                max={500}
+                min={0}
                 onChange={(e) => {
-                  console.log(e);
+                  setSearchTerm((prev) => ({
+                    ...prev,
+                    pointRange: e,
+                  }));
                 }}
               />
             </div>
-            <Link to="/problemset">
-              <button className="text-primary border border-primary rounded-md px-4 py-2 mt-4 w-full cursor-pointer">
-                Tìm
-              </button>
-            </Link>
+            <button
+              className="text-primary border border-primary rounded-md px-4 py-2 mt-4 w-full cursor-pointer"
+              onClick={handleSeachProblems}
+            >
+              Tìm
+            </button>
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ export type Problem = {
   memoryLimit: number;
   points: number;
   slug: string;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "Dễ" | "Trung bình" | "Khó";
 };
 export type ProblemResponse = {
   id?: number;
@@ -26,7 +26,7 @@ export type ProblemResponse = {
   executionTime: number;
   memoryLimit: number;
   points: number;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "Dễ" | "Trung bình" | "Khó";
 };
 export type CreateProblemData = {
   title: string;
@@ -35,7 +35,7 @@ export type CreateProblemData = {
   executionTime: number;
   memoryLimit: number;
   points: number;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "Dễ" | "Trung bình" | "Khó";
 };
 
 export type UpdateProblemData = {
@@ -45,5 +45,5 @@ export type UpdateProblemData = {
   executionTime: number;
   memoryLimit: number;
   points: number;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "Dễ" | "Trung bình" | "Khó";
 };

@@ -92,16 +92,63 @@ const getProblemBySlug = async (req, res) => {
   }
 };
 const getProblems = async (req, res) => {
+  const {
+    page = 1,
+    limit = 20,
+    hideSolved,
+    userId,
+    title,
+    difficulty,
+    categories,
+    pointRange,
+  } = req.query;
+
+  const skip = (page - 1) * limit;
+  const whereConditions = {
+    isDeleted: false,
+    categories: {
+      some: {
+        name: { in: categories ? categories.split(",") : undefined },
+      },
+    },
+    title: {
+      contains: title ? title : undefined,
+      mode: "insensitive",
+    },
+    difficulty: {
+      equals: difficulty ? difficulty : undefined,
+    },
+    points: {
+      gte: pointRange ? parseInt(pointRange.split(",")[0]) : undefined,
+      lte: pointRange ? parseInt(pointRange.split(",")[1]) : undefined,
+    },
+  };
+
+  if (hideSolved && hideSolved === "1" && userId) {
+    console.log("Hide solved problems for userId:", hideSolved, userId);
+
+    whereConditions.SolvedBy = {
+      none: {
+        userId: parseInt(userId),
+      },
+    };
+  }
   try {
+    const totalProblems = await prisma.problem.count({
+      where: whereConditions,
+    });
     const problems = await prisma.problem.findMany({
       include: {
         categories: true,
       },
+      where: whereConditions,
+      skip: parseInt(skip),
+      take: parseInt(limit),
     });
 
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
-      data: problems,
+      data: { problems, totalProblems },
     });
   } catch (err) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({

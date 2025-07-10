@@ -28,7 +28,7 @@ export default function Profile() {
   if (!isUserLoading && !params?.userId && currentUser === null) {
     toast.error("Bạn cần đăng nhập để xem trang cá nhân.");
     navigate("/login");
-  }
+}
   return (
     <div className="items-center justify-center h-screen max-w-screen-xl mx-auto">
       <ProfileHeader
