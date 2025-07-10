@@ -11,10 +11,23 @@ const login = async (req, res) => {
   const token = req.cookies.jwt;
 
   const payload = parseJwt(token);
+  const userId = payload?.id;
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: {
+      role: true,
+      solvedProblems: {
+        include: {
+          problem: true,
+        },
+      },
+    },
+  });
   if (payload)
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
-      data: payload,
+      data: user,
     });
 
   if (!email || !password) {
@@ -28,6 +41,11 @@ const login = async (req, res) => {
       where: { OR: [{ email: email }, { username: email }] },
       include: {
         role: true,
+        solvedProblems: {
+          include: {
+            problem: true,
+          },
+        },
       },
     });
     if (!user) {

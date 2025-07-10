@@ -19,6 +19,9 @@ model User {
   isDeleted        Boolean             @default(false)
   points           Int                 @default(0)
   roleId           Int
+  location        String?
+  fullName          String?
+  aboutMe         String?
   comments         Comment[]
   messagesReceived Message[]           @relation("ReceivedMessages")
   messagesSent     Message[]           @relation("SentMessages")

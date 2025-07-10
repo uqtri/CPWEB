@@ -43,7 +43,7 @@ export default function Header() {
   ]);
 
   useEffect(() => {
-    if (user?.role.name === "admin") {
+    if (user?.role?.name === "admin") {
       setItems((prev) => {
         if (prev.some((item) => item.key === "admin")) {
           return prev;

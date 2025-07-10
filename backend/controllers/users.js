@@ -1,6 +1,8 @@
 import { prisma } from "../prisma/prisma-client.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import bcrypt from "bcrypt";
+
+import { uploadStream } from "../libs/cloudinary.js";
 const getUsers = async (req, res) => {
   const { order, sort } = req.query;
   const { page = 1, limit = 100 } = req.query;
@@ -21,7 +23,7 @@ const getUsers = async (req, res) => {
       take: parseInt(limit),
     });
     users.map((user) => {
-      delete user.password; // Remove password from the response
+      delete user.password;
       return user;
     });
     return res.status(HTTP_STATUS.OK.code).json({
@@ -40,6 +42,13 @@ const getUserById = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: parseInt(id) },
+      include: {
+        solvedProblems: {
+          include: {
+            problem: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -95,6 +104,20 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const data = req.body;
   const { id } = req.params;
+
+  if (req.file) {
+    try {
+      const response = await uploadStream(req.file.buffer);
+      console.log(response);
+      data.avatarUrl = response.secure_url;
+    } catch (error) {
+      console.log(error);
+      return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+        success: false,
+        message: "Error uploading image",
+      });
+    }
+  }
   try {
     const user = await prisma.user.update({
       where: { id: parseInt(id) },

@@ -1,7 +1,19 @@
-import React from "react";
-import { Calendar, Code, Edit3, Mail, MapPin, Medal } from "lucide-react";
+import { useState } from "react";
+import { Calendar, Edit3, Mail, MapPin, Medal } from "lucide-react";
+import { Button } from "@/ui/Button";
+import UserAvatar from "@/assets/user.png";
+import { useAppStore } from "@/store";
+import { toast } from "react-toastify";
+export default function ProfileHeader({
+  user,
+  canEdit,
+}: {
+  user: any;
+  canEdit?: boolean;
+}) {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const updateUser = useAppStore((state) => state.updateUser);
 
-export default function ProfileHeader({ user }: { user: any }) {
   return (
     <div className="rounded-xl relative max-w-screen-xl mx-auto">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
@@ -9,13 +21,18 @@ export default function ProfileHeader({ user }: { user: any }) {
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
             <div className="relative">
               <img
-                src={user?.avatar}
+                src={user?.avatarUrl || UserAvatar}
                 alt={user?.fullName}
                 className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
               />
-              <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-lg">
-                <Edit3 className="w-4 h-4 text-gray-600" />
-              </div>
+              {canEdit && (
+                <div
+                  className="absolute -bottom-1 right-2 bg-white rounded-full p-2 shadow-lg cursor-pointer"
+                  onClick={() => setIsOpenModal(true)}
+                >
+                  <Edit3 className="w-4 h-4 text-gray-600" />
+                </div>
+              )}
             </div>
 
             <div className="flex-1 text-center md:text-left text-white">
@@ -27,7 +44,9 @@ export default function ProfileHeader({ user }: { user: any }) {
               <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4" />
-                  <span className="text-blue-100">{user?.location}</span>
+                  <span className="text-blue-100">
+                    {user?.location || "Chưa có địa chỉ"}
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4" />
@@ -83,6 +102,101 @@ export default function ProfileHeader({ user }: { user: any }) {
           </div>
         </div>
       </div>
+
+      {isOpenModal && (
+        <div
+          className="modal-overlay bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setIsOpenModal(false)}
+        >
+          <div
+            className="bg-white rounded-lg p-6 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-semibold mb-4">Chỉnh sửa thông tin</h2>
+            <form id="edit-profile-form">
+              <div className="mb-4">
+                <input
+                  type="file"
+                  className="hidden"
+                  id="avatar-upload"
+                  accept=".png ,.jpg,.jpeg"
+                />
+                <label htmlFor="avatar-upload">
+                  <img
+                    id="avatar-preview"
+                    src={user?.avatarUrl || UserAvatar}
+                    alt={user?.fullName}
+                    className="mx-auto w-[100px] h-[100px] rounded-full cursor-pointer"
+                  />
+                </label>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Tên đầy đủ
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  defaultValue={user?.fullName}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Địa chỉ
+                </label>
+                <input
+                  type="text"
+                  name="location"
+                  defaultValue={user?.location}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Email
+                </label>
+                <input
+                  name="email"
+                  type="text"
+                  defaultValue={user?.email}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Giới thiệu bản thân
+                </label>
+                <textarea
+                  name="aboutMe"
+                  defaultValue={user?.aboutMe}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                  rows={4}
+                ></textarea>
+              </div>
+            </form>
+            <div className="flex justify-end gap-4">
+              <Button
+                onClick={() => setIsOpenModal(false)}
+                content="Đóng"
+              ></Button>
+              <Button
+                className=""
+                content="Lưu thay đổi"
+                onClick={async () => {
+                  setIsOpenModal(false);
+                  const formElement = document.querySelector(
+                    "#edit-profile-form"
+                  ) as HTMLFormElement;
+                  const formData = new FormData(formElement);
+                  await updateUser(formData);
+                  toast.success("Cập nhật thông tin thành công!");
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

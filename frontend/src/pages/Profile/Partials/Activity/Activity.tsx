@@ -5,7 +5,7 @@ import Contest from "./Partials/Contest/Contest";
 import Problem from "./Partials/Problem/Problem";
 export default function Activity({ user }: { user: any }) {
   const [tabs, setTabs] = useState("contests");
-  console.log("user", user);
+
   return (
     <div>
       <div className="activity-header flex gap-4 border border-gray-200 rounded-lg">
@@ -30,14 +30,13 @@ export default function Activity({ user }: { user: any }) {
           <p>Bài tập đã giải</p>
         </div>
       </div>
-      <div>
-        {/* {tabs === "contests" && <Contest user={user} />} */}
-        {tabs === "problems" && (
-          <div className="problem-activity p-4">
-            <Problem problems={user?.solvedProblems || []} />
-          </div>
-        )}
-      </div>
+      {/* {tabs === "contests" && <Contest user={user} />} */}
+      {tabs === "problems" && (
+        <div className="problem-activity p-4">
+          <Problem problems={user?.solvedProblems || []} />
+        </div>
+      )}
+      <div></div>
     </div>
   );
 }

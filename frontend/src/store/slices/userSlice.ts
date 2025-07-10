@@ -3,6 +3,7 @@ import { UserSlice } from "../type";
 import { io } from "socket.io-client";
 import { login, logout } from "@/api/auth.api";
 import { toast } from "react-toastify";
+import { updateUser } from "@/api/user.api";
 
 export const createUserSlice: StateCreator<
   UserSlice,
@@ -12,28 +13,54 @@ export const createUserSlice: StateCreator<
 > = (set, get) => ({
   user: null,
   socket: null,
+  isUserLoading: true,
   // setSocket: (socket) => {
   //   set((state) => {
   //     state.socket = socket;
   //   });
   // },
-  login: async (user) => {
-    try {
-      const response = await login(user || {});
 
+  updateUser: async (formData: FormData) => {
+    if (!get().user) {
+      return;
+    }
+    set((state) => {
+      state.isUserLoading = true;
+    });
+    try {
+      const newUser = await updateUser(get().user?.id, formData);
+      console.log(newUser);
+      set((state) => {
+        state.user = newUser;
+      });
+    } catch (error) {
+      toast.error("Cập nhật thông tin thất bại. Vui lòng thử lại sau.");
+    }
+    set((state) => {
+      state.isUserLoading = false;
+    });
+  },
+  login: async (user) => {
+    const empty = user.email === "" && user.password === "";
+    try {
+      set((state) => {
+        state.isUserLoading = true;
+      });
+      const response = await login(user || {});
       set((state) => {
         state.user = response.data;
       });
-      console.log("Login successful @@", response.data);
-      toast.success("Đăng nhập thành công!");
-      // }
+      if (!empty) toast.success("Đăng nhập thành công!");
     } catch (error) {
-      console.log("Login failed", error);
       if (user)
-        toast.error(
-          "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập."
-        );
+        if (!empty)
+          toast.error(
+            "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập."
+          );
     }
+    set((state) => {
+      state.isUserLoading = false;
+    });
   },
   logout: async () => {
     try {
@@ -46,12 +73,6 @@ export const createUserSlice: StateCreator<
     } catch (error) {
       toast.error("Đăng xuất thất bại. Vui lòng thử lại sau.");
     }
-  },
-  updateUser: (user) => {
-    // set((state) => {
-    //   state.username = user.username;
-    //   state.imageUrl = user.imageUrl;
-    // });
   },
   connectSocket: () => {
     console.log("Connect to socket function");

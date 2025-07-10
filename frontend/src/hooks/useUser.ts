@@ -5,7 +5,7 @@ export default function useUser({
   userId,
 }: {
   params?: string;
-  userId?: string;
+  userId?: number;
 }) {
   const getAllUsersQuery = useQuery({
     queryKey: ["users", params],
