@@ -99,7 +99,7 @@ export default function Problemset() {
                         {value.title}
                       </TableCell>
                       <TableCell className="">{value.difficulty}</TableCell>
-                      <TableCell className="py-4">{index + 50}</TableCell>
+                      <TableCell className="py-4">{value?.points}</TableCell>
                       <TableCell className="py-4">
                         <CircleCheck color="hsl(221.2 83.2% 53.3%)" />
                       </TableCell>

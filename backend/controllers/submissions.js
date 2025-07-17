@@ -85,12 +85,13 @@ const createSubmission = async (req, res) => {
   }
 
   try {
-    console.log("START");
     const submission = await prisma.submission.create({
-      data,
+      data: {
+        ...data,
+        status: "Pending",
+      },
     });
 
-    console.log("START");
     await flowProducer.add({
       name: `submission-${submission.id}`,
       data: {

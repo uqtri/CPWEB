@@ -24,6 +24,7 @@ export default function RankingCard({
 }: RankingCardProps) {
   const navigate = useNavigate();
 
+  console.log("user", user);
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -50,12 +51,16 @@ export default function RankingCard({
         <p className="font-bold text-lg">{user?.username}</p>
         <div className="flex gap-3 mt-4 justify-center">
           <div className="bg-gray-50 p-3 rouned-md ">
-            <p className="text-center text-sm"> Đã giải</p>
-            <p className="text-center text-lg font-bold">482 bài</p>
+            <p className="text-center text-sm"> Số bài đã giải</p>
+            <p className="text-center text-lg font-bold">
+              {user?.solvedProblems?.length}
+            </p>
           </div>
           <div className="bg-gray-50 p-3 rouned-md ">
-            <p className="text-center text-sm">Chuỗi ngày</p>
-            <p className="text-center text-lg font-bold">124</p>
+            <p className="text-center text-sm">Số kì thi tham gia</p>
+            <p className="text-center text-lg font-bold">
+              {user?.participatedContests?.length}
+            </p>
           </div>
         </div>
         <div className="mt-4">

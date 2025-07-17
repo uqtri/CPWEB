@@ -1,55 +1,8 @@
 import Markdown from "@/components/Markdown/Markdown";
 import { useEscape } from "@/hooks/useEscape";
 import { CreateProblemData, UpdateProblemData } from "@/types/problem";
-
-const markdown = `
-Cho một chuỗi gồm $N, W_1, W_2,..., W_N$ được viết bằng tiếng latin in thường. Bạn hãy viết chương trình dự đoán xem chuỗi từ này có phải là ngôn ngữ Anh hay không bằng dấu hiệu nhận biết sau:
-
-- Nếu một trong các từ là $and, not , that, the, hoặc$  $you$, nó là tiếng Anh.
-- Ngược lại, nó không phải là tiếng Anh.
-
-### Input
-- Dòng đầu chứa số nguyên dương $N (1\\le N\\le 100)$.
-- Dòng tiếp theo chứa ~N~ từ ~W_1~, ~W_2~,..., ~W_N~ được viết bằng tiếng latin in thường. Mỗi từ có độ dài không vượt quá ~50~.
-
-### Output
-- In ra \`Yes\` nếu một trong các từ là \`and\`, \`not\`, \`that\`, \`the\`, hoặc \`you\`, ngược lại in ra \`No\`.
-
-### Ví dụ
-
-#### Sample input 01
-\`\`\`
-10
-in that case you should print yes and not no
-\`\`\`
-
-#### Sample output 01
-\`\`\`
-Yes
-\`\`\`
-
-#### Sample input 02
-\`\`\`
-3
-le quynh anh
-\`\`\`
-
-#### Sample output 02
-\`\`\`
-No
-\`\`\`
-
-#### Sample input 03
-\`\`\`
-3
-i love you
-\`\`\`
-
-#### Sample output 03
-\`\`\`
-Yes
-\`\`\`
-`;
+import { Button } from "@/ui/Button";
+import { Check, Clock, FileArchive, MenuIcon } from "lucide-react";
 
 export default function Preview({
   callback,
@@ -63,13 +16,49 @@ export default function Preview({
   // const title = (problem.get("title") as string) || "";
   // const content = (problem.get("content") as string) || "";
   return (
-    <div className="fixed w-[100vw] bg-white overflow-y-auto h-[100vh]">
-      <div className="max-w-screen-xl py-3">
-        <h1 className="text-2xl font-bold text-white">{problem.title}</h1>
-        <div className="w-[100%] h-[2px] bg-gray-100"></div>
-        <div className="prose max-w-none mt-6">
-          <Markdown markdown={problem.content} />
+    <div className="problem-detail fixed top-0 left-0 w-full h-full bg-white z-50 p-6 overflow-y-auto">
+      <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-6 p-4 bg-yellow/20 rounded-md gap-4 mt-4">
+        <div className="flex items-center gap-2">
+          <Check />
+          <p>
+            <span className="font-bold">Điểm số:</span> {problem?.points}
+          </p>
         </div>
+        <div className="flex items-center gap-2">
+          <Clock />
+          <p>
+            <span className="font-bold">Giới hạn thời gian:</span>{" "}
+            {problem?.executionTime} giây
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <MenuIcon />
+          <p>
+            <span className="font-bold"> Giới hạn bộ nhớ: </span>{" "}
+            {problem?.memoryLimit} MB
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <FileArchive />
+          <p>
+            <span className="font-bold">Độ khó:</span> {problem?.difficulty}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          {/* <FileArchive />
+          <p>
+            <span className="font-bold">Xem các nộp bài:</span> {problem.output}
+          </p> */}
+        </div>
+        <div>
+          <Button content="Nộp bài" />
+        </div>
+      </div>
+
+      <div className="prose max-w-none mt-6 p-15 shadow-md rounded-md">
+        <Markdown markdown={problem?.content || ""} />
       </div>
     </div>
   );

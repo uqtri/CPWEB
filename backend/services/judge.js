@@ -2,6 +2,7 @@ import submissionService from "./submisison.js";
 import problemService from "./problems.js";
 import submissionResultsService from "./submissionResults.js";
 import userSolvedProblemService from "./userSolvedProblem.js";
+import testCaseService from "./testCases.js";
 import fs from "fs";
 import { promisify } from "util";
 import { rootPath } from "../utils/path.js";
@@ -22,9 +23,14 @@ export const judgeSubmission = async (submissionId) => {
   ); // path to save submission
   let problem;
   let submission;
+  let testCasesRecord;
+
   try {
     submission = await submissionService.getSubmissionById(submissionId);
     problem = await problemService.getProblemById(submission.problemId);
+    testCasesRecord = await testCaseService.getTestCaseByProblemSlug(
+      problem.slug
+    );
     await mkdirAsync(submisisonPath, { recursive: true });
     await writeFileAsync(
       path.join(submisisonPath, "main.cpp"),
@@ -34,10 +40,11 @@ export const judgeSubmission = async (submissionId) => {
     await rmdirAsync(submisisonPath, { recursive: true, force: true });
     throw error;
   }
+
   const testCasesPath = path.join(
     savedTestCasesPath,
     problem.slug,
-    problem.slug
+    testCasesRecord.path.replace(".zip", "")
   ); // path to save test cases of the problem
   const testCases = await readDirAsync(testCasesPath);
 
@@ -84,12 +91,15 @@ export const judgeSubmission = async (submissionId) => {
   let index = 0;
   let accepted = true;
   let testCasePassed = 0;
-  console.log("Test cases completed");
 
   for (const testCase of testCases) {
     const inputFile = path.join("..", "test-cases", testCase, "input.INP");
     const outputFile = path.join("..", "test-cases", testCase, "output.OUT");
-    const commandRun = `docker exec submission-${submissionId} sh -c "timeout ${problem.executionTime}s ./main < ${inputFile} > "output.inp" && diff ${outputFile} output.inp"`;
+    const commandRun = `docker exec submission-${submissionId} sh -c "timeout ${problem.executionTime}s ./main < ${inputFile} > "output.out" && diff ${outputFile} output.out"`;
+    const { stdout } = await shellCommand(
+      `docker exec submission-${submissionId} sh -c "ls"`
+    );
+    console.log(`Test case ${index + 1} output:\n${stdout}`);
 
     try {
       await shellCommand(commandRun);
@@ -106,11 +116,17 @@ export const judgeSubmission = async (submissionId) => {
       let data = {
         index: index + 1,
         submissionId: submission.id,
+        // code: error.code,
       };
 
-      if (error.code === 124) {
+      if (error.code === 124 || error.code === 137 || error.code === 143) {
         data.result = "Time Limit Exceeded"; // Time Limit Exceeded
-      } else if (error.code === 139) {
+      } else if (
+        error.code === 139 ||
+        error.code === 11 ||
+        error.code === 132 ||
+        error.code === 134
+      ) {
         // RE
         data.result = "Runtime Error"; // Runtime Error
       } else {

@@ -52,9 +52,9 @@ export default function Leaderboard() {
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Đã giải
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Chuỗi ngày
-            </th>
+            </th> */}
           </tr>
           {users.slice(3).map((user: any, index: number) => (
             <tr key={user.id} className="table-row hover:bg-gray-50 transition">
@@ -86,10 +86,12 @@ export default function Leaderboard() {
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm ">{user.solved} bài</div>
+                <div className="text-sm ">
+                  {user?.solvedProblems?.length} bài
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm ">{user.streak} ngày</div>
+                {/* <div className="text-sm ">{user.streak} ngày</div> */}
               </td>
             </tr>
           ))}

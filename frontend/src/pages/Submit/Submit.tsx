@@ -60,7 +60,7 @@ export default function Submit() {
   };
 
   return (
-    <div className="mt-[62px] p-4">
+    <div className="p-4">
       <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
       <div className="flex justify-center mt-4 gap-3">
         <Editor

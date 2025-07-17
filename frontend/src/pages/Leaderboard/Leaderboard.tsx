@@ -92,9 +92,9 @@ export default function Leaderboard() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Đã giải
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Chuỗi ngày
-              </th>
+              </th> */}
             </tr>
             {users.map((user: any, index: number) => (
               <tr
@@ -116,12 +116,14 @@ export default function Leaderboard() {
                     <div className="h-10 w-10 rounded-full overflow-hidden">
                       <img
                         src={user?.avatarUrl || UserAvatar}
-                        alt={user.name}
+                        alt={user?.name}
                         className="h-full w-full object-cover"
                       />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium">{user.username}</div>
+                      <div className="text-sm font-medium">
+                        {user?.username}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -131,11 +133,13 @@ export default function Leaderboard() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm ">{user.solved} bài</div>
+                  <div className="text-sm ">
+                    {user?.solvedProblems.length} bài
+                  </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm ">{user.streak} ngày</div>
-                </td>
+                {/* <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm ">{user?.streak || 0} ngày</div>
+                </td> */}
               </tr>
             ))}
           </table>

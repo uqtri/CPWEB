@@ -7,6 +7,7 @@ import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
 type NotificationType = "success" | "info" | "warning" | "error";
 
 import { message, notification } from "antd";
+import { toast } from "react-toastify";
 
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +35,7 @@ export default function Register() {
       type: "text",
       placeholder: "Username",
       label: "Username",
-      pattern: "^[a-zAz0-9]{8,}$|^[a-zA-Z0-9]{5,}@+.+.+$",
+      pattern: "^[a-zA-Z0-9]{8,}$|^[a-zA-Z0-9]{5,}@+.+.+$",
       message: "Username phải có ít nhất 8 kí tự",
     },
     {
@@ -42,9 +43,8 @@ export default function Register() {
       type: "password",
       placeholder: "Password",
       label: "Password",
-      pattern: "(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}$",
-      message:
-        "Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất 1 ký tự đặc biệt",
+      pattern: "[a-zA-Z0-9]{8,}",
+      message: "Mật khẩu phải có ít nhất 8 ký tự",
     },
     {
       name: "confirmPassword",
@@ -65,7 +65,8 @@ export default function Register() {
 
     // openNotification("error");
     if (password !== confirmPassword) {
-      openNotification("error", "Mật khẩu không khớp");
+      toast.error("Mật khẩu không khớp");
+      // openNotification("error", "Mật khẩu không khớp");
       return;
     }
     const register = async (username: string, password: string) => {
@@ -86,10 +87,10 @@ export default function Register() {
       });
       console.log("Response: ", response);
       if (response.success === true) {
-        openNotification("success", "Đăng ký thành công");
+        toast.success("Đăng ký thành công");
         navigate("/login");
       } else {
-        openNotification("error", response.message);
+        toast.error(response.message);
       }
       setIsLoading(false);
     };
@@ -129,7 +130,7 @@ export default function Register() {
           })}
         <button
           type="submit"
-          className="mt-3 bg-primary w-full text-white rounded-md flex items-center p-3 justify-center"
+          className="mt-3 bg-primary w-full text-white rounded-md flex items-center p-3 justify-center cursor-pointer"
         >
           <span>Đăng ký</span>
           <ArrowRight className="ml-2" />

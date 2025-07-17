@@ -15,6 +15,7 @@ const getUsers = async (req, res) => {
     const users = await prisma.user.findMany({
       include: {
         solvedProblems: true,
+        participatedContests: true,
       },
       orderBy: [
         {
@@ -56,6 +57,7 @@ const getUserById = async (req, res) => {
             problem: true,
           },
         },
+        participatedContests: true,
       },
     });
 

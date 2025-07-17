@@ -8,6 +8,7 @@ import { getSubmissionResultBySubmissionId } from "@/api/submissionResult.api";
 import { Submission } from "@/types/submission";
 
 import { getTestCaseByProblemSlug } from "@/api/testCase.api";
+import { set } from "lodash";
 
 export default function SubmissionDetail() {
   const socket = useAppStore((state) => state.socket);
@@ -71,6 +72,7 @@ export default function SubmissionDetail() {
       try {
         const submission = await getSubmissionById(parseInt(submissionId!));
         setSubmission(submission);
+        setStatus(submission.status);
       } catch (error) {
         console.error("Error fetching submission:", error);
       }
@@ -78,6 +80,7 @@ export default function SubmissionDetail() {
     fetchSubmissionResultAndSubmission();
   }, [submissionId]);
 
+  console.log(submissionResult);
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Title */}
@@ -127,9 +130,18 @@ export default function SubmissionDetail() {
           </div> */}
         </div>
       </div>
+      {/* Source Code */}
+      <div className="bg-white rounded-xl shadow p-4 border">
+        <h2 className="text-lg font-semibold mb-4">Source Code</h2>
+        <div className="bg-gray-100 p-3 rounded overflow-auto max-h-96">
+          <pre className="text-sm text-gray-800 whitespace-pre-wrap">
+            {submission?.code}
+          </pre>
+        </div>
+      </div>
 
       {/* Testcase Results */}
-      <div className="bg-white rounded-xl shadow p-4 mb-6 border">
+      <div className="bg-white rounded-xl shadow p-4 mt-6 border">
         <h2 className="text-lg font-semibold mb-4">Kết quả chấm bài</h2>
         <div className="divide-y">
           {submissionResult.map((test) => (
@@ -144,16 +156,6 @@ export default function SubmissionDetail() {
               />
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Source Code */}
-      <div className="bg-white rounded-xl shadow p-4 border">
-        <h2 className="text-lg font-semibold mb-4">Source Code</h2>
-        <div className="bg-gray-100 p-3 rounded overflow-auto max-h-96">
-          <pre className="text-sm text-gray-800 whitespace-pre-wrap">
-            {submission?.code}
-          </pre>
         </div>
       </div>
     </div>

@@ -80,7 +80,8 @@ const createTestCase = async (req, res) => {
     let testCase;
 
     const testCases = await readdirAsync(
-      savedFilePath + `/${problem.slug}/${problem.slug}`,
+      savedFilePath +
+        `/${problem.slug}/${file.originalname.replace(/\.zip$/, "")}`,
       {
         withFileTypes: true,
       }
@@ -134,7 +135,8 @@ const deleteTestCase = async (req, res) => {
 };
 const getTestCaseByProblemSlug = async (req, res) => {
   const { problemSlug } = req.params;
-
+  console.log("TRI!@#");
+  console;
   const testCases = await testCaseService.getTestCaseByProblemSlug(problemSlug);
   const testCasesPath = path.join(savedFilePath, testCases.problem.slug);
 

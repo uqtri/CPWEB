@@ -44,7 +44,7 @@ export default function TestCase() {
               key={problem.id}
               className="hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                navigate(`/admin/test-case/${slug(problem.title)}`);
+                navigate(`/admin/test-case/${slug(problem.slug)}`);
               }}
             >
               <TableCell>{problem.title}</TableCell>

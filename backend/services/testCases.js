@@ -1,5 +1,6 @@
 import { prisma } from "../prisma/prisma-client.js";
 const getTestCaseByProblemSlug = async (problemSlug) => {
+  console.log(problemSlug, "!@#");
   try {
     const testCases = await prisma.testCase.findFirst({
       where: {
