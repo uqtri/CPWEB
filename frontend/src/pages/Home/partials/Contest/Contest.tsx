@@ -19,6 +19,7 @@ export default function Contest() {
           description="Cuộc thi lập trình CodeForge Cup 2025 là một trong những cuộc thi lớn nhất trong năm 2025 với sự tham gia của hàng ngàn lập trình viên trên toàn thế giới. Cuộc thi sẽ diễn ra trong vòng 24 giờ và các thí sinh sẽ phải giải quyết các bài toán lập trình khó khăn nhất để giành chiến thắng."
           difficulty="Khó"
           participants={1000}
+          options={{ showButton: true }}
         />
         <ContestCard
           status="Đang diễn ra"
@@ -28,6 +29,7 @@ export default function Contest() {
           description="Cuộc thi lập trình CodeForge Cup 2025 là một trong những cuộc thi lớn nhất trong năm 2025 với sự tham gia của hàng ngàn lập trình viên trên toàn thế giới. Cuộc thi sẽ diễn ra trong vòng 24 giờ và các thí sinh sẽ phải giải quyết các bài toán lập trình khó khăn nhất để giành chiến thắng."
           difficulty="Khó"
           participants={1000}
+          options={{ showButton: true }}
         />
         <ContestCard
           status="Đang diễn ra"
@@ -37,6 +39,7 @@ export default function Contest() {
           description="Cuộc thi lập trình CodeForge Cup 2025 là một trong những cuộc thi lớn nhất trong năm 2025 với sự tham gia của hàng ngàn lập trình viên trên toàn thế giới. Cuộc thi sẽ diễn ra trong vòng 24 giờ và các thí sinh sẽ phải giải quyết các bài toán lập trình khó khăn nhất để giành chiến thắng."
           difficulty="Khó"
           participants={1000}
+          options={{ showButton: true }}
         />
         <ContestCard
           status="Đang diễn ra"
@@ -46,6 +49,7 @@ export default function Contest() {
           description="Cuộc thi lập trình CodeForge Cup 2025 là một trong những cuộc thi lớn nhất trong năm 2025 với sự tham gia của hàng ngàn lập trình viên trên toàn thế giới. Cuộc thi sẽ diễn ra trong vòng 24 giờ và các thí sinh sẽ phải giải quyết các bài toán lập trình khó khăn nhất để giành chiến thắng."
           difficulty="Khó"
           participants={1000}
+          options={{ showButton: true }}
         />
       </div>
       <div className="mt-6 p-4 font-bold flex">

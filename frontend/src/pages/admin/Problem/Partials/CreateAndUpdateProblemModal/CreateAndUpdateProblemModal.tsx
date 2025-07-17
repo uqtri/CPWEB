@@ -83,6 +83,18 @@ export default function CreateAndUpdateProblemModal({
               onChange={handleChange}
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-xl font-medium mb-2">Slug</label>
+            <input
+              name="slug"
+              type="text"
+              className="w-full p-2 border rounded"
+              required
+              minLength={5}
+              defaultValue={data.slug}
+              onChange={handleChange}
+            />
+          </div>
           <div className="grid grid-cols-4 gap-4 mb-4">
             <div>
               <label className="block text-xl font-medium mb-2">Điểm số</label>

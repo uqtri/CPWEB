@@ -13,13 +13,16 @@ import Dashboard from "../../pages/admin/Dashboard/Dashboard";
 import Problem from "../../pages/admin/Problem/Problem";
 import Submission from "../../pages/admin/Submission/Submission";
 import Post from "../../pages/admin/Post/Post";
-import Contest from "../../pages/Home/partials/Contest/Contest";
 import Settings from "../../pages/admin/Settings/Settings";
 import User from "../../pages/admin/User/User";
 import Category from "@/pages/admin/Category/Category";
 import TestCase from "@/pages/admin/TestCase/TestCase";
 import TestCaseDetail from "@/pages/admin/TestCase/partials/TestCaseDetail/TestCaseDetail";
 import Leaderboard from "@/pages/Leaderboard/Leaderboard";
+import AdminContest from "@/pages/admin/Contest/Contest";
+import Contest from "@/pages/Contest/Contest";
+import ContestDetail from "@/pages/ContestDetail/ContestDetail";
+import ContestProblemDetail from "@/pages/Contest/Partials/ProblemDetail/ProblemDetail";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -62,6 +65,18 @@ const router = createBrowserRouter([
         path: "/leaderboard",
         element: <Leaderboard />,
       },
+      {
+        path: "/contests",
+        element: <Contest />,
+      },
+      {
+        path: "/contest/:contestSlug",
+        element: <ContestDetail />,
+      },
+      {
+        path: "/contest/:contestSlug/problem/:problemSlug",
+        element: <ContestProblemDetail />,
+      },
     ],
   },
   {
@@ -88,7 +103,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin/contest",
-        element: <Contest />,
+        element: <AdminContest />,
       },
       {
         path: "/admin/comment",

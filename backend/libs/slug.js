@@ -1,5 +1,5 @@
 import slugify from "slugify";
-export function slug(text) {
+export function generateSlug(text) {
   return slugify(text, {
     lower: true,
     strict: true,

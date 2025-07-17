@@ -1,4 +1,13 @@
-import { Calendar, Circle, Clock, Dot, Flag, Users } from "lucide-react";
+import {
+  Calendar,
+  Circle,
+  Clock,
+  Dot,
+  Edit,
+  Flag,
+  Trash,
+  Users,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { formatDate } from "@/lib/formatDate";
@@ -11,16 +20,9 @@ type ContestCardProps = {
   endTime: string;
   participants: number;
 };
-export default function ContestCard({ contest, options = {} }: any) {
-  console.log(contest);
+export default function ContestCard({ contest, onEdit }: any) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="contest-card rounded-md bg-white shadow-xl w-full overflow-hidden"
-    >
+    <div className="contest-card rounded-md bg-white shadow-xl w-full overflow-hidden">
       <div className="bg-red-500 text-center text-white px-4 py-2 flex items-center">
         <Circle className="animate-ping" size={10} />{" "}
         <p className="flex-grow text-center">{"Đang diễn ra"}</p>
@@ -50,14 +52,16 @@ export default function ContestCard({ contest, options = {} }: any) {
             {contest?.participants?.length || 0} người tham gia
           </p>
         </div>
-        {options?.showButton && (
-          <Link to={`/contest/${contest?.slug}`}>
-            <button className="p-2 border border-primary text-primary w-full mt-4 rounded-md cursor-pointer">
-              Tham gia ngay
-            </button>
-          </Link>
-        )}
+        <div className="flex justify-end gap-4 mt-4">
+          <Edit
+            className="cursor-pointer"
+            onClick={() => {
+              onEdit();
+            }}
+          />
+          <Trash className="cursor-pointer" />
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

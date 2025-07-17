@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import UserAvatar from "@/assets/user.png";
 import { Pagination } from "antd";
 import { getUsersByUsername } from "@/api/user.api";
-import { u } from "framer-motion/client";
+
 const size = 10;
 export default function Leaderboard() {
   const [searchUsername, setSearchUsername] = useState("");
@@ -31,7 +31,7 @@ export default function Leaderboard() {
       // console.log(error);
     }
   };
-  console.log(usersFound, "usersFound");
+  console.log(users, "users");
   return (
     <div className="rounded-xl relative max-w-screen-xl mx-auto">
       <div>

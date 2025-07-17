@@ -13,5 +13,6 @@ export const flowProducer = new FlowProducer({
 });
 
 flowProducer.on("error", (error) => {
+  // con
   console.error("FlowProducer error:", error.toString());
 });

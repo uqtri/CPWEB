@@ -20,7 +20,6 @@ export default function Problem() {
   const { getProblemListQuery } = useProblem({ params: params.toString() });
 
   const problems = getProblemListQuery.data?.problems || [];
-  console.log(problems, "problems");
 
   return (
     <div className="w-full px-10 py-10">

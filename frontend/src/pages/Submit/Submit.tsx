@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import Button from "../../components/Button/Button";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppStore } from "../../store";
 import { createSubmissions } from "@/api/submissions.api";
 import { useProblem } from "@/hooks/useProblem";
@@ -20,11 +20,14 @@ type Problem = {
 export default function Submit() {
   let code = useRef<string>("");
 
+  const [searchQuery, setSearchQuery] = useSearchParams();
+
   const { problemSlug } = useParams();
   const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
   const problem = getProblemBySlugQuery?.data;
   const user = useAppStore((state) => state.user);
   const socket = useAppStore((state) => state.socket);
+
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -36,6 +39,7 @@ export default function Submit() {
         language: language,
         problemId: problem!.id,
         userId: user.id,
+        contestId: parseInt(searchQuery.get("contestId")!) || undefined,
       });
       if (socket) {
         socket.emit("submission:join", {

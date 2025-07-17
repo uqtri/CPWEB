@@ -1,6 +1,6 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
-import { slug } from "../libs/slug.js";
+import { generateSlug } from "../libs/slug.js";
 import { parseJwt } from "../utils/parseJwt.js";
 import problemService from "../services/problems.js";
 import userSolvedProblem from "../services/userSolvedProblem.js";
@@ -13,7 +13,7 @@ const createProblem = async (req, res) => {
   if (!problemData.userId) {
     problemData.userId = payload.id;
   }
-  problemData.slug = slug(problemData.title);
+  if (!problemData.slug) problemData.slug = generateSlug(problemData.title);
   try {
     const problem = await prisma.problem.create({
       data: {
@@ -167,8 +167,8 @@ const updateProblem = async (req, res) => {
   if (!problemData.userId) {
     problemData.userId = payload.id;
   }
-  problemData.slug = slug(problemData.title);
-  console.log(problemData);
+  if (!problemData.slug) problemData.slug = generateSlug(problemData.title);
+
   try {
     const problem = await prisma.problem.update({
       where: { id: parseInt(id) },

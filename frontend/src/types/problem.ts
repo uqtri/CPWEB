@@ -26,6 +26,7 @@ export type ProblemResponse = {
   executionTime: number;
   memoryLimit: number;
   points: number;
+  slug: string;
   difficulty: "Dễ" | "Trung bình" | "Khó";
 };
 export type CreateProblemData = {
@@ -35,6 +36,7 @@ export type CreateProblemData = {
   executionTime: number;
   memoryLimit: number;
   points: number;
+  slug?: string;
   difficulty: "Dễ" | "Trung bình" | "Khó";
 };
 
@@ -45,5 +47,6 @@ export type UpdateProblemData = {
   executionTime: number;
   memoryLimit: number;
   points: number;
+  slug?: string;
   difficulty: "Dễ" | "Trung bình" | "Khó";
 };

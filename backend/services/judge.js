@@ -8,6 +8,7 @@ import { rootPath } from "../utils/path.js";
 import path from "path";
 import { shellCommand } from "../utils/shell.js";
 import { emitTestResults } from "../socket/emitters/submission.js";
+import { console } from "inspector";
 const savedTestCasesPath = path.join(rootPath, "..", "test-cases"); // Path to save all test cases of problems
 const savedSubmissionsPath = path.join(rootPath, "..", "submissions"); // Path to save all submissions
 const readDirAsync = promisify(fs.readdir);
@@ -48,8 +49,11 @@ export const judgeSubmission = async (submissionId) => {
     `--memory ${problem.memoryLimit}M ` +
     `frolvlad/alpine-gxx tail -f /dev/null`;
 
-  // remove the container if it exists
-  await shellCommand(`docker rm -f submission-${submissionId}`);
+  try {
+    await shellCommand(`docker rm -f submission-${submissionId}`);
+  } catch (error) {
+    throw error;
+  }
   // run container
 
   try {
@@ -79,6 +83,9 @@ export const judgeSubmission = async (submissionId) => {
 
   let index = 0;
   let accepted = true;
+  let testCasePassed = 0;
+  console.log("Test cases completed");
+
   for (const testCase of testCases) {
     const inputFile = path.join("..", "test-cases", testCase, "input.INP");
     const outputFile = path.join("..", "test-cases", testCase, "output.OUT");
@@ -91,6 +98,7 @@ export const judgeSubmission = async (submissionId) => {
         result: "Accepted",
         submissionId: submission.id,
       };
+      testCasePassed++;
       emitTestResults("submission-" + submission.id.toString(), data);
       await submissionResultsService.createSubmissionResult(data);
     } catch (error) {
@@ -115,6 +123,10 @@ export const judgeSubmission = async (submissionId) => {
     index++;
   }
   try {
+    await submissionService.updateSubmission(submissionId, {
+      testCasePassed,
+      points: (testCasePassed / testCases.length) * problem.points,
+    });
     if (accepted) {
       await userSolvedProblemService.createUserSolvedProblem({
         userId: submission.userId,

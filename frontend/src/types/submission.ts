@@ -8,6 +8,7 @@ export type Submission = {
   problem: Problem;
   user: any;
   executionTime: number;
+  contestId?: number;
   memoryUser: number;
   Score: number;
   createdAt: Date;
@@ -18,10 +19,12 @@ export type CreateSubmissionData = {
   language: string;
   userId: number;
   problemId: number;
+  contestId?: number;
 };
 
 export type UpdateSubmissionData = {
   code: string;
   languague: string;
   userId: number;
+  contestId?: number;
 };

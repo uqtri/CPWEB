@@ -50,6 +50,7 @@ export const createUserSlice: StateCreator<
       set((state) => {
         state.user = response.data;
       });
+      console.log("Login response:", response);
       if (!empty) toast.success("Đăng nhập thành công!");
     } catch (error) {
       if (user)

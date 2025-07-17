@@ -30,6 +30,7 @@ model User {
   submissions      Submission[]
   role             Role                @relation(fields: [roleId], references: [id])
   solvedProblems   UserSolvedProblem[]
+  participatedContests ContestRegistration[]
 }
 
 model Post {
@@ -72,7 +73,9 @@ model Problem {
   testCases         TestCase[]
   SolvedBy          UserSolvedProblem[]
   categories        Category[]          @relation("CategoryToProblem")
-  contests          Contest[]           @relation("ContestToProblem")
+  // contests          Contest[]           @relation("ContestToProblem")
+  status         ProblemStatus           @default(active)
+  inContests      ContestProblem[] 
 }
 
 model ProblemCategory {
@@ -100,6 +103,10 @@ model Submission {
   problem       Problem            @relation(fields: [problemId], references: [id])
   user          User               @relation(fields: [userId], references: [id])
   result        SubmissionResult[]
+  contestId Int? 
+  testCasePassed Int? @default(0)
+  points          Int? @default(0)
+  contestProblem ContestProblem? @relation(fields: [contestId, problemId], references: [contestId, problemId])
 }
 
 model Message {
@@ -112,17 +119,6 @@ model Message {
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
   sender     User     @relation("SentMessages", fields: [senderId], references: [id])
 }
-
-model Contest {
-  id        Int       @id @default(autoincrement())
-  title     String
-  createdAt DateTime  @default(now())
-  beginAt   DateTime
-  endAt     DateTime
-  isDeleted Boolean   @default(false)
-  problems  Problem[] @relation("ContestToProblem")
-}
-
 model TestCase {
   id        Int     @id @default(autoincrement())
   path      String
@@ -163,4 +159,45 @@ model UserSolvedProblem {
   user      User    @relation(fields: [userId], references: [id])
 
   @@id([userId, problemId])
+}
+
+
+model Contest {
+  id        Int       @id @default(autoincrement())
+  title     String
+  createdAt DateTime  @default(now())
+  startTime   DateTime
+  endTime     DateTime
+  isDeleted Boolean   @default(false)
+  description String?
+  slug String @unique
+  // problems  Problem[] @relation("ContestToProblem")
+  participants ContestRegistration[]
+  problems    ContestProblem[]
+  
+}
+
+model ContestRegistration {
+  userId    Int
+  contestId Int
+  isDeleted Boolean @default(false)
+  user      User    @relation(fields: [userId], references: [id])
+  contest   Contest @relation(fields: [contestId], references: [id])
+
+  @@id([userId, contestId])
+}
+
+  model ContestProblem {
+  contestId Int
+  problemId Int
+  isDeleted Boolean @default(false)
+  contest   Contest @relation(fields: [contestId], references: [id])
+  problem   Problem @relation(fields: [problemId], references: [id])
+  submissions Submission[]
+
+  @@id([contestId, problemId])
+}
+enum ProblemStatus {
+  active
+  inactive
 }

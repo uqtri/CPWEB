@@ -4,6 +4,7 @@ export function pushEscapeHandler(handler: () => void) {
   escapeStack.push(handler);
 }
 export function popEscapeHandler() {
+  console.log("Popping escape handler");
   escapeStack.pop();
 }
 
