@@ -24,6 +24,8 @@ import AdminContest from "@/pages/admin/Contest/Contest";
 import Contest from "@/pages/Contest/Contest";
 import ContestDetail from "@/pages/ContestDetail/ContestDetail";
 import ContestProblemDetail from "@/pages/Contest/Partials/ProblemDetail/ProblemDetail";
+import Chat from "@/pages/Chat/Chat";
+import Message from "@/pages/Message/Message";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -77,6 +79,16 @@ const router = createBrowserRouter([
       {
         path: "/contest/:contestSlug/problem/:problemSlug",
         element: <ContestProblemDetail />,
+      },
+      {
+        path: "/chat",
+        element: <Chat />,
+        children: [
+          {
+            path: "/chat/:conversationId",
+            element: <Message />,
+          },
+        ],
       },
     ],
   },
