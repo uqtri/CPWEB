@@ -23,7 +23,7 @@ model User {
   fullName          String?
   aboutMe         String?
   comments         Comment[]
-  messagesReceived Message[]           @relation("ReceivedMessages")
+  // messagesReceived Message[]           @relation("ReceivedMessages")
   messagesSent     Message[]           @relation("SentMessages")
   posts            Post[]
   problems         Problem[]
@@ -31,6 +31,8 @@ model User {
   role             Role                @relation(fields: [roleId], references: [id])
   solvedProblems   UserSolvedProblem[]
   participatedContests ContestRegistration[]
+  conversations    Conversation[]      @relation("ConversationParticipants")
+  createdConversations Conversation[] 
 }
 
 model Post {
@@ -107,17 +109,6 @@ model Submission {
   testCasePassed Int? @default(0)
   points          Int? @default(0)
   contestProblem ContestProblem? @relation(fields: [contestId, problemId], references: [contestId, problemId])
-}
-
-model Message {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  senderId   Int
-  receiverId Int
-  isDeleted  Boolean  @default(false)
-  content    String
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
 }
 model TestCase {
   id        Int     @id @default(autoincrement())
@@ -196,6 +187,32 @@ model ContestRegistration {
   submissions Submission[]
 
   @@id([contestId, problemId])
+}
+
+model Conversation {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isDeleted  Boolean  @default(false)
+  isGroup   Boolean  @default(false)
+  isCommunity  Boolean  @default(false)
+  name       String?
+  participants User[] @relation("ConversationParticipants")
+  messages   Message[]
+  authorId   Int?
+  author     User?    @relation(fields: [authorId], references: [id])
+  lastMessage String?
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  senderId   Int
+  isDeleted  Boolean  @default(false)
+  content    String
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  conversationId Int
+  conversation Conversation @relation(fields: [conversationId], references: [id])
 }
 enum ProblemStatus {
   active
