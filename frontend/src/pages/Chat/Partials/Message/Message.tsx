@@ -1,15 +1,8 @@
 import GroupAvatar from "@/assets/user.png";
 import { useMessage } from "@/hooks/useMessage";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useConversation } from "@/hooks/useConversation";
-import {
-  ArrowBigLeft,
-  ArrowBigRightDash,
-  ArrowLeft,
-  ArrowLeftToLine,
-  Image,
-  SendHorizonal,
-} from "lucide-react";
+import { ArrowLeft, Image, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import UserAvatar from "@/assets/user.png";
@@ -26,7 +19,6 @@ export default function Message() {
   const messagesRef = useRef<HTMLDivElement>(null);
   const shouldScrollToBottom = useRef(true);
   const socket = useAppStore((state) => state.socket);
-  const navigate = useNavigate();
   const { getMessageByConversationIdQuery, createMessageMutation } = useMessage(
     {
       conversationId: conversationId,
@@ -42,10 +34,33 @@ export default function Message() {
     getMessageByConversationIdQuery?.data?.pages
       .flatMap((page) => page)
       .reverse() || [];
-
-  if (!conversationId) {
-    return <div className="flex-1">Chọn một cuộc trò chuyện để bắt đầu.</div>;
-  }
+  useEffect(() => {
+    if (socket) {
+      socket.on("message:create", async (data: any) => {
+        const message = data.message;
+        console.log("Received message:create", data);
+        if (message.conversationId === conversationId) {
+          await handleSendMessage({ message, sentByCurrentUser: false });
+          shouldScrollToBottom.current = true;
+        }
+      });
+    }
+  }, [socket]);
+  useEffect(() => {
+    if (messages.length === 0) return;
+    if (
+      firstMessageRef.current &&
+      messagesRef.current &&
+      messagesRef.current.scrollTop === 0 &&
+      !shouldScrollToBottom.current
+    ) {
+      messagesRef.current.scrollTop = firstMessageRef.current.offsetHeight;
+    }
+    if (messagesRef.current && shouldScrollToBottom.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+      shouldScrollToBottom.current = false;
+    }
+  }, [firstMessageRef, messages]);
   const handleSendMessage = async ({ message, sentByCurrentUser }: any) => {
     if (sentByCurrentUser) {
       message = {
@@ -94,21 +109,6 @@ export default function Message() {
     }
   };
 
-  useEffect(() => {
-    if (messages.length === 0) return;
-    if (
-      firstMessageRef.current &&
-      messagesRef.current &&
-      messagesRef.current.scrollTop === 0 &&
-      !shouldScrollToBottom.current
-    ) {
-      messagesRef.current.scrollTop = firstMessageRef.current.offsetHeight;
-    }
-    if (messagesRef.current && shouldScrollToBottom.current) {
-      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-      shouldScrollToBottom.current = false;
-    }
-  }, [firstMessageRef, messages]);
   const handleFetchOldMessages = async (e: React.UIEvent<HTMLDivElement>) => {
     console.log("Scroll position:", e.currentTarget.scrollTop);
     if (e.currentTarget.scrollTop == 0) {
@@ -116,27 +116,14 @@ export default function Message() {
       await getMessageByConversationIdQuery.fetchNextPage();
     }
   };
-  useEffect(() => {
-    if (socket) {
-      socket.on("message:create", async (data: any) => {
-        const message = data.message;
-        console.log("Received message:create", data);
-        if (message.conversationId === conversationId) {
-          await handleSendMessage({ message, sentByCurrentUser: false });
-          shouldScrollToBottom.current = true;
-        }
-      });
-    }
-  }, [socket]);
+
+  if (!conversationId) {
+    return <div className="flex-1">Chọn một cuộc trò chuyện để bắt đầu.</div>;
+  }
   return (
     <div className="flex-1 flex flex-col border border-gray-200 shadow-md rounded-lg overflow-hidden relative h-full">
       <div className="p-2 flex gap-4 items-center bg-gray-100 shadow-md h-[75px]">
-        <ArrowLeftToLine
-          className="cursor-pointer block lg:hidden"
-          onClick={() => {
-            navigate("/chat");
-          }}
-        />
+        {/* <ArrowLeft className="w-10 h-10" /> */}
         <img
           className="w-12 h-12 rounded-full"
           src={currentConversation?.image || GroupAvatar}

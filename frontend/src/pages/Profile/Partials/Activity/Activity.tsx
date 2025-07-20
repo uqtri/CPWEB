@@ -7,7 +7,7 @@ export default function Activity({ user }: { user: any }) {
   const [tabs, setTabs] = useState("contests");
 
   return (
-    <div>
+    <div className="mb-[100px] lg:mb-0">
       <div className="activity-header flex gap-4 border border-gray-200 rounded-lg">
         <div
           className={cn(

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { X, CodeIcon, Menu } from "lucide-react";
 
 import { useState } from "react";
@@ -20,12 +20,17 @@ const menuItems = [
     link: "/leaderboard",
   },
   {
+    name: "Nhắn tin",
+    link: "/chat",
+  },
+  {
     name: "Cộng đồng",
     link: "/community",
   },
 ];
 export default function HeaderForAnonymous() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
       <div className="flex justify-between items-center bg-white p-4 shadow-md">
@@ -41,11 +46,16 @@ export default function HeaderForAnonymous() {
         <div className="hidden lg:flex space-x-4 space-x-4 items-center">
           {menuItems.map((item) => {
             return (
-              <Link to={item.link} key={item.name}>
-                <p className="text-lg text-gray-700 hover:text-primary font-medium">
-                  {item.name}
-                </p>
-              </Link>
+              <p
+                key={item.name}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  navigate(item.link);
+                }}
+                className="text-lg text-gray-700 hover:text-primary font-medium"
+              >
+                {item.name}
+              </p>
             );
           })}
           <Link to="/login">

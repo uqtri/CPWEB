@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { X, CodeIcon, Menu } from "lucide-react";
 import { useAppStore } from "../../store/index";
 import { useEffect, useState } from "react";
 import { Dropdown, Space } from "antd";
 import type { MenuProps } from "antd";
+import { nav } from "framer-motion/client";
 const menuItems = [
   {
     name: "Trang chủ",
@@ -22,6 +23,10 @@ const menuItems = [
     link: "/leaderboard",
   },
   {
+    name: "Nhắn tin",
+    link: "/chat",
+  },
+  {
     name: "Cộng đồng",
     link: "/community",
   },
@@ -31,6 +36,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const logout = useAppStore((state) => state.logout);
   const user = useAppStore((state) => state.user);
+  const navigate = useNavigate();
   const [items, setItems] = useState<any[]>([
     {
       key: "profile",
@@ -73,7 +79,14 @@ export default function Header() {
         <div className="hidden lg:flex lg:items-center justify-between space-x-4">
           {menuItems.map((item) => {
             return (
-              <Link to={item.link} key={item.name}>
+              <Link
+                to={item.link}
+                key={item.name}
+                onClick={() => {
+                  console.log("Clicked on menu item:", item.name);
+                  setIsMenuOpen(false);
+                }}
+              >
                 <p className="text-lg text-gray-700 hover:text-primary font-medium">
                   {item.name}
                 </p>
@@ -111,17 +124,32 @@ export default function Header() {
           <div className="flex flex-col space-y-4 space-y-4">
             {menuItems.map((item) => {
               return (
-                <Link to={item.link} key={item.name}>
-                  <p className="text-lg text-gray-700 hover:text-primary font-medium">
-                    {item.name}
-                  </p>
-                </Link>
+                // <Link to={item.link} key={item.name}>
+                <p
+                  key={item.name}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate(item.link);
+                  }}
+                  className="text-lg text-gray-700 hover:text-primary font-medium"
+                >
+                  {item.name}
+                </p>
+                // </Link>
               );
             })}
           </div>
-          <Dropdown menu={{ items }} trigger={["click"]}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>Hover me</Space>
+          <Dropdown
+            menu={{ items, onClick: () => setIsMenuOpen(false) }}
+            trigger={["click"]}
+            className="flex cursor-pointer mt-4 text-lg font-semibold text-gray-700 hover:text-primary"
+          >
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              Người dùng
             </a>
           </Dropdown>
           <div className="flex flex-col space-y-2 mt-4">

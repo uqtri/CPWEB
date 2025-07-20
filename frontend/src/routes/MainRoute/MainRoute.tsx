@@ -81,7 +81,7 @@ const router = createBrowserRouter([
         element: <ContestProblemDetail />,
       },
       {
-        path: "/chat",
+        path: "/chat/",
         element: <Chat />,
         children: [
           {

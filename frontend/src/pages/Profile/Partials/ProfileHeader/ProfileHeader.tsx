@@ -15,10 +15,10 @@ export default function ProfileHeader({
   const updateUser = useAppStore((state) => state.updateUser);
 
   return (
-    <div className="rounded-xl relative max-w-screen-xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-12">
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+    <div className="rounded-xl relative max-w-screen-xl mx-auto w-full">
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 w-full">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-12 w-full">
+          <div className="flex flex-wrap md:flex-row items-center justify-between md:items-start space-y-6 md:space-y-0 md:space-x-8 w-full">
             <div className="relative">
               <img
                 src={user?.avatarUrl || UserAvatar}
@@ -34,14 +34,13 @@ export default function ProfileHeader({
                 </div>
               )}
             </div>
-
-            <div className="flex-1 text-center md:text-left text-white">
+            <div className="flex-1 order-3 basis-[100%] lg:order-none lg:basis-auto text-white">
               <h1 className="text-3xl font-bold mb-2">
                 {user?.fullName || "Chưa có tên"}
               </h1>
               <p className="text-xl text-blue-100 mb-4">@{user?.username}</p>
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4">
+              <div className="flex flex-wrap justify-start gap-4 mb-4">
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-4 h-4" />
                   <span className="text-blue-100">
@@ -68,7 +67,7 @@ export default function ProfileHeader({
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="text-center order-2 lg:order-none">
               <div
                 className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold`}
               >

@@ -9,7 +9,7 @@ export default function MainLayout() {
   return (
     <div>
       {user ? <Header /> : <HeaderForAnonymous />}
-      <div className="mt-22 max-w-screen-3xl px-10 py-5 mx-auto">
+      <div className="mt-22 max-w-screen-xl lg:max-w-screen-3xl px-3 lg:px-10 lg:py-5 mx-auto">
         <Outlet />
       </div>
       <Footer />

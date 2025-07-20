@@ -7,6 +7,7 @@ import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 const XL_SCREEN = 1440;
 
 export default function Sidebar() {
@@ -18,6 +19,32 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const params = useParams();
   const conversationId = parseInt(params?.conversationId || "");
+  const socket = useAppStore((state) => state.socket);
+  useEffect(() => {
+    if (socket) {
+      socket.on("conversation:create", () => {
+        getConversationByUserIdQuery.refetch();
+        toast.success("Đã tạo nhóm chat mới.");
+      });
+      socket.on("message:create", () => {
+        getConversationByUserIdQuery.refetch();
+      });
+    }
+    if (socket && conversations.length > 0) {
+      console.log("Joining conversations");
+      socket.emit(
+        "conversations:join",
+        conversations.map((c: Conversation) => c.id)
+      );
+    }
+    return () => {
+      // if (socket) {
+      //   socket.off("conversation:create");
+      //   socket.off("message:create");
+      // }
+    };
+  }, [socket, conversations]);
+
   useEffect(() => {
     const handleResizeAndNavigate = () => {
       if (conversations.length > 0 && !conversationId) {
@@ -28,12 +55,16 @@ export default function Sidebar() {
     };
 
     handleResizeAndNavigate();
-
     window.addEventListener("resize", handleResizeAndNavigate);
     return () => window.removeEventListener("resize", handleResizeAndNavigate);
   }, [conversations]);
   return (
-    <aside className="w-1/4 bg-gray-100 p-5 rounded-lg">
+    <aside
+      className={cn(
+        "w-full lg:w-1/4 bg-gray-100 p-4 rounded-lg",
+        conversationId && "hidden lg:block"
+      )}
+    >
       <div className="flex gap-4 items-center justify-between">
         <h1 className="text-2xl">Nhắn tin</h1>
         <Button content="Tạo nhóm chat" />
@@ -52,7 +83,7 @@ export default function Sidebar() {
             <div
               key={conversation.id}
               className={cn(
-                `py-2 px-8 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer flex gap-2 items-center mt-4`,
+                `py-2 px-8 bg-white hover:bg-gray-200 rounded cursor-pointer flex gap-2 items-center mt-4`,
                 conversationId === conversation.id &&
                   "bg-gray-300 hover:bg-gray-300"
               )}
