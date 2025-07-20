@@ -43,7 +43,7 @@ export default function HeaderForAnonymous() {
             <p className="font-bold text-primary text-xl">CodeForge</p>
           </div>
         </Link>
-        <div className="hidden lg:flex space-x-4 space-x-4 items-center">
+        <div className="hidden lg:flex space-x-4 items-center">
           {menuItems.map((item) => {
             return (
               <p
@@ -91,7 +91,7 @@ export default function HeaderForAnonymous() {
       </div>
       {isMenuOpen && (
         <div className="mobile-menu sticky border bg-white border-gray-300 p-3 shadow-md">
-          <div className="flex flex-col space-y-4 space-y-4">
+          <div className="flex flex-col space-y-4">
             {menuItems.map((item) => {
               return (
                 <Link to={item.link} key={item.name}>

@@ -3,7 +3,7 @@ import DifficultyCard from "../../components/DifficultyCard/DifficultyCard";
 
 export default function Challenge() {
   return (
-    <div className="challenge-section mt-10 shadow-lg rounded-xl">
+    <div className="challenge-section p-5 lg:p-10 mt-10 shadow-lg rounded-xl">
       <p className="text-4xl text-center font-bold">
         Thử thách theo mức độ khó
       </p>

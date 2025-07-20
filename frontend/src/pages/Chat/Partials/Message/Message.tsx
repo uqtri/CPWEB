@@ -2,7 +2,7 @@ import GroupAvatar from "@/assets/user.png";
 import { useMessage } from "@/hooks/useMessage";
 import { useParams } from "react-router-dom";
 import { useConversation } from "@/hooks/useConversation";
-import { ArrowLeft, Image, SendHorizonal } from "lucide-react";
+import { Image, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import UserAvatar from "@/assets/user.png";

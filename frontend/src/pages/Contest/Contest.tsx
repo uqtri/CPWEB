@@ -6,7 +6,7 @@ import type { Contest } from "@/types/contest";
 import ContestList from "./Partials/ContestList/ContestList";
 export default function Contest() {
   const [contestStatus, setContestStatus] = useState("");
-  const [textSearch, setTextSearch] = useState("");
+  const [, setTextSearch] = useState("");
 
   const { getContestsQuery } = useContest({});
 
@@ -34,15 +34,15 @@ export default function Contest() {
     }) || [];
   // const registeredContests =
   return (
-    <div>
-      <div>
-        <h1>Các kì thi lập trình</h1>
-        <p>
+    <div className="mb-[100px]">
+      <div className="mb-4">
+        <h1 className="text-2xl font-semibold mb-4">Các kì thi lập trình</h1>
+        <p className="text-gray-600 mb-4">
           Tham gia vào kì thi lập trình thi đấu và cải thiện kĩ năng thuật toán
           của bạn
         </p>
       </div>
-      <div className="flex items-center border-1 border-gray-300 pl-2">
+      <div className="flex items-center border-1 border-gray-300 pl-2 mb-4">
         <Search />
         <input
           type="text"
@@ -51,8 +51,8 @@ export default function Contest() {
           onChange={(e) => setTextSearch(e.target.value)}
         />
       </div>
-      <div className="mt-4 mb-4">
-        <div className="flex gap-4 border border-gray-200">
+      <div className="mb-4">
+        <div className="flex gap-2 border border-gray-200 ">
           <p
             className={cn(
               `p-4 hover:border-b-2 hover:border-blue-200 cursor-pointer`,
@@ -66,7 +66,7 @@ export default function Contest() {
           </p>
           <p
             className={cn(
-              `p-4  hover:border-b-2 hover:border-blue-200 cursor-pointer`,
+              `p-4 hover:border-b-2 hover:border-blue-200 cursor-pointer`,
               contestStatus === "ongoing" && "border-b-2 border-blue-500"
             )}
             onClick={() => {

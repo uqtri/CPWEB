@@ -2,9 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { X, CodeIcon, Menu } from "lucide-react";
 import { useAppStore } from "../../store/index";
 import { useEffect, useState } from "react";
-import { Dropdown, Space } from "antd";
-import type { MenuProps } from "antd";
-import { nav } from "framer-motion/client";
+import { Dropdown } from "antd";
+
 const menuItems = [
   {
     name: "Trang chủ",
@@ -121,7 +120,7 @@ export default function Header() {
       </div>
       {isMenuOpen && (
         <div className="mobile-menu sticky border bg-white border-gray-300 p-3 shadow-md">
-          <div className="flex flex-col space-y-4 space-y-4">
+          <div className="flex flex-col space-y-4">
             {menuItems.map((item) => {
               return (
                 // <Link to={item.link} key={item.name}>

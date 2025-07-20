@@ -4,7 +4,7 @@ import { Sigma, Cloud, ChartBar } from "lucide-react";
 // import { BG_COLORS } from "@/constants/color";
 export default function Topic() {
   return (
-    <div className="topic-section mt-10 shadow-lg rounded-xl">
+    <div className="topic-section p-5 lg:p-10 mt-10 shadow-lg rounded-xl">
       <p className="text-4xl text-center font-bold">Khám Phá Các Chủ Đề</p>
       <p className="text-center text-gray-500 font-medium mt-2">
         Luyện tập và cải thiện kỹ năng của bạn với hàng trăm bài tập được chia

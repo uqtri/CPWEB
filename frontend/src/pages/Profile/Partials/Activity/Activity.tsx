@@ -1,7 +1,6 @@
 import { Code, Trophy } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import Contest from "./Partials/Contest/Contest";
 import Problem from "./Partials/Problem/Problem";
 export default function Activity({ user }: { user: any }) {
   const [tabs, setTabs] = useState("contests");
@@ -21,7 +20,7 @@ export default function Activity({ user }: { user: any }) {
         </div>
         <div
           className={cn(
-            `flex gap-2 p-4 cursor-pointer  h-full hover:border-b hover:border-b-2 hover:border-blue-200`,
+            `flex gap-2 p-4 cursor-pointer  h-full hover:border-b-2 hover:border-blue-200`,
             tabs === "problems" && "border-b-2 border-blue-500"
           )}
           onClick={() => setTabs("problems")}

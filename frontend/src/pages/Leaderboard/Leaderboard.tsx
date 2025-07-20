@@ -7,7 +7,6 @@ import { getUsersByUsername } from "@/api/user.api";
 
 const size = 10;
 export default function Leaderboard() {
-  const [searchUsername, setSearchUsername] = useState("");
   const navigate = useNavigate();
   const [query] = useSearchParams();
   const [page, setPage] = useState(parseInt(query.get("page") || "1") || 1);
@@ -33,7 +32,7 @@ export default function Leaderboard() {
   };
   console.log(users, "users");
   return (
-    <div className="rounded-xl relative max-w-screen-xl mx-auto">
+    <div className="rounded-xl relative mx-auto mb-[100px] lg:mb-0">
       <div>
         <p className="text-4xl text-center font-bold">Bảng xếp hạng</p>
         <p className="text-center text-gray-500 font-medium mt-2">

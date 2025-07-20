@@ -10,7 +10,7 @@ export default function Leaderboard() {
   const users = getAllUsersQuery?.data?.users || [];
   const navigate = useNavigate();
   return (
-    <div className="contest-section mt-10 shadow-lg rounded-xl relative w-full">
+    <div className="contest-section p-5 lg:p-10 mt-10 shadow-lg rounded-xl relative w-full">
       <div className="absolute top-0 right-0 w-[20%] h-[20%] filter bg-primary blur-xl opacity-30"></div>
       <p className="text-4xl text-center font-bold">Bảng xếp hạng</p>
       <p className="text-center text-gray-500 font-medium mt-2">

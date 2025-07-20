@@ -4,7 +4,7 @@ import { Button } from "@/ui/Button";
 
 export default function Contest() {
   return (
-    <div className="contest-section mt-10 shadow-lg rounded-xl">
+    <div className="contest-section p-5 lg:p-10 mt-10 shadow-lg rounded-xl">
       <p className="text-4xl text-center font-bold">Cuộc thi nổi bật</p>
       <p className="text-center text-gray-500 font-medium mt-2">
         Tham gia các cuộc thi lập trình để thử thách bản thân, nâng cao kỹ năng

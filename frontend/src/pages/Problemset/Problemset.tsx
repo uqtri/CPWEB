@@ -70,10 +70,10 @@ export default function Problemset() {
     setSearchQuery(query);
   };
   return (
-    <div className="">
+    <div className="mb-[100px] lg:mb-0">
       <p className="text-3xl font-semibold border-b pb-1">Các thử thách</p>
       <div className="flex flex-col lg:flex-row lg:gap-4 justify-center mt-4">
-        <div className="grow order-2 lg:order-1 sm:mt-10 lg:mt-0">
+        <div className="grow order-2 lg:order-1 mt-10 lg:mt-0">
           <Table className="">
             <TableHeader>
               <TableRow>
@@ -85,7 +85,7 @@ export default function Problemset() {
             </TableHeader>
             <TableBody>
               {problems &&
-                problems.map((value: Problem, index: number) => {
+                problems.map((value: Problem) => {
                   return (
                     // <Link to={`/problem/${value.id}`}>
                     <TableRow
