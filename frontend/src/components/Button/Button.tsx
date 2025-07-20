@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import React from "react";
-import { link } from "framer-motion/client";
 import { BORDER_COLORS, TEXT_COLORS, BG_COLORS } from "../../constants/color";
 type buttonProps = {
   label: string;

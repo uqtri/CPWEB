@@ -1,5 +1,5 @@
 import { useContest } from "@/hooks/useContest";
-import { Calendar, Star, Timer, User, Users } from "lucide-react";
+import { Calendar, Star, Timer, Users } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { formatDate } from "@/lib/formatDate";
 import { useState } from "react";

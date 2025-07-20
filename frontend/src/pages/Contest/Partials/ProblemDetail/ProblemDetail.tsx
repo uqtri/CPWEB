@@ -1,14 +1,12 @@
-import Markdown from "@/components/Markdown/Markdown";
 import { useContest } from "@/hooks/useContest";
-import { useProblem } from "@/hooks/useProblem";
 import { ArrowLeft } from "lucide-react";
-import React from "react";
+
 import { useParams } from "react-router-dom";
 
 export default function ProblemDetail() {
   const params = useParams();
-  const { contestSlug, problemSlug } = params;
-  const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
+  const { contestSlug } = params;
+  // const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
   const { getContestBySlugQuery } = useContest({ slug: contestSlug || "" });
   const contest = getContestBySlugQuery.data || {};
   return (

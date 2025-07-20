@@ -1,10 +1,6 @@
 import { axiosInstance, axiosFormDataInstance } from "../lib/axios";
 
-import type {
-  TestCase,
-  CreateTestCaseData,
-  UpdateTestCaseData,
-} from "../types/testCase";
+import type { TestCase } from "../types/testCase";
 export const getTestCaseList = async (
   problemId: number
 ): Promise<TestCase[]> => {

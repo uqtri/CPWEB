@@ -1,4 +1,3 @@
-import React from "react";
 import DifficultyCard from "../../components/DifficultyCard/DifficultyCard";
 
 export default function Challenge() {

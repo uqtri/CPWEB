@@ -7,8 +7,7 @@ import {
   TriangleAlert,
   Timer,
 } from "lucide-react";
-import { col } from "framer-motion/client";
-import { BG_COLORS, TEXT_COLORS } from "../../../../constants/color";
+import { TEXT_COLORS } from "../../../../constants/color";
 
 type TestCaseCardProps = {
   id: number;
@@ -21,13 +20,13 @@ type TestCaseCardProps = {
 
 export default function TestCaseCard({
   id,
-  input,
-  output,
+  // input,
+  // output,
   result,
-  time,
-  space,
-}: TestCaseCardProps) {
-  const [expanded, setExpanded] = useState(false);
+}: // time,
+// space,
+TestCaseCardProps) {
+  const [expanded] = useState(false);
   let color: "green" | "red" | "yellow" | "gray" = "green";
   if (result === "Wrong Answer" || result === "WA") {
     color = "red";

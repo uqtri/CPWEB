@@ -1,6 +1,4 @@
 import { BookOpen } from "lucide-react";
-import { A } from "node_modules/framer-motion/dist/types.d-DDSxwf0n";
-import React from "react";
 
 const defaultText =
   "Passionate competitive programmer with expertise in algorithms and data structures. Love solving complex problems and participating in programming contests";

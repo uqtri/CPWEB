@@ -1,26 +1,14 @@
-import { CodeIcon, ArrowRight, Loader2 } from "lucide-react";
+import { CodeIcon, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
+// import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
 
-// import type { NotificationArgsProps } from "antd";
-type NotificationType = "success" | "info" | "warning" | "error";
-
-import { message, notification } from "antd";
 import { toast } from "react-toastify";
 
 export default function Register() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
+  const [, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const openNotification = (type: NotificationType, message: string) => {
-    api[type]({
-      message: `Notification`,
-      description: `${message}`,
-      placement: "topRight",
-    });
-  };
   const fields = [
     {
       name: "email",
@@ -98,7 +86,6 @@ export default function Register() {
   };
   return (
     <div className="my-10 mx-7 border border-gray-300 rounded-md py-10 px-5 shadow-xl">
-      {contextHolder}
       <CodeIcon className="h-10 w-10 text-primary text-center mx-auto" />
       <h1 className="text-2xl font-bold text-center">Đăng ký tài khoản</h1>
       <p className="text-lg text-center mt-2 text-gray-500">

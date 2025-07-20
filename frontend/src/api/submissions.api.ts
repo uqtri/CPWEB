@@ -8,7 +8,9 @@ export const getSubmissionByProblemId = async (
   problemId: number,
   params: any
 ): Promise<Submission[]> => {
-  const response = await axiosInstance.get(`/submissions`, { params });
+  const response = await axiosInstance.get(
+    `/submissions/problem/${problemId}?${params || ""}`
+  );
   return response.data;
 };
 export const getSubmissionById = async (

@@ -1,15 +1,14 @@
-import React from "react";
 import {
   getBackgroundColorByProblemDifficulty,
   getBorderColorByProblemDifficulty,
   getTextColorByProblemDifficulty,
 } from "@/utils/color";
 import { cn } from "@/lib/utils";
-import { Menu, Paperclip, Timer, Users } from "lucide-react";
+import { Menu, Timer, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 export default function Problems({
   problems,
-  contestSlug,
+  // contestSlug,
   contestId,
 }: {
   problems: any[];

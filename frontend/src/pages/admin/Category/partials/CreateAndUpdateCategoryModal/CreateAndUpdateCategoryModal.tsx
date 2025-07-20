@@ -6,7 +6,7 @@ import {
   UpdateCategoryData,
 } from "@/types/category";
 import { Button } from "@/ui/Button";
-import React, { useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function CreateAndUpdateCategoryModal({

@@ -1,7 +1,5 @@
-import { number } from "framer-motion";
-import React from "react";
 import Button from "../../../../components/Button/Button";
-import { BG_COLORS, TEXT_COLORS } from "../../../../constants/color";
+import { BG_COLORS } from "../../../../constants/color";
 type DifficultyCardProps = {
   title: string;
   description: string;

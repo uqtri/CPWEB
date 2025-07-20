@@ -2,18 +2,12 @@ import CategoryCard from "./components/CategoryCard";
 import { Button } from "@/ui/Button";
 import { useState } from "react";
 import CreateAndUpdateCategoryModal from "./partials/CreateAndUpdateCategoryModal/CreateAndUpdateCategoryModal";
-import type { Category, UpdateCategoryData } from "@/types/category";
+import type { Category } from "@/types/category";
 import { useCategory } from "@/hooks/useCategory";
-import { get } from "http";
-const mockData = [
-  { id: 1, name: "Dạng bài tập 1", description: "Mô tả dạng bài tập 1" },
-  { id: 2, name: "Dạng bài tập 2", description: "Mô tả dạng bài tập 2" },
-  { id: 3, name: "Dạng bài tập 3", description: "Mô tả dạng bài tập 3" },
-  { id: 4, name: "Dạng bài tập 4", description: "Mô tả dạng bài tập 4" },
-];
+
 export default function Category() {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingCategory] = useState<Category | null>(null);
 
   const { getCategoryListQuery } = useCategory();
   const data = getCategoryListQuery.data || [];

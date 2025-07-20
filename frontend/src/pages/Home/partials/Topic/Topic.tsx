@@ -1,6 +1,5 @@
-import React from "react";
 import ClassificationCard from "../../../../components/ClassificationCard/ClassificationCard";
-import { Sigma, Cloud, ChartBar } from "lucide-react";
+import { Sigma } from "lucide-react";
 // import { BG_COLORS } from "@/constants/color";
 export default function Topic() {
   return (

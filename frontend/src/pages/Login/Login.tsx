@@ -3,11 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
 import { useAppStore } from "../../store/index";
-import { notification } from "antd";
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [api, contextHolder] = notification.useNotification();
 
   const login = useAppStore((state) => state.login);
   const user = useAppStore((state) => state.user);
@@ -46,7 +44,6 @@ export default function Login() {
   };
   return (
     <div className="mt-[62px]">
-      {contextHolder}
       {isLoading && <WaitingScreen />}
 
       <div className="my-10 mx-7 border border-gray-300 rounded-md py-5 px-5 shadow-xl relative ">

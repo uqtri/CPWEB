@@ -1,25 +1,6 @@
-import {
-  Calendar,
-  Circle,
-  Clock,
-  Dot,
-  Edit,
-  Flag,
-  Trash,
-  Users,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion } from "motion/react";
+import { Calendar, Circle, Clock, Edit, Trash, Users } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
-type ContestCardProps = {
-  status: string;
-  title: string;
-  description: string;
-  difficulty: string;
-  startTime: string;
-  endTime: string;
-  participants: number;
-};
+
 export default function ContestCard({ contest, onEdit }: any) {
   return (
     <div className="contest-card rounded-md bg-white shadow-xl w-full overflow-hidden">

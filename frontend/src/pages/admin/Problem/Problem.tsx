@@ -14,7 +14,7 @@ import { useSearchParams } from "react-router-dom";
 import type { Problem } from "@/types/problem";
 import CreateAndUpdateProblemModal from "./Partials/CreateAndUpdateProblemModal/CreateAndUpdateProblemModal";
 export default function Problem() {
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
   const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { getProblemListQuery } = useProblem({ params: params.toString() });

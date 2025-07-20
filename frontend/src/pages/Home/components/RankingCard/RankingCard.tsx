@@ -4,10 +4,9 @@ import {
   BG_COLORS,
   BORDER_COLORS,
   HOVER_TEXT_COLORS,
-  TEXT_COLORS,
 } from "../../../../constants/color";
 import { Button } from "@/ui/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserAvatar from "@/assets/user.png";
 
 type RankingCardProps = {

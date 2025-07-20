@@ -8,7 +8,6 @@ import {
 } from "@/api/contest.api";
 import { CreateContestData, UpdateContestData } from "@/types/contest";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { get } from "lodash";
 
 export function useContest({
   params,

@@ -1,26 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import { useRef } from "react";
 
-import Editor, { useMonaco } from "@monaco-editor/react";
-import Button from "../../components/Button/Button";
+import Editor from "@monaco-editor/react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppStore } from "../../store";
 import { createSubmissions } from "@/api/submissions.api";
 import { useProblem } from "@/hooks/useProblem";
 import { toast } from "react-toastify";
-type Problem = {
-  name: string;
-  description: string;
-  timeLimit: number;
-  memoryLimit: number;
-  input: string;
-  output: string;
-  points: number;
-  difficulty: number;
-};
+
 export default function Submit() {
   let code = useRef<string>("");
 
-  const [searchQuery, setSearchQuery] = useSearchParams();
+  const [searchQuery] = useSearchParams();
 
   const { problemSlug } = useParams();
   const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });

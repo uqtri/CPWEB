@@ -1,5 +1,5 @@
 import { CreateProblemData, Problem, UpdateProblemData } from "@/types/problem";
-import { useEffect, useState, useRef, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { useEscape } from "@/hooks/useEscape";
 import { Button } from "@/ui/Button";
 import { Select } from "antd";

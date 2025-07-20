@@ -32,7 +32,7 @@ function getStatusText(status: string) {
 }
 export default function ContestCard({
   contest,
-  options,
+  // options,
   isRegistered,
 }: {
   contest: Contest;

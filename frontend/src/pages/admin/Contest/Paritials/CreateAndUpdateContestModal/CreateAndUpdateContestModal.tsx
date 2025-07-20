@@ -4,11 +4,10 @@ import { useProblem } from "@/hooks/useProblem";
 import { popEscapeHandler } from "@/lib/escapeStackManager";
 import { formatDatetimeLocal } from "@/lib/formatDate";
 
-import { slug } from "@/lib/slugify";
 import { Problem } from "@/types/problem";
 import { Button } from "@/ui/Button";
 import { Select } from "antd";
-import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
+import { ChangeEvent, useState } from "react";
 // import { omit, set } from "lodash";
 import { toast } from "react-toastify";
 export default function CreateAndUpdateContestModal({

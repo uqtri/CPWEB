@@ -9,12 +9,11 @@ import {
   TableCell,
   TableCaption,
 } from "@/ui/Table";
-import { useState } from "react";
 import { Problem } from "@/types/problem";
 import { slug } from "@/lib/slugify";
 export default function TestCase() {
-  const [params, setSearchParams] = useSearchParams();
-  const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
+  const [params] = useSearchParams();
+  // const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
   const { getProblemListQuery } = useProblem({ params: params.toString() });
   const navigate = useNavigate();
   const problems = getProblemListQuery.data?.problems || [];

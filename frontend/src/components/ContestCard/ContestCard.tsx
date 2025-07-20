@@ -1,16 +1,8 @@
-import { Calendar, Circle, Clock, Dot, Flag, Users } from "lucide-react";
+import { Calendar, Circle, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { formatDate } from "@/lib/formatDate";
-type ContestCardProps = {
-  status: string;
-  title: string;
-  description: string;
-  difficulty: string;
-  startTime: string;
-  endTime: string;
-  participants: number;
-};
+
 export default function ContestCard({ contest, options = {} }: any) {
   console.log(contest);
   return (

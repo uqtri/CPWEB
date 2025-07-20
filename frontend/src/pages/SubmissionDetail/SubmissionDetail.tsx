@@ -8,7 +8,6 @@ import { getSubmissionResultBySubmissionId } from "@/api/submissionResult.api";
 import { Submission } from "@/types/submission";
 
 import { getTestCaseByProblemSlug } from "@/api/testCase.api";
-import { set } from "lodash";
 
 export default function SubmissionDetail() {
   const socket = useAppStore((state) => state.socket);
