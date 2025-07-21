@@ -2,7 +2,7 @@ import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
 import { flowProducer } from "../jobs/flow/flow.js";
 import { parseJwt } from "../utils/parseJwt.js";
-
+import submissionService from "../services/submisison.js";
 const getSubmissionById = async (req, res) => {
   const submissionId = parseInt(req.params.submissionId);
   if (isNaN(submissionId)) {
@@ -41,26 +41,20 @@ const getSubmissionById = async (req, res) => {
 const getSubmissionsByUserId = async (req, res) => {
   const userId = parseInt(req.params.userId);
 
-  if (isNaN(userId)) {
-    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
-      success: false,
-      message: "Invalid user ID",
-    });
-  }
   try {
-    const submissions = await prisma.submission.findMany({
-      where: {
-        userId,
-      },
+    const submissions = await submissionService.getSubmissionsByUserId({
+      userId,
+      query: req.query,
     });
+
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
       data: submissions,
     });
   } catch (err) {
-    return res.status(HTTP_STATUS.BAD_REQUEST).json({
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       message: err.toString(),
-      message: "Failed to fetch submissions.",
+      // message: "Failed to fetch submissions.",
     });
   }
 };
