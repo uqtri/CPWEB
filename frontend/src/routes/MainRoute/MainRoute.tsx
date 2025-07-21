@@ -12,7 +12,8 @@ import Problemset from "../../pages/Problemset/Problemset";
 import AdminLayout from "../../Layout/AdminLayout/AdminLayout";
 import Dashboard from "../../pages/admin/Dashboard/Dashboard";
 import Problem from "../../pages/admin/Problem/Problem";
-import Submission from "../../pages/admin/Submission/Submission";
+import AdminSubmission from "../../pages/admin/Submission/Submission";
+import Submission from "@/pages/Submission/Submission";
 import Post from "../../pages/admin/Post/Post";
 import Settings from "../../pages/admin/Settings/Settings";
 import User from "../../pages/admin/User/User";
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: "/submissions",
+        element: <Submission />,
+      },
     ],
   },
   {
@@ -108,7 +113,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin/submission",
-        element: <Submission />,
+        element: <AdminSubmission />,
       },
       {
         path: "/admin/post",

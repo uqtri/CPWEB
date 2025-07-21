@@ -1,6 +1,3 @@
-
 export default function Submission() {
-  return (
-    <div>Submission</div>
-  )
+  return <div>Submission</div>;
 }

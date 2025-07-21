@@ -10,7 +10,7 @@ export type Submission = {
   executionTime: number;
   contestId?: number;
   memoryUser: number;
-  Score: number;
+  points: number;
   createdAt: Date;
 };
 

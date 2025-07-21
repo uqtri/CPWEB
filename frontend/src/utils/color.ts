@@ -16,6 +16,25 @@ const borderColorByDifficulty: Record<string, string> = {
   "Trung bình": "border-yellow-300",
   Khó: "border-red-300",
 };
+
+const bgSubmissionStatusColors: Record<string, string> = {
+  Accepted: "bg-green-600",
+  "Wrong Answer": "bg-red-600",
+  "Compilation Error": "bg-yellow-600",
+  Pending: "bg-gray-600",
+};
+const textSubmissionStatusColors: Record<string, string> = {
+  Accepted: "text-white",
+  "Wrong Answer": "text-white",
+  "Compilation Error": "text-white",
+  Pending: "text-white",
+};
+export function getBackgroundColorBySubmissionStatus(status: string): string {
+  return bgSubmissionStatusColors[status] || "bg-gray-600";
+}
+export function getTextColorBySubmissionStatus(status: string): string {
+  return textSubmissionStatusColors[status] || "text-white";
+}
 export function getTextColorByProblemDifficulty(difficulty: string): string {
   return textColorByDifficulty[difficulty] ?? "text-gray-700";
 }

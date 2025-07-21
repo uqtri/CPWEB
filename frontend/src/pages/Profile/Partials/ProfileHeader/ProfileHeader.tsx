@@ -56,7 +56,7 @@ export default function ProfileHeader({
                 </div>
               </div>
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-3">
+              <div className="flex flex-wrap md:justify-start gap-3">
                 <a
                   href={`mailto:${user?.email}`}
                   className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"

@@ -33,9 +33,15 @@ export const updateSubmission = async (
   return response.data;
 };
 
-export const getSubmissionByUserId = async (
-  userId: number
-): Promise<Submission> => {
-  const response = await axiosInstance.get(`/submissions/${userId}`);
-  return response.data;
+export const getSubmissionsByUserId = async ({
+  userId,
+  params,
+}: {
+  userId: number;
+  params?: string;
+}): Promise<any> => {
+  const response = await axiosInstance.get(
+    `/submissions/user/${userId}?${params || ""}`
+  );
+  return response.data.data;
 };
