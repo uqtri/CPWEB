@@ -1,6 +1,6 @@
 import { Contest } from "@/types/contest";
 import { cn } from "@/lib/utils";
-import { Calendar, Clock, Users } from "lucide-react";
+import { Calendar, Check, CheckCheck, Clock, Users } from "lucide-react";
 import { Button } from "@/ui/Button";
 import { useContestRegistration } from "@/hooks/useContestRegistration";
 import { toast } from "react-toastify";
@@ -8,15 +8,17 @@ import { Link } from "react-router-dom";
 function getStatusColor(status: string) {
   switch (status) {
     case "upcoming":
-      return "bg-amber-300 text-gray-800";
+      return "bg-yellow-200 text-yellow-800"; // matches your current "Sắp diễn ra"
     case "ongoing":
-      return "bg-green-300 text-gray-800";
+      return "bg-green-100 text-green-800"; // matches your current "Đang diễn ra"
     case "ended":
-      return "bg-gray-300 text-gray-600";
+      return "bg-purple-100 text-purple-800";
+    // clean subtle neutral for ended
     default:
       return "";
   }
 }
+
 function getStatusText(status: string) {
   switch (status) {
     case "upcoming":
@@ -58,13 +60,22 @@ export default function ContestCard({
     }
   };
   return (
-    <div className="border border-gray-200 rounded-t-lg overflow-hidden shadow-lg">
-      <div className={cn("py-2 text-center", getStatusColor(status))}>
-        {" "}
-        {getStatusText(status)}
-      </div>
-      <div className="p-4">
+    <div className="border border-gray-200 rounded-t-lg overflow-hidden shadow-lg py-6 px-4">
+      <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">{contest?.title}</h2>
+
+        <div
+          className={cn(
+            "py-2 px-5 text-center rounded-full text-sm",
+            getStatusColor(status)
+          )}
+        >
+          {" "}
+          {getStatusText(status)}
+        </div>
+      </div>
+      <div className="">
+        {/* <h2 className="text-2xl font-semibold">{contest?.title}</h2> */}
         <p className="text-gray-600 mb-1 line-clamp-2 min-h-[60px]">
           {contest?.description}
         </p>
@@ -109,7 +120,10 @@ export default function ContestCard({
             ))}
           {status === "upcoming" &&
             (isRegistered ? (
-              <Button content="Đã Đăng ký" className={`w-full mt-4`} />
+              <Button
+                content="Đã Đăng ký"
+                className={`w-full mt-4 text-white bg-green-400 hover:border-green-500 hover:text-green-500`}
+              />
             ) : (
               <Button
                 content="Đăng ký ngay"

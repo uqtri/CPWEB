@@ -3,6 +3,14 @@ import RankingCard from "../../components/RankingCard/RankingCard";
 import { Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import UserAvatar from "@/assets/user.png";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/ui/Table";
 export default function Leaderboard() {
   const { getAllUsersQuery } = useUser({
     params: "limit=10",
@@ -38,64 +46,73 @@ export default function Leaderboard() {
         />
       </div>
       <div className="overflow-x-auto mt-10 border border-gray-500 rounded-lg">
-        <table className="w-full divide-gray-200 divide-y">
-          <tr className="bg-gray-50">
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Thứ hạng
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Người dùng
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Số điểm
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Đã giải
-            </th>
-            {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <Table className="w-full divide-gray-200 divide-y">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Thứ hạng
+              </TableHead>
+              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Người dùng
+              </TableHead>
+              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Số điểm
+              </TableHead>
+              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Đã giải
+              </TableHead>
+              {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Chuỗi ngày
-            </th> */}
-          </tr>
-          {users.slice(3).map((user: any, index: number) => (
-            <tr key={user.id} className="table-row hover:bg-gray-50 transition">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium">#{index + 4}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div
-                  className="flex items-center cursor-pointer"
-                  onClick={() => {
-                    navigate(`/profile/${user?.id}`);
-                  }}
-                >
-                  <div className="h-10 w-10 rounded-full overflow-hidden">
-                    <img
-                      src={user?.avatarUrl || UserAvatar}
-                      alt={user?.fullName}
-                      className="h-full w-full object-cover"
-                    />
+              </th> */}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.slice(3).map((user: any, index: number) => (
+              <TableRow
+                key={user.id}
+                className="table-row hover:bg-gray-50 transition"
+              >
+                <TableCell className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium">#{index + 4}</div>
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap">
+                  <div
+                    className="flex items-center cursor-pointer"
+                    onClick={() => {
+                      navigate(`/profile/${user?.id}`);
+                    }}
+                  >
+                    <div className="h-10 w-10 rounded-full overflow-hidden">
+                      <img
+                        src={user?.avatarUrl || UserAvatar}
+                        alt={user?.fullName}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <div className="text-sm font-medium">
+                        {user?.username}
+                      </div>
+                    </div>
                   </div>
-                  <div className="ml-4">
-                    <div className="text-sm font-medium">{user?.username}</div>
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-bold">
+                    {user?.points?.toLocaleString()}
                   </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-bold">
-                  {user?.points?.toLocaleString()}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm ">
-                  {user?.solvedProblems?.length} bài
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {/* <div className="text-sm ">{user.streak} ngày</div> */}
-              </td>
-            </tr>
-          ))}
-        </table>
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm ">
+                    {user?.solvedProblems?.length} bài
+                  </div>
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap">
+                  {/* <div className="text-sm ">{user.streak} ngày</div> */}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

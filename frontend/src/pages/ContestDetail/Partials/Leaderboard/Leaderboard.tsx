@@ -21,6 +21,8 @@ export default function Leaderboard({
   const { getLeaderboardQuery } = useContest({ slug: contestSlug });
   // console.log("getLeaderboardQuery@", getLeaderboardQuery?.data);
   const leaderboard = getLeaderboardQuery?.data || [];
+  // console.log("leaderboard@", leaderboard);
+  
   return (
     <div>
       <Table>

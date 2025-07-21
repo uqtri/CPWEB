@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { formatDate } from "@/lib/formatDate";
 
 export default function ContestCard({ contest, options = {} }: any) {
-  console.log(contest);
+  console.log(contest, "@@");
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}

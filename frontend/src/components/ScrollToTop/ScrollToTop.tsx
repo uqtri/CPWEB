@@ -8,7 +8,7 @@ export default function ScrollToTop() {
     window.scrollTo({
       top: 0,
       // behavior: "",
-    });
+  });
   }, [pathname, search]);
 
   return null;
