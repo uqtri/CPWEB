@@ -2,7 +2,7 @@ import { useContest } from "@/hooks/useContest";
 import { Calendar, Star, Timer, Users } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { formatDate } from "@/lib/formatDate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Problems from "./Partials/Problems/Problems";
 import { cn } from "@/lib/utils";
 import Leaderboard from "./Partials/Leaderboard/Leaderboard";
@@ -10,17 +10,35 @@ export default function ContestDetail() {
   const params = useParams();
   const contestSlug = params.contestSlug;
   const [tab, setTab] = useState("problems");
-
+  const [time, setTime] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
   const { getContestBySlugQuery } = useContest({ slug: contestSlug });
   const contest = getContestBySlugQuery.data || {};
-  console.log("contest", contest);
-  const diff =
-    new Date(contest?.endTime).getTime() -
-    new Date(contest?.startTime).getTime();
-  console.log("diff", new Date(diff).getHours());
-  const hours = new Date(diff).getHours();
-  const minutes = new Date(diff).getMinutes();
 
+  useEffect(() => {
+    if (!contest?.endTime) return;
+    const interval = setInterval(() => {
+      const diff =
+        Math.floor(
+          new Date(contest?.endTime).getTime() - new Date().getTime()
+        ) / 1000;
+
+      if (diff <= 0) {
+        clearInterval(interval);
+        setTime({ hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      setTime({
+        hours: Math.floor(diff / 3600),
+        minutes: Math.floor((diff % 3600) / 60),
+        seconds: Math.floor(diff % 60),
+      });
+    }, 500);
+    return () => clearInterval(interval);
+  }, [contest]);
   return (
     <div className="p-10">
       <h1 className="text-2xl">{contest?.title}</h1>
@@ -40,7 +58,7 @@ export default function ContestDetail() {
             {" "}
             <p className="block text-gray-400">Tổng thời gian </p>
             <p className="block font-bold">
-              {hours} giờ {minutes} phút
+              {time?.hours} giờ {time?.minutes} phút {time?.seconds} giây
             </p>
           </div>
         </div>

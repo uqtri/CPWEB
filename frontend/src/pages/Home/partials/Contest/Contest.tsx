@@ -8,7 +8,6 @@ export default function Contest() {
   const { getContestsQuery } = useContest({});
   const contests = getContestsQuery?.data || [];
 
-  console.log("contests@", contests);
   return (
     <div className="contest-section p-5 lg:p-10 mt-10 shadow-lg rounded-xl">
       <p className="text-4xl text-center font-bold">Cuộc thi nổi bật</p>

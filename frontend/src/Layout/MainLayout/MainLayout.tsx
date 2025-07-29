@@ -12,7 +12,7 @@ export default function MainLayout() {
       <ScrollToTop />
       <div className="min-h-screen">
         {user ? <Header /> : <HeaderForAnonymous />}
-        <div className="max-w-screen-xl lg:max-w-screen-2xl px-3 lg:px-10 lg:py-5 mx-auto">
+        <div className="max-w-screen-xl lg:max-w-screen-2xl px-3 lg:px-10 lg:py-5 mx-auto h-full">
           <Outlet />
         </div>
       </div>

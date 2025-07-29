@@ -7,6 +7,8 @@ export default function Statistic({ data }: { data: any }) {
     (data?.acceptedCount +
       data?.wrongAnswerCount +
       data?.timeLimitExceededCount);
+  console.log(data?.total, "total");
+  console.log((othersCount / data?.total) * 100);
   return (
     <div className="p-4 bg-white">
       <div className="flex items-center gap-4">
@@ -27,14 +29,14 @@ export default function Statistic({ data }: { data: any }) {
                 Tỷ lệ thành công
               </span>
               <span className="text-sm font-bold text-green-600">
-                {Math.round(data?.acceptedCount / data?.total) || 0}%
+                {Math.round((data?.acceptedCount / data?.total) * 100) || 0}%
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
                 className="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500"
                 style={{
-                  width: `${data?.acceptedCount / data?.total || 0}%`,
+                  width: `${(data?.acceptedCount / data?.total || 0) * 100}%`,
                 }}
               ></div>
             </div>
@@ -58,7 +60,9 @@ export default function Statistic({ data }: { data: any }) {
                   <div
                     className="bg-green-500 h-2 rounded-full"
                     style={{
-                      width: `${data?.acceptedCount / data?.total || 0}%`,
+                      width: `${
+                        (data?.acceptedCount / data?.total || 0) * 100
+                      }%`,
                     }}
                   ></div>
                 </div>
@@ -79,7 +83,7 @@ export default function Statistic({ data }: { data: any }) {
                     className="bg-red-500 h-2 rounded-full"
                     style={{
                       width: `${
-                        (data?.wrongAnswerCount / data?.total)  || 0
+                        (data?.wrongAnswerCount / data?.total || 0) * 100
                       }%`,
                     }}
                   ></div>
@@ -101,7 +105,7 @@ export default function Statistic({ data }: { data: any }) {
                     className="bg-yellow-500 h-2 rounded-full"
                     style={{
                       width: `${
-                        (data?.timeLimitExceededCount / data?.total) 
+                        (data?.timeLimitExceededCount / data?.total) * 100
                       }%`,
                     }}
                   ></div>
@@ -123,9 +127,8 @@ export default function Statistic({ data }: { data: any }) {
                     className="bg-gray-500 h-2 rounded-full"
                     style={{
                       width: `${
-                        Math.floor(
-                          (othersCount / data?.total)  || 0
-                        ) as number
+                        (Math.round((othersCount / data?.total) * 100) ||
+                          0) as number
                       }%`,
                     }}
                   ></div>

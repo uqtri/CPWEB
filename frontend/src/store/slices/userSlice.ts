@@ -76,18 +76,26 @@ export const createUserSlice: StateCreator<
     }
   },
   connectSocket: () => {
-    console.log("Connect to socket function");
     const user = get().user;
-    console.log("User in connectSocket:", user);
     console.log(get().socket);
     if (!user) return;
-    console.log("Connecting to socket...", import.meta.env.VITE_BACKEND_SOCKET);
+    const existingSocket = get().socket;
+    if (existingSocket && existingSocket.connected) {
+      existingSocket.disconnect();
+    }
     const socket = io(import.meta.env.VITE_BACKEND_SOCKET, {
       query: {
         userId: user.id,
       },
     });
-    console.log("Socket connected:", socket);
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+      // toast.success("Kết nối đến máy chủ thành công!");
+    });
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected");
+      // toast.error("Mất kết nối với máy chủ. Vui lòng thử lại sau.");
+    });
     set((state) => {
       state.socket = socket;
     });

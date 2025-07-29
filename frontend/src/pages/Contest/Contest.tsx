@@ -12,7 +12,6 @@ export default function Contest() {
 
   const contests = getContestsQuery.data || [];
 
-  console.log("FETCH CONTESTS");
   const upcomingContests =
     contests?.filter((contest: Contest) => {
       const currentTime = new Date();

@@ -13,3 +13,7 @@ export const getConversationsByUserId = async (userId: number) => {
   const response = await axiosInstance.get(`/conversations/user/${userId}`);
   return response.data.data;
 };
+export const getDirectConversation = async ({ query }: { query: string }) => {
+  const response = await axiosInstance.get(`/conversations/direct?${query}`);
+  return response.data.data;
+};

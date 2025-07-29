@@ -1,11 +1,17 @@
 import { useRef } from "react";
 
 import Editor from "@monaco-editor/react";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useSearchParams,
+  Link,
+} from "react-router-dom";
 import { useAppStore } from "../../store";
 import { createSubmissions } from "@/api/submissions.api";
 import { useProblem } from "@/hooks/useProblem";
 import { toast } from "react-toastify";
+import { ArrowLeft } from "lucide-react";
 
 export default function Submit() {
   let code = useRef<string>("");
@@ -50,7 +56,14 @@ export default function Submit() {
   };
 
   return (
-    <div className="p-4">
+    <div className="">
+      <Link to={`/problem/${problemSlug}`}>
+        <div className="flex text-gray-500 items-center gap-2 mb-4">
+          <ArrowLeft />
+          <span className="cursor-pointer">Quay lại</span>
+        </div>
+      </Link>
+
       <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
       <div className="flex justify-center mt-4 gap-3">
         <Editor

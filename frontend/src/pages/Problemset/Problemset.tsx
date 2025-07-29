@@ -52,7 +52,7 @@ export default function Problemset() {
       query.difficulty = searchTerm.difficulty;
     }
     if (searchTerm.categories.length > 0) {
-      query.categories = searchTerm.categories.join(",");
+      query.categories = searchTerm.categories;
     }
     if (searchTerm.pointRange) {
       query.pointRange = searchTerm.pointRange.join(",");
@@ -66,7 +66,6 @@ export default function Problemset() {
     }
     query.page = searchTerm.page;
     query.limit = searchTerm.limit;
-
     setSearchQuery(query);
   };
   return (

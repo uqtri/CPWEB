@@ -21,7 +21,6 @@ export const getMessagesByConversationId = async (req, res) => {
 };
 const createMessage = async (req, res) => {
   const data = req.body;
-  console.log("Creating message with data:", data);
   if (!data.senderId) {
     const user = parseJwt(req.cookies.jwt);
     if (!user) {

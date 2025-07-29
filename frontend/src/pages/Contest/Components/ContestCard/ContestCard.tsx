@@ -1,10 +1,11 @@
 import { Contest } from "@/types/contest";
 import { cn } from "@/lib/utils";
-import { Calendar, Check, CheckCheck, Clock, Users } from "lucide-react";
+import { Calendar, Clock, Users } from "lucide-react";
 import { Button } from "@/ui/Button";
 import { useContestRegistration } from "@/hooks/useContestRegistration";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { getStatusText } from "@/utils/status";
 function getStatusColor(status: string) {
   switch (status) {
     case "upcoming":
@@ -19,19 +20,6 @@ function getStatusColor(status: string) {
   }
 }
 
-function getStatusText(status: string) {
-  switch (status) {
-    case "upcoming":
-      return "Sắp diễn ra";
-    case "ongoing":
-      return "Đang diễn ra";
-
-    case "ended":
-      return "Đã kết thúc";
-    default:
-      return "Chưa bắt đầu";
-  }
-}
 export default function ContestCard({
   contest,
   // options,
@@ -100,7 +88,9 @@ export default function ContestCard({
         </div>
         <div>
           {status === "ended" && (
-            <Button content="Xem chi tiết" className="w-full mt-4" />
+            <Link to={`/contest/${contest.slug}`}>
+              <Button content="Xem chi tiết" className="w-full mt-4" />
+            </Link>
           )}
           {status === "ongoing" &&
             (isRegistered ? (

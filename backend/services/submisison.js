@@ -31,18 +31,17 @@ export const getSubmissionsByUserId = async ({ userId, query }) => {
     throw new Error("Invalid user ID");
   }
   const whereConditions = {
+    ...query,
     userId,
     language: query.language || undefined,
+    problemId: query.problemId ? parseInt(query.problemId) : undefined,
     status: query.status || undefined,
+    page: undefined,
+    limit: undefined,
   };
   const page = parseInt(query.page) || 1;
   const limit = parseInt(query.limit) || 10;
-  console.log(
-    "Fetching submissions for user:",
-    userId,
-    "with conditions:",
-    whereConditions
-  );
+
   try {
     const submissions = await prisma.submission.findMany({
       where: whereConditions,

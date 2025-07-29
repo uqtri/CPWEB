@@ -2,9 +2,30 @@ import { Calendar, Circle, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { formatDate } from "@/lib/formatDate";
+import { getStatusText } from "@/utils/status";
+import { cn } from "@/lib/utils";
+function getStatusColor(status: string) {
+  switch (status) {
+    case "upcoming":
+      return "bg-yellow-200 text-yellow-800"; // matches your current "Sắp diễn ra"
+    case "ongoing":
+      return "bg-green-100 text-green-800"; // matches your current "Đang diễn ra"
+    case "ended":
+      return "bg-purple-100 text-purple-800";
+    // clean subtle neutral for ended
+    default:
+      return "";
+  }
+}
 
 export default function ContestCard({ contest, options = {} }: any) {
-  console.log(contest, "@@");
+  const status =
+    new Date(contest?.startTime) > new Date()
+      ? "upcoming"
+      : new Date(contest?.endTime) < new Date()
+      ? "ended"
+      : "ongoing";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -13,9 +34,14 @@ export default function ContestCard({ contest, options = {} }: any) {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="contest-card rounded-md bg-white shadow-xl w-full overflow-hidden"
     >
-      <div className="bg-red-500 text-center text-white px-4 py-2 flex items-center">
+      <div
+        className={cn(
+          `bg-red-500 text-center text-white px-4 py-2 flex items-center`,
+          getStatusColor(status)
+        )}
+      >
         <Circle className="animate-ping" size={10} />{" "}
-        <p className="flex-grow text-center">{"Đang diễn ra"}</p>
+        <p className="flex-grow text-center">{getStatusText(status)}</p>
       </div>
       <div className="p-5">
         <p className="font-bold text-xl min-h-[40px] line-clamp-2">

@@ -83,9 +83,35 @@ export const getConversationsByUserId = async (userId) => {
     throw error;
   }
 };
+export const getDirectConversation = async (data) => {
+  if (!data || !data.participants) {
+    return null;
+  }
+
+  try {
+    const conversation = await prisma.conversation.findFirst({
+      where: {
+        isCommunity: false,
+        isGroup: false,
+        participants: {
+          every: {
+            id: { in: data.participants },
+          },
+        },
+      },
+      include: {
+        participants: true,
+      },
+    });
+    return conversation;
+  } catch (error) {
+    throw error;
+  }
+};
 export default {
   createConversation,
   deleteConversationById,
   getConversationById,
   getConversationsByUserId,
+  getDirectConversation,
 };

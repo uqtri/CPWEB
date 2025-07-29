@@ -62,8 +62,34 @@ export const getConversationById = async (req, res) => {
     });
   }
 };
+
+export const getDirectConversation = async (req, res) => {
+  console.log(req.query.participants, "@@");
+  const data = { participants: req.query.participants.map((p) => parseInt(p)) };
+
+  try {
+    const conversation = await conversationService.getDirectConversation(data);
+    if (!conversation) {
+      return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+        success: false,
+        message: "Conversation not created",
+      });
+    }
+    return res.status(HTTP_STATUS.OK.code).json({
+      success: true,
+      data: conversation,
+    });
+  } catch (error) {
+    console.log(error.toString());
+    return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
+      success: false,
+      message: error.toString(),
+    });
+  }
+};
 export default {
   getConversationsByUserId,
   createConversation,
   getConversationById,
+  getDirectConversation,
 };

@@ -1,8 +1,15 @@
 import { Check, Clock, FileArchive, MenuIcon } from "lucide-react";
-import Button from "../../components/Button/Button";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { Button } from "@/ui/Button";
+import {
+  Link,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import Markdown from "../../components/Markdown/Markdown";
+
 import { useProblem } from "@/hooks/useProblem";
+import NotFound from "@/Layout/404NotFound/404NotFound";
 
 export default function ProblemDetail() {
   const location = useLocation();
@@ -11,6 +18,13 @@ export default function ProblemDetail() {
 
   const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
   const problem = getProblemBySlugQuery?.data;
+  console.log(problem);
+  console.log(getProblemBySlugQuery.status, problem, "vc");
+
+  if (getProblemBySlugQuery.status === "error" && !problem) {
+    return <NotFound />;
+  }
+
   return (
     <div className="problem-detail">
       <p className="text-3xl font-semibold border-b pb-1">{problem?.title}</p>
@@ -42,19 +56,15 @@ export default function ProblemDetail() {
             <span className="font-bold">Độ khó:</span> {problem?.difficulty}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          {/* <FileArchive />
-          <p>
-            <span className="font-bold">Xem các nộp bài:</span> {problem.output}
-          </p> */}
+        <div className="">
+          <Link to={`${location.pathname}/your-submissions`}>
+            <Button content="Các bài đã nộp" className="w-full" />
+          </Link>
         </div>
         <div>
-          <Button
-            link={`${location.pathname}/submit?${searchQuery.toString()}`}
-            color="white"
-            label="Nộp bài"
-            background="primary"
-          />
+          <Link to={`${location.pathname}/submit?${searchQuery.toString()}`}>
+            <Button content="Nộp bài" className="w-full" />
+          </Link>
         </div>
       </div>
 

@@ -5,6 +5,8 @@ export type Conversation = {
   updatedAt: string;
   participants: any[];
   lastMessage?: any;
+  isGroup: boolean;
+  isCommunity: boolean;
   image?: string; // URL to the conversation's avatar image
 };
 export type CreateConversationData = {

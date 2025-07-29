@@ -28,6 +28,7 @@ export function useProblem({
       return getProblemBySlug(slug!);
     },
     enabled: !!slug,
+    retry: false,
   });
   const createProblemMutation = useMutation({
     mutationFn: (data: CreateProblemData) => {

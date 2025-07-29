@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 
 export default function Profile() {
   const params = useParams();
-
   const currentUser = useAppStore((state) => state.user);
   const isUserLoading = useAppStore((state) => state.isUserLoading);
   const navigate = useNavigate();
@@ -34,6 +33,9 @@ export default function Profile() {
       <ProfileHeader
         user={params?.userId ? fetchingUser.data : currentUser}
         canEdit={params?.userId ? false : true}
+        canMessage={
+          params?.userId && params?.userId !== currentUser?.id ? true : false
+        }
       />
       <Bio user={params?.userId ? fetchingUser.data : currentUser} />
       <Activity user={params?.userId ? fetchingUser.data : currentUser} />

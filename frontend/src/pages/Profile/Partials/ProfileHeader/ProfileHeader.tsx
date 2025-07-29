@@ -4,16 +4,60 @@ import { Button } from "@/ui/Button";
 import UserAvatar from "@/assets/user.png";
 import { useAppStore } from "@/store";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
+import { getDirectConversation } from "@/api/conversation.api";
+import { useQuery } from "@tanstack/react-query";
+import { useConversation } from "@/hooks/useConversation";
+
 export default function ProfileHeader({
   user,
   canEdit,
+  canMessage,
 }: {
   user: any;
   canEdit?: boolean;
+  canMessage?: boolean;
 }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const updateUser = useAppStore((state) => state.updateUser);
+  const currentUser = useAppStore((state) => state.user);
+  const params = useParams();
+  const navigate = useNavigate();
+  const { createConversationMutation } = useConversation({});
 
+  const getDirectConversationQuery = useQuery({
+    queryKey: ["directConversation", currentUser?.id, params?.userId],
+    queryFn: () => {
+      if (!currentUser?.id || !params?.userId) return null;
+      return getDirectConversation({
+        query: `participants=${currentUser?.id}&participants=${parseInt(
+          params?.userId!
+        )}`,
+        // participants: [currentUser?.id, parseInt(params?.userId!)],
+      });
+    },
+    enabled: !!currentUser?.id && !!params?.userId,
+  });
+
+  const directConversation = getDirectConversationQuery?.data;
+  const handleNavigateToConversation = async () => {
+    if (directConversation) {
+      navigate(`/chat/${directConversation.id}`);
+      return;
+    }
+
+    try {
+      const data = {
+        participants: [currentUser?.id, parseInt(params?.userId!)],
+        isGroup: false,
+        isPublic: false,
+        name: "",
+      };
+      const conversation = await createConversationMutation.mutateAsync(data);
+
+      navigate(`/chat/${conversation.id}`);
+    } catch (error) {}
+  };
   return (
     <div className="rounded-xl relative max-w-screen-xl mx-auto w-full">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 w-full">
@@ -55,7 +99,6 @@ export default function ProfileHeader({
                   </span>
                 </div>
               </div>
-
               <div className="flex flex-wrap md:justify-start gap-3">
                 <a
                   href={`mailto:${user?.email}`}
@@ -64,6 +107,14 @@ export default function ProfileHeader({
                   <Mail className="w-4 h-4" />
                   <span>Email</span>
                 </a>
+                {canMessage && (
+                  <p
+                    onClick={handleNavigateToConversation}
+                    className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2 cursor-pointer"
+                  >
+                    Nhắn tin
+                  </p>
+                )}
               </div>
             </div>
 
@@ -118,7 +169,16 @@ export default function ProfileHeader({
                   type="file"
                   className="hidden"
                   id="avatar-upload"
+                  name="avatar-upload"
                   accept=".png ,.jpg,.jpeg"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    const url = URL.createObjectURL(file!);
+                    const avatarPreview = document.getElementById(
+                      "avatar-preview"
+                    ) as HTMLImageElement;
+                    avatarPreview.src = url;
+                  }}
                 />
                 <label htmlFor="avatar-upload">
                   <img

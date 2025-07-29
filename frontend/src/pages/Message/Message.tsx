@@ -19,6 +19,7 @@ export default function Message() {
   const messagesRef = useRef<HTMLDivElement>(null);
   const shouldScrollToBottom = useRef(true);
   const socket = useAppStore((state) => state.socket);
+  console.log("Socket in Message:", socket);
   const navigate = useNavigate();
   const { getMessageByConversationIdQuery, createMessageMutation } = useMessage(
     {
@@ -49,6 +50,9 @@ export default function Message() {
         createdAt: new Date().toISOString(),
         id: Math.floor(Math.random() * 1000000000),
       };
+    }
+    if (message.senderId === user?.id && !sentByCurrentUser) {
+      return;
     }
     if (message.content.trim() === "") return;
 
@@ -103,7 +107,6 @@ export default function Message() {
     }
   }, [firstMessageRef, messages]);
   const handleFetchOldMessages = async (e: React.UIEvent<HTMLDivElement>) => {
-    console.log("Scroll position:", e.currentTarget.scrollTop);
     if (e.currentTarget.scrollTop == 0) {
       shouldScrollToBottom.current = false;
       await getMessageByConversationIdQuery.fetchNextPage();
@@ -120,7 +123,26 @@ export default function Message() {
         }
       });
     }
+    return () => {
+      console.log("Cleaning up socket listeners in Message");
+      if (socket) {
+        socket.off("message:create");
+      }
+    };
   }, [socket]);
+
+  useEffect(() => {
+    if (socket && conversationId) {
+      socket.emit("conversations:join", [conversationId]);
+    }
+
+    return () => {
+      if (socket && conversationId) {
+        socket.emit("conversations:leave", [conversationId]);
+      }
+    };
+  }, [socket, conversationId]);
+
   return (
     <div className="flex-1 flex flex-col border border-gray-200 shadow-md rounded-lg overflow-hidden relative h-full">
       <div className="p-2 flex gap-4 items-center bg-gray-100 shadow-md h-[75px]">
@@ -144,7 +166,7 @@ export default function Message() {
       >
         {messages.map((message, index: number) => (
           <div
-            key={message.id}
+            key={index}
             ref={index === 0 ? firstMessageRef : null}
             className="flex gap-4 items-center mt-3"
           >

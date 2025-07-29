@@ -11,11 +11,11 @@ export default function Topic() {
       </p>
       <div className="topics grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
         <ClassificationCard
-          title="Cấu trúc dữ liệu"
+          title="Cài đặt cơ bản"
           description="Mảng, danh sách liên kết, ngăn xếp, hàng đợi, cây, đồ thị, bảng băm, và nhiều hơn nữa."
           numberOfProblems={125}
           icon={<Sigma size={30} className="rounded-full" />}
-          color="--color-primary"
+          color="blue"
           tags={[
             "Mảng",
             "Danh sách liên kết",
@@ -31,39 +31,32 @@ export default function Topic() {
           description="Mảng, danh sách liên kết, ngăn xếp, hàng đợi, cây, đồ thị, bảng băm, và nhiều hơn nữa."
           numberOfProblems={125}
           icon={<Sigma size={30} className="rounded-full" />}
-          color="--color-primary"
+          color="blue"
+          tags={["Quy hoạch động", "Chặt nhị phân", "Chặt tam phân"]}
+          link="/"
+        />
+        <ClassificationCard
+          title="Xử lí xâu"
+          description="Mảng, danh sách liên kết, ngăn xếp, hàng đợi, cây, đồ thị, bảng băm, và nhiều hơn nữa."
+          numberOfProblems={125}
+          icon={<Sigma size={30} className="rounded-full" />}
+          color="blue"
           tags={[
-            "Mảng",
-            "Danh sách liên kết",
-            "Ngăn xếp",
-            "Hàng đợi",
-            "Cây nhị phân",
+            "Xử lí xâu",
+            "Cài đặt cơ bản",
+            "Hai con trỏ",
             "Đồ thị",
+            "BFS",
+            "DFS",
           ]}
           link="/"
         />
         <ClassificationCard
-          title="Cấu trúc dữ liệu"
+          title="Đồ thị"
           description="Mảng, danh sách liên kết, ngăn xếp, hàng đợi, cây, đồ thị, bảng băm, và nhiều hơn nữa."
           numberOfProblems={125}
           icon={<Sigma size={30} className="rounded-full" />}
-          color="--color-primary"
-          tags={[
-            "Mảng",
-            "Danh sách liên kết",
-            "Ngăn xếp",
-            "Hàng đợi",
-            "Cây nhị phân",
-            "Đồ thị",
-          ]}
-          link="/"
-        />
-        <ClassificationCard
-          title="Cấu trúc dữ liệu"
-          description="Mảng, danh sách liên kết, ngăn xếp, hàng đợi, cây, đồ thị, bảng băm, và nhiều hơn nữa."
-          numberOfProblems={125}
-          icon={<Sigma size={30} className="rounded-full" />}
-          color="--color-primary"
+          color="blue"
           tags={[
             "Mảng",
             "Danh sách liên kết",

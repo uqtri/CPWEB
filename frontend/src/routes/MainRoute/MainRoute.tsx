@@ -27,6 +27,7 @@ import ContestDetail from "@/pages/ContestDetail/ContestDetail";
 import ContestProblemDetail from "@/pages/Contest/Partials/ProblemDetail/ProblemDetail";
 import Chat from "@/pages/Chat/Chat";
 import Message from "@/pages/Message/Message";
+import SubmissionForSpecificProblem from "@/pages/SubmissionsForSpecificProblem/SubmissionForSpecificProblem";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       { path: "/problem/:problemSlug/submit", element: <Submit /> },
+      {
+        path: "/problem/:problemSlug/your-submissions",
+        element: <SubmissionForSpecificProblem />,
+      },
       {
         path: "/profile",
         element: <Profile />,

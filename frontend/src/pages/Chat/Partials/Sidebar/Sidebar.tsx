@@ -7,7 +7,7 @@ import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
+import DirectMessageCard from "../../components/DirectMessageCard/DirectMessageCard";
 const XL_SCREEN = 1440;
 
 export default function Sidebar() {
@@ -24,24 +24,18 @@ export default function Sidebar() {
     if (socket) {
       socket.on("conversation:create", () => {
         getConversationByUserIdQuery.refetch();
-        toast.success("Đã tạo nhóm chat mới.");
-      });
-      socket.on("message:create", () => {
-        getConversationByUserIdQuery.refetch();
       });
     }
     if (socket && conversations.length > 0) {
-      console.log("Joining conversations");
       socket.emit(
         "conversations:join",
         conversations.map((c: Conversation) => c.id)
       );
     }
     return () => {
-      // if (socket) {
-      //   socket.off("conversation:create");
-      //   socket.off("message:create");
-      // }
+      if (socket) {
+        socket.off("conversation:create");
+      }
     };
   }, [socket, conversations]);
 
@@ -79,6 +73,14 @@ export default function Sidebar() {
       </div>
       <div className="mt-4">
         {conversations?.map((conversation: Conversation) => {
+          if (!conversation?.isGroup && !conversation?.isCommunity) {
+            return (
+              <DirectMessageCard
+                key={conversation.id}
+                conversation={conversation}
+              />
+            );
+          }
           return (
             <div
               key={conversation.id}

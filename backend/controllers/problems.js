@@ -92,23 +92,24 @@ const getProblemBySlug = async (req, res) => {
   }
 };
 const getProblems = async (req, res) => {
-  const {
-    page = 1,
-    limit = 20,
-    hideSolved,
-    userId,
-    title,
-    difficulty,
-    categories,
-    pointRange,
-  } = req.query;
-
-  const skip = (page - 1) * limit;
+  const { hideSolved, userId, title, difficulty, categories, pointRange } =
+    req.query;
+  // const skip = (page - 1) * limit;
+  console.log(categories, "@@@");
+  let { limit, page, skip, take } = req.query;
+  if (page === undefined) {
+    skip = undefined;
+    take = undefined;
+  } else {
+    page = parseInt(page) || 1;
+    take = parseInt(limit) || 10;
+    skip = parseInt(page - 1) * limit || 0;
+  }
   const whereConditions = {
     isDeleted: false,
     categories: {
       some: {
-        name: { in: categories ? categories.split(",") : undefined },
+        name: { in: categories ? categories : undefined },
       },
     },
     title: {
@@ -133,6 +134,7 @@ const getProblems = async (req, res) => {
       },
     };
   }
+  console.log(skip, take);
   try {
     const totalProblems = await prisma.problem.count({
       where: whereConditions,
@@ -142,8 +144,8 @@ const getProblems = async (req, res) => {
         categories: true,
       },
       where: whereConditions,
-      skip: parseInt(skip),
-      take: parseInt(limit),
+      skip,
+      take,
     });
 
     return res.status(HTTP_STATUS.OK.code).json({

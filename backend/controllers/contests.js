@@ -176,13 +176,16 @@ const getLeaderboardByContestSlug = async (req, res) => {
 			"Submission" sb
 			ON sb."userId" = register."userId" 
 			AND sb."contestId" = ct.id
+      AND sb."createdAt" >= ct."startTime"
+		  AND sb."createdAt" <= ct."endTime"
 		LEFT JOIN
 			"Problem" prob 
 			on prob.id = sb."problemId"
-		GROUP BY 
+    GROUP BY 
 			register."userId", sb."problemId"
 		ORDER BY 
 			"problemPoints" ASC, sb."problemId" ASC	
+
 	) as subquery
       LEFT JOIN "User" on "User".id = "userId"
       GROUP BY "userId", "User".username
