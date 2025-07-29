@@ -134,7 +134,6 @@ const getProblems = async (req, res) => {
       },
     };
   }
-  console.log(skip, take);
   try {
     const totalProblems = await prisma.problem.count({
       where: whereConditions,

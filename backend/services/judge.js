@@ -90,6 +90,7 @@ export const judgeSubmission = async (submissionId) => {
 
   let index = 0;
   let accepted = true;
+  let status = "Accepted";
   let testCasePassed = 0;
 
   for (const testCase of testCases) {
@@ -121,6 +122,7 @@ export const judgeSubmission = async (submissionId) => {
 
       if (error.code === 124 || error.code === 137 || error.code === 143) {
         data.result = "Time Limit Exceeded"; // Time Limit Exceeded
+        status = "Time Limit Exceeded";
       } else if (
         error.code === 139 ||
         error.code === 11 ||
@@ -129,9 +131,11 @@ export const judgeSubmission = async (submissionId) => {
       ) {
         // RE
         data.result = "Runtime Error"; // Runtime Error
+        status = "Runtime Error";
       } else {
         // WA
         data.result = "Wrong Answer"; // Wrong Answer
+        status = "Wrong Answer";
       }
       emitTestResults("submission-" + submission.id.toString(), data);
       await submissionResultsService.createSubmissionResult(data);
@@ -154,7 +158,7 @@ export const judgeSubmission = async (submissionId) => {
       });
     } else {
       await submissionService.updateSubmission(submissionId, {
-        status: "Wrong Answer",
+        status,
       });
     }
     // remove the container
