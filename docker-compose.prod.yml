@@ -2,8 +2,8 @@ services:
   frontend:
     container_name: codeforge_frontend
     image: uqtri/codeforge_frontend:latest
-    ports:
-      - "5173:5173"
+    # ports:
+    # - "5173:5173"
     volumes:
       - frontend_dist:/app/dist
     networks:
@@ -12,7 +12,7 @@ services:
     container_name: codeforge_backend
     image: uqtri/codeforge_backend:latest
     ports:
-      - "5000:5000"
+      - "5002:5002"
     networks:
       - default
   nginx:
