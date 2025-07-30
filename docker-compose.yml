@@ -1,0 +1,32 @@
+services:
+  frontend:
+    container_name: codeforge_frontend
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - frontend_dist:/app/dist
+    networks:
+      - default
+  backend:
+    container_name: codeforge_backend
+    build: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - default
+  nginx:
+    container_name: codeforge_nginx
+    build: ./nginx
+    ports:
+      - "5005:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - default
+volumes:
+  frontend_dist:
+networks:
+  default:
+    driver: bridge
