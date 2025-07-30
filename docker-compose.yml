@@ -23,6 +23,9 @@ services:
     depends_on:
       - frontend
       - backend
+    volumes:
+      - frontend_dist:/usr/share/nginx/html
+      - /etc/certbot/live/codeforge.id.vn:/etc/certtbot/live/codeforge.id.vn
     networks:
       - default
 volumes:
