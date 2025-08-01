@@ -2,12 +2,13 @@ services:
   frontend:
     container_name: codeforge_frontend
     image: uqtri/codeforge_frontend:latest
-    # ports:
-    # - "5173:5173"
-    volumes:
-      - frontend_dist:/app/dist
+    ports:
+      - "5173:5173"
     networks:
       - default
+    volumes:
+      - /etc/certbot/live/codeforge.id.vn:/etc/certtbot/live/codeforge.id.vn
+
   backend:
     container_name: codeforge_backend
     image: uqtri/codeforge_backend:latest
@@ -15,21 +16,6 @@ services:
       - "5002:5002"
     networks:
       - default
-  nginx:
-    container_name: codeforge_nginx
-    image: uqtri/codeforge_nginx:latest
-    ports:
-      - "5005:80"
-    depends_on:
-      - frontend
-      - backend
-    volumes:
-      - frontend_dist:/usr/share/nginx/html
-      - /etc/certbot/live/codeforge.id.vn:/etc/certtbot/live/codeforge.id.vn
-    networks:
-      - default
-volumes:
-  frontend_dist:
 networks:
   default:
     driver: bridge
