@@ -4,17 +4,17 @@ services:
     image: uqtri/codeforge_frontend:latest
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "5173:80"
     networks:
       - default
     volumes:
-      - /etc/letsencrypt/live/codeforge.id.vn:/etc/letsencrypt/live/codeforge.id.vn
+      - /etc/letsencrypt:/etc/letsencrypt:ro
   backend:
     container_name: codeforge_backend
     image: uqtri/codeforge_backend:latest
     build: ./backend
     ports:
-      - "5000:5000"
+      - "5000:5002"
     networks:
       - default
 networks:
