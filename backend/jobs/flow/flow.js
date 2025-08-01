@@ -1,7 +1,9 @@
 import { FlowProducer } from "bullmq";
 import IORedis from "ioredis";
-import dotenv from "dotenv";
-dotenv.config();
+import * as dotenv from "dotenv";
+dotenv.config({
+  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
+});
 const connection = new IORedis({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
