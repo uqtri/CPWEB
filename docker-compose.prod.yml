@@ -15,6 +15,8 @@ services:
       - "5002:5002"
     networks:
       - default
+    volumes:
+      - /test-cases:/test-cases
   postgres:
     image: postgres:latest
     container_name: codeforge_postgres
