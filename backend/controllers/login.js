@@ -1,13 +1,11 @@
 import bcrypt from "bcrypt";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
-import * as dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { parseJwt } from "../utils/parseJwt.js";
-dotenv.config({
-  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
-});
-
+import dotenv from "dotenv";
+dotenv.config();
+console.log(process.env.REDIS_HOST, "@!#@", "DCM");
 const login = async (req, res) => {
   const { email, password } = req.body;
   const token = req.cookies.jwt;

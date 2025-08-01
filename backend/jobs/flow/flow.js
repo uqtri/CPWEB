@@ -1,13 +1,13 @@
 import { FlowProducer } from "bullmq";
 import IORedis from "ioredis";
-import * as dotenv from "dotenv";
-dotenv.config({
-  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
-});
+import dotenv from "dotenv";
+import { rootPath } from "../../utils/path.js";
+import path from "path";
+dotenv.config({});
 const connection = new IORedis({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD,
+  // password: process.env.REDIS_PASSWORD,
   maxRetriesPerRequest: null,
 });
 export const flowProducer = new FlowProducer({

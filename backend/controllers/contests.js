@@ -1,7 +1,6 @@
 import { prisma } from "../prisma/prisma-client.js";
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { generateSlug } from "../libs/slug.js";
-import { get } from "http";
 export const getContests = async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
 

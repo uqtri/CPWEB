@@ -1,12 +1,12 @@
 import IORedis from "ioredis";
-import * as dotenv from "dotenv";
-dotenv.config({
-  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
-});
+
+import dotenv from "dotenv";
+dotenv.config({});
+console.log(`Host: ${process.env.REDIS_HOST}`);
+console.log(`Port: ${process.env.REDIS_PORT}`);
 const connection = new IORedis({
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD,
   maxRetriesPerRequest: null,
 });
 

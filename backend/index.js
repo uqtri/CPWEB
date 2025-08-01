@@ -1,11 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config();
 import http from "http";
 import express from "express";
 import cors from "cors";
-import routeApp from "./routes/index.js";
 import "./jobs/workers/cpp.js";
+import routeApp from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import { app, server } from "./socket/socket.js";
-
 const PORT = process.env.PORT || 5002;
 app.use(
   cors({
