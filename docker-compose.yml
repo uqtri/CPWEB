@@ -8,7 +8,7 @@ services:
     networks:
       - default
     volumes:
-      - /etc/certbot/live/codeforge.id.vn:/etc/certbot/live/codeforge.id.vn
+      - /etc/letsencrypt/live/codeforge.id.vn:/etc/letsencrypt/live/codeforge.id.vn
   backend:
     container_name: codeforge_backend
     image: uqtri/codeforge_backend:latest
