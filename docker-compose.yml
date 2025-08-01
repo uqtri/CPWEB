@@ -8,7 +8,9 @@ services:
     networks:
       - default
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./frontend:/app # Mount code vào container
+      - /app/node_modules # Đảm bảo node_modules không bị ghi đè
   backend:
     container_name: codeforge_backend
     image: uqtri/codeforge_backend:latest
@@ -17,6 +19,10 @@ services:
       - "5000:5002"
     networks:
       - default
+    volumes:
+      - ./backend:/app # Mount code vào container
+      - /app/node_modules # Đảm bảo node_modules không bị ghi đè
+      - /test-cases:/test-cases
 networks:
   default:
     driver: bridge
