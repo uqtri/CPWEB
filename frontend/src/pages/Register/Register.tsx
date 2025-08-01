@@ -5,6 +5,8 @@ import { useState } from "react";
 
 import { toast } from "react-toastify";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function Register() {
   const [, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -60,7 +62,7 @@ export default function Register() {
     const register = async (username: string, password: string) => {
       setIsLoading(true);
       console.log("Registering user...");
-      const response = await fetch("http://localhost:5000/api/v1/users", {
+      const response = await fetch(BACKEND_URL + "/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
