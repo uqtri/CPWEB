@@ -14,7 +14,7 @@ services:
     image: uqtri/codeforge_backend:latest
     build: ./backend
     ports:
-      - "5000:5000"
+      - "5000:5002"
     networks:
       - default
 networks:
