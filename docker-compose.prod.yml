@@ -23,14 +23,14 @@ services:
     volumes:
       - postgres_data_cp:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5433:5433"
     networks:
       - default
   redis:
     image: redis:latest
     container_name: codeforge_redis
     ports:
-      - "6380:6379"
+      - "6380:6380"
     networks:
       - default
 networks:
