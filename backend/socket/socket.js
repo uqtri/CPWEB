@@ -7,7 +7,7 @@ const app = express();
 const server = createServer(app);
 const socketServer = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://codeforge.id.vn"],
     credentials: true,
   },
 });

@@ -6,13 +6,13 @@ import "./jobs/workers/cpp.js";
 import cookieParser from "cookie-parser";
 import { app, server } from "./socket/socket.js";
 
-const PORT = process.env.PORT || 5002;  
+const PORT = process.env.PORT || 5002;
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
       "http://192.168.1.36:5173",
-      "codeforge.id.vn",
+      "https://codeforge.id.vn",
     ],
     credentials: true,
   })
