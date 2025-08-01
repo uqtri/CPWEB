@@ -4,7 +4,9 @@ import { prisma } from "../prisma/prisma-client.js";
 import * as dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { parseJwt } from "../utils/parseJwt.js";
-dotenv.config();
+dotenv.config({
+  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
+});
 
 const login = async (req, res) => {
   const { email, password } = req.body;
