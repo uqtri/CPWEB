@@ -94,7 +94,6 @@ const createSubmission = async (req, res) => {
       queueName: "cpp-submissions",
     });
 
-    console.log("START");
     return res.status(HTTP_STATUS.OK.code).json({
       data: submission,
       success: true,

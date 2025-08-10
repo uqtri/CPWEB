@@ -2,8 +2,11 @@ docker-dev:
 
 docker-prod:
 
-docker-build:
+docker-build-dev:
 	docker compose -f docker-compose.yml build
+docker-build-production:
+		docker compose -f docker-compose.yml build
+
 docker-pull:
 	docker pull uqtri/codeforge_frontend:latest
 	docker pull uqtri/codeforge_backend:latest

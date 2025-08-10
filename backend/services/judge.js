@@ -16,6 +16,8 @@ const readDirAsync = promisify(fs.readdir);
 const mkdirAsync = promisify(fs.mkdir);
 const writeFileAsync = promisify(fs.writeFile);
 const rmdirAsync = promisify(fs.rm);
+
+console.log("ASD");
 export const judgeSubmission = async (submissionId) => {
   const submisisonPath = path.join(
     savedSubmissionsPath,
@@ -24,7 +26,6 @@ export const judgeSubmission = async (submissionId) => {
   let problem;
   let submission;
   let testCasesRecord;
-
   try {
     submission = await submissionService.getSubmissionById(submissionId);
     problem = await problemService.getProblemById(submission.problemId);
@@ -48,29 +49,34 @@ export const judgeSubmission = async (submissionId) => {
   ); // path to save test cases of the problem
   const testCases = await readDirAsync(testCasesPath);
 
-  const command =
-    `docker run --name submission-${submissionId} -d ` +
-    `-v ${testCasesPath}:/test-cases ` +
-    `-v ${submisisonPath}:/code ` +
-    `-w /code ` +
-    `--memory ${problem.memoryLimit}M ` +
-    `frolvlad/alpine-gxx tail -f /dev/null`;
+  // const command =
+  //   `docker run --name submission-${submissionId} -d ` +
+  //   `-v ${testCasesPath}:/test-cases ` +
+  //   `-v ${submisisonPath}:/code ` +
+  //   `-w /code ` +
+  //   `--memory ${problem.memoryLimit}M ` +
+  //   `frolvlad/alpine-gxx tail -f /dev/null`;
 
-  try {
-    await shellCommand(`docker rm -f submission-${submissionId}`);
-  } catch (error) {
-    throw error;
-  }
+  // try {
+  //   await shellCommand(`docker rm -f submission-${submissionId}`);
+  // } catch (error) {
+  //   throw error;
+  // }
   // run container
 
-  try {
-    await shellCommand(command);
-  } catch (error) {
-    // await rmdirAsync(submisisonPath, { recursive: true, force: true });
-    throw error;
-  }
+  // try {
+  //   await shellCommand(command);
+  // } catch (error) {
+  //   // await rmdirAsync(submisisonPath, { recursive: true, force: true });
+  //   throw error;
+  // }
   // compile the code
-  const compileCommand = `docker exec submission-${submissionId} sh -c "g++ main.cpp -o main"`;
+  const sourceFile = path.join(submisisonPath, "main.cpp");
+  const binaryFile = path.join(submisisonPath, "main");
+
+  const compileCommand = `ulimit -v ${
+    problem.memoryLimit * 1024
+  } && g++ "${sourceFile}" -o "${binaryFile}"`;
 
   try {
     await shellCommand(compileCommand);
@@ -84,23 +90,20 @@ export const judgeSubmission = async (submissionId) => {
       submissionId: submission.id,
     });
 
-    await shellCommand(`docker rm -f submission-${submissionId}`);
+    await shellCommand(`rm -rf ${submisisonPath}`);
     throw error;
   }
-
   let index = 0;
   let accepted = true;
   let status = "Accepted";
   let testCasePassed = 0;
 
   for (const testCase of testCases) {
-    const inputFile = path.join("..", "test-cases", testCase, "input.INP");
-    const outputFile = path.join("..", "test-cases", testCase, "output.OUT");
-    const commandRun = `docker exec submission-${submissionId} sh -c "timeout ${problem.executionTime}s ./main < ${inputFile} > "output.out" && diff ${outputFile} output.out"`;
-    const { stdout } = await shellCommand(
-      `docker exec submission-${submissionId} sh -c "ls"`
-    );
-    console.log(`Test case ${index + 1} output:\n${stdout}`);
+    const inputFile = path.join(testCasesPath, testCase, "input.INP");
+    const outputFile = path.join(testCasesPath, testCase, "output.OUT");
+    const commandRun = `ulimit -v ${problem.memoryLimit * 1000} && timeout ${
+      problem.executionTime
+    }s ${binaryFile} < ${inputFile} > output.out && diff ${outputFile} output.out`;
 
     try {
       await shellCommand(commandRun);
@@ -161,8 +164,8 @@ export const judgeSubmission = async (submissionId) => {
         status,
       });
     }
-    // remove the container
-    await shellCommand(`docker rm -f submission-${submissionId}`);
+    // remove the folder submisison
+    await shellCommand(`rm -rf ${submisisonPath}`);
   } catch (error) {
     throw error;
   }

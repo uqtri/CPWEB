@@ -2,19 +2,28 @@ services:
   frontend:
     container_name: codeforge_frontend
     image: uqtri/codeforge_frontend:latest
-    build: ./frontend
+    build:
+      context: ./frontend
+      target: dev
+      args:
+        ENV: development
     ports:
-      - "5173:80"
+      - "5173:5173"
+      # - "80:80"
     networks:
       - default
     volumes:
       # - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./frontend:/app # Mount code vào container
       - /app/node_modules # Đảm bảo node_modules không bị ghi đè
+
   backend:
     container_name: codeforge_backend
     image: uqtri/codeforge_backend:latest
-    build: ./backend
+    build:
+      context: ./backend
+      args:
+        ENV: development
     ports:
       - "5000:5002"
     networks:
@@ -22,7 +31,14 @@ services:
     volumes:
       - ./backend:/app # Mount code vào container
       - /app/node_modules # Đảm bảo node_modules không bị ghi đè
-      - /test-cases:/test-cases
+      - ./test-cases:/test-cases
+  redis:
+    image: redis:latest
+    container_name: codeforge_redis
+    ports:
+      - "6380:6379"
+    networks:
+      - default
 networks:
   default:
     driver: bridge

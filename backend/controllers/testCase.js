@@ -135,8 +135,7 @@ const deleteTestCase = async (req, res) => {
 };
 const getTestCaseByProblemSlug = async (req, res) => {
   const { problemSlug } = req.params;
-  console.log("TRI!@#");
-  console;
+
   const testCases = await testCaseService.getTestCaseByProblemSlug(problemSlug);
   const testCasesPath = path.join(savedFilePath, testCases.problem.slug);
 
