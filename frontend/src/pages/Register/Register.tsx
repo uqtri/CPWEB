@@ -119,7 +119,7 @@ export default function Register() {
           })}
         <button
           type="submit"
-          className="mt-3 bg-primary w-full text-white rounded-md flex items-center p-3 justify-center cursor-pointer"
+          className="mt-3 bg-primary w-full md:w-[50%] lg:w-[20%] mx-auto text-white rounded-md flex items-center p-3 justify-center cursor-pointer"
         >
           <span>Đăng ký</span>
           <ArrowRight className="ml-2" />

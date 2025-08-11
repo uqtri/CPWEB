@@ -1,0 +1,58 @@
+services:
+  frontend:
+    container_name: codeforge_frontend
+    image: uqtri/codeforge_frontend:latest
+    build:
+      context: ./frontend
+      target: production
+      args:
+        ENV: production
+    ports:
+      - "5173:5173"
+      # - "80:80"
+    networks:
+      - default
+    volumes:
+      # - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./frontend:/app # Mount code vào container
+      - /app/node_modules # Đảm bảo node_modules không bị ghi đè
+
+  backend:
+    container_name: codeforge_backend
+    image: uqtri/codeforge_backend:latest
+    build:
+      context: ./backend
+      args:
+        ENV: production
+    ports:
+      - "5000:5002"
+    networks:
+      - default
+    volumes:
+      - ./backend:/app # Mount code vào container
+      - /app/node_modules # Đảm bảo node_modules không bị ghi đè
+      - ./test-cases:/test-cases
+  redis:
+    image: redis:latest
+    container_name: codeforge_redis
+    ports:
+      - "6380:6379"
+    networks:
+      - default
+  postgres:
+    image: postgres:latest
+    container_name: codeforge_postgres
+    environment:
+      POSTGRES_PASSWORD: triuq
+    volumes:
+      - postgres_data_cp:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - default
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  postgres_data_cp:

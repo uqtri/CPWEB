@@ -65,6 +65,13 @@ export const getConversationsByUserId = async (userId) => {
           },
         ],
         isDeleted: false,
+        AND: {
+          isCommunity: false,
+          isGroup: false,
+          messages: {
+            some: {},
+          },
+        },
       },
       include: {
         participants: true,

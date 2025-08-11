@@ -39,7 +39,44 @@ const getUsersByUsername = async (username) => {
   }
 };
 
+const getUserByEmail = async (email) => {
+  if (!email || email.trim() === "") {
+    throw new Error("Email is required");
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+    return user;
+  } catch (error) {
+    throw new Error("Error fetching user by email: " + error.message);
+  }
+};
+const createUser = async (data) => {
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+  } else data.password = "";
+  try {
+    const user = await prisma.user.create({
+      data: {
+        ...data,
+        role: {
+          connect: {
+            name: data.role || "user",
+          },
+        },
+      },
+    });
+    return user;
+  } catch (error) {
+    throw new Error("Error creating user: " + error.message);
+  }
+};
 export default {
   getUserById,
   getUsersByUsername,
+  getUserByEmail,
+  createUser,
 };

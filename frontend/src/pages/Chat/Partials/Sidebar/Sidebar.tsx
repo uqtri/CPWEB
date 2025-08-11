@@ -1,7 +1,6 @@
 import { useConversation } from "@/hooks/useConversation";
 import { useAppStore } from "@/store";
 import { Conversation } from "@/types/conversation";
-import { Button } from "@/ui/Button";
 import GroupAvatar from "@/assets/user.png";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -61,7 +60,7 @@ export default function Sidebar() {
     >
       <div className="flex gap-4 items-center justify-between">
         <h1 className="text-2xl">Nhắn tin</h1>
-        <Button content="Tạo nhóm chat" />
+        {/* <Button content="Tạo nhóm chat" /> */}
       </div>
       <div className="flex items-center gap-2 mt-4 rounded-lg bg-gray-300 px-5 py-4">
         <Search />

@@ -18,7 +18,7 @@ COPY . .
 CMD ["npm", "run", "dev"]
 ## PRODUCTION
 
-FROM nginx:alpine
+FROM nginx:alpine AS production
 COPY ./nginx/default.dev.conf /tmp/default.dev.conf
 COPY ./nginx/default.conf /tmp/default.conf
 

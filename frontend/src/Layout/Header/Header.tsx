@@ -25,10 +25,10 @@ const menuItems = [
     name: "Nhắn tin",
     link: "/chat",
   },
-  {
-    name: "Cộng đồng",
-    link: "/community",
-  },
+  // {
+  //   name: "Cộng đồng",
+  //   link: "/community",
+  // },
 ];
 
 export default function Header() {

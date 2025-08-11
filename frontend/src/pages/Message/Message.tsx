@@ -2,7 +2,7 @@ import GroupAvatar from "@/assets/user.png";
 import { useMessage } from "@/hooks/useMessage";
 import { useNavigate, useParams } from "react-router-dom";
 import { useConversation } from "@/hooks/useConversation";
-import { ArrowLeftToLine, Image, SendHorizonal } from "lucide-react";
+import { ArrowLeftToLine, SendHorizonal } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import UserAvatar from "@/assets/user.png";
@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAppStore } from "@/store";
 import { toast } from "react-toastify";
 import { omit } from "lodash";
+import { cn } from "@/lib/utils";
 
 export default function Message() {
   const params = useParams();
@@ -31,7 +32,14 @@ export default function Message() {
     conversationId: conversationId,
   });
   const currentConversation = getConversationByIdQuery?.data || {};
+
+  const isDirectConversation =
+    !currentConversation?.isCommunity && !currentConversation?.isGroup;
+
   const user = useAppStore((state) => state.user);
+  const anotherUser = currentConversation?.participants?.find((value: any) => {
+    return value.id != user?.id;
+  });
   const messages =
     getMessageByConversationIdQuery?.data?.pages
       .flatMap((page) => page)
@@ -124,7 +132,6 @@ export default function Message() {
       });
     }
     return () => {
-      console.log("Cleaning up socket listeners in Message");
       if (socket) {
         socket.off("message:create");
       }
@@ -142,9 +149,10 @@ export default function Message() {
       }
     };
   }, [socket, conversationId]);
-
+  console.log(anotherUser, " ANOTHER");
   return (
     <div className="flex-1 flex flex-col border border-gray-200 shadow-md rounded-lg overflow-hidden relative h-full">
+      {/* <h1>kkkk</h1> */}
       <div className="p-2 flex gap-4 items-center bg-gray-100 shadow-md h-[75px]">
         <ArrowLeftToLine
           className="cursor-pointer block lg:hidden"
@@ -154,10 +162,18 @@ export default function Message() {
         />
         <img
           className="w-12 h-12 rounded-full"
-          src={currentConversation?.image || GroupAvatar}
+          src={
+            isDirectConversation
+              ? anotherUser?.avatarUrl || GroupAvatar
+              : currentConversation?.image || GroupAvatar
+          }
           alt="Ảnh nhóm"
         />
-        <p className="font-bold">{currentConversation?.name}</p>
+        <p className="font-bold">
+          {isDirectConversation
+            ? anotherUser?.username
+            : currentConversation?.name}
+        </p>
       </div>
       <div
         className="overflow-y-auto p-2 flex-1 mb-[60px]"
@@ -171,11 +187,19 @@ export default function Message() {
             className="flex gap-4 items-center mt-3"
           >
             <img
-              className="w-10 h-10 rounded-full"
+              className={cn(
+                `w-10 h-10 rounded-full`,
+                message.senderId === user?.id && "hidden"
+              )}
               src={message?.sender?.avatar || UserAvatar}
             />
             <div className="w-full">
-              <div className="flex gap-2 text-xs">
+              <div
+                className={cn(
+                  "flex gap-2 text-xs ml-auto",
+                  message.senderId === user?.id && "hidden"
+                )}
+              >
                 <p>{message.sender?.username || "Người dùng"}</p>
                 <p className="text-gray-500 mb-1">
                   {new Date(message.createdAt).toLocaleTimeString("vi-VN", {
@@ -186,7 +210,9 @@ export default function Message() {
               </div>
               <div
                 className={`px-4 py-2 ${
-                  message.senderId === user?.id ? "bg-blue-100" : "bg-gray-100"
+                  message.senderId === user?.id
+                    ? "bg-blue-100 ml-auto"
+                    : "bg-gray-200"
                 } rounded-lg w-fit max-w-[70%]`}
               >
                 <p>{message.content}</p>
@@ -196,7 +222,7 @@ export default function Message() {
         ))}
       </div>
       <div className="absolute bottom-0 left-0 h-[50px] bg-gray-200 flex items-center gap-4 p-4 w-full">
-        <Image className="cursor-pointer" />
+        {/* <Image className="cursor-pointer" /> */}
         <input
           type="text"
           placeholder="Aa"

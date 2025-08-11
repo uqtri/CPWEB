@@ -27,7 +27,7 @@ export default function DirectMessageCard({
       }}
     >
       <img
-        src={anotherUser?.image || UserAvatar}
+        src={anotherUser?.avatarUrl || UserAvatar}
         className="w-18 h-18 p-2 rounded-full"
         alt="Ảnh avatar cho group chat"
       />

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
 import { useAppStore } from "../../store/index";
+import Google from "@/assets/google.png";
+
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -75,12 +77,14 @@ export default function Login() {
               );
             })}
           <Link to="/">
-            <p className="text-sm text-primary mt-3 underline">Quên mật khẩu</p>
+            <p className="text-sm text-primary mt-3 underline  font-semibold">
+              Quên mật khẩu
+            </p>
           </Link>
 
           <button
             type="submit"
-            className="mt-3 bg-primary w-full text-white rounded-md flex items-center p-3 justify-center"
+            className="mt-3 cursor-pointer md:w-[50%] lg:w-[20%] mx-auto bg-primary w-full text-white rounded-md flex items-center p-3 justify-center"
           >
             <span>Đăng nhập</span>
             <ArrowRight className="ml-2" />
@@ -92,6 +96,23 @@ export default function Login() {
                 <span className="text-primary underline"> Đăng ký </span>
               </Link>
             </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <p className="flex-1 h-[1px] bg-gray-300"></p>
+            <p>Hoặc đăng nhập bằng</p>
+            <p className="flex-1 h-[1px] bg-gray-300"></p>
+          </div>
+          <div className="auth grid grid-cols-3 gap-3 mt-3">
+            <Link to={import.meta.env.VITE_BACKEND_URL + "/auth/google"}>
+              <div className="flex cursor-pointer gap-3 items-center font-semibold border-1 rounded-full justify-center py-1">
+                <img
+                  src={Google}
+                  alt="Google logo"
+                  className="w-[40px] h-[40px]"
+                />
+                <p>Đăng nhập bằng Google</p>
+              </div>
+            </Link>
           </div>
         </form>
       </div>

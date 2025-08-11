@@ -58,6 +58,7 @@ export default function ProfileHeader({
       navigate(`/chat/${conversation.id}`);
     } catch (error) {}
   };
+
   return (
     <div className="rounded-xl relative max-w-screen-xl mx-auto w-full">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 w-full">
@@ -135,21 +136,21 @@ export default function ProfileHeader({
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 pt-2 pb-4 text-xl">
+        <div className="grid grid-cols-2 pt-2 pb-4 text-xl">
           <div className="text-center">
             <h1 className="">Số bài đã giải</h1>
-            <p>123</p>
+            <p>{user?.solvedProblems?.length}</p>
           </div>
 
           <div className="text-center">
             <h1>Số kì thi đã tham gia</h1>
-            <p>123</p>
+            <p>{user?.participatedContests?.length || 0}</p>
           </div>
 
-          <div className="text-center">
+          {/* <div className="text-center">
             <h1>Xếp hạng</h1>
             <p>123</p>
-          </div>
+          </div> */}
         </div>
       </div>
 

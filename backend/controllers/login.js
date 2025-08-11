@@ -4,8 +4,38 @@ import { prisma } from "../prisma/prisma-client.js";
 import jwt from "jsonwebtoken";
 import { parseJwt } from "../utils/parseJwt.js";
 import dotenv from "dotenv";
+import { loginWithGoogle } from "../services/auth.js";
 dotenv.config();
-console.log(process.env.REDIS_HOST, "@!#@", "DCM");
+
+export const redirectToGoogleAuth = (req, res) => {
+  const SCOPES = [
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+  ];
+  console.log(process.env.GOOGLE_REDIRECT_URL);
+  const url = `${process.env.GOOGLE_AUTH_URI}?client_id=${
+    process.env.GOOGLE_CLIENT_ID
+  }&redirect_uri=${
+    process.env.GOOGLE_REDIRECT_URL
+  }&response_type=code&scope=${SCOPES.join(" ")}`;
+  console.log("Redirecting to Google Auth URL:", url);
+  return res.redirect(url);
+};
+export const handleGoogleCallback = async (req, res) => {
+  try {
+    const code = req.query.code;
+
+    const token = await loginWithGoogle(code);
+    res.setHeader(
+      "Set-Cookie",
+      `jwt=${token}; HttpOnly; Path=/; Max-Age=432000; SameSite=None; Secure`
+    );
+    return res.redirect(process.env.FRONTEND_URL);
+  } catch (error) {
+    console.log(error.toString());
+  }
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   const token = req.cookies.jwt;
@@ -94,4 +124,4 @@ const logout = async (req, res) => {
     message: "Logged out successfully",
   });
 };
-export default { login, logout };
+export default { login, logout, handleGoogleCallback, redirectToGoogleAuth };
