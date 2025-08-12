@@ -54,7 +54,7 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "w-full lg:w-1/4 bg-gray-100 p-4 rounded-lg",
+        "w-full lg:w-fit bg-gray-100 p-4 rounded-lg",
         conversationId && "hidden lg:block"
       )}
     >

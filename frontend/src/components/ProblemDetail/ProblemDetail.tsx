@@ -1,8 +1,8 @@
 import { Check, Clock, FileArchive, MenuIcon } from "lucide-react";
 import { Button } from "@/ui/Button";
 import {
-  Link,
   useLocation,
+  useNavigate,
   useParams,
   useSearchParams,
 } from "react-router-dom";
@@ -10,17 +10,17 @@ import Markdown from "../../components/Markdown/Markdown";
 
 import { useProblem } from "@/hooks/useProblem";
 import NotFound from "@/Layout/404NotFound/404NotFound";
+import { useAppStore } from "@/store";
+import { toast } from "react-toastify";
 
 export default function ProblemDetail() {
   const location = useLocation();
   const { problemSlug } = useParams();
   const [searchQuery] = useSearchParams();
-
   const { getProblemBySlugQuery } = useProblem({ slug: problemSlug || "" });
   const problem = getProblemBySlugQuery?.data;
-  console.log(problem);
-  console.log(getProblemBySlugQuery.status, problem, "vc");
-
+  const navigate = useNavigate();
+  const user = useAppStore((state) => state.user);
   if (getProblemBySlugQuery.status === "error" && !problem) {
     return <NotFound />;
   }
@@ -57,14 +57,30 @@ export default function ProblemDetail() {
           </p>
         </div>
         <div className="">
-          <Link to={`${location.pathname}/your-submissions`}>
+          <p
+            onClick={() => {
+              if (!user) {
+                toast.error("Vui lòng đăng nhập");
+                return;
+              }
+              navigate(`${location.pathname}/your-submissions`);
+            }}
+          >
             <Button content="Các bài đã nộp" className="w-full" />
-          </Link>
+          </p>
         </div>
         <div>
-          <Link to={`${location.pathname}/submit?${searchQuery.toString()}`}>
+          <p
+            onClick={() => {
+              if (!user) {
+                toast.error("Vui lòng đăng nhập");
+                return;
+              }
+              navigate(`${location.pathname}/submit?${searchQuery.toString()}`);
+            }}
+          >
             <Button content="Nộp bài" className="w-full" />
-          </Link>
+          </p>
         </div>
       </div>
 

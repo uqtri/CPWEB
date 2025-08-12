@@ -3,6 +3,7 @@ import { X, CodeIcon, Menu } from "lucide-react";
 import { useAppStore } from "../../store/index";
 import { useEffect, useState } from "react";
 import { Dropdown } from "antd";
+import { cn } from "@/lib/utils";
 
 const menuItems = [
   {
@@ -46,6 +47,7 @@ export default function Header() {
       label: <Link to="/submissions">Các bài đã nộp</Link>,
     },
   ]);
+  const [tab, setTab] = useState("Trang chủ");
 
   useEffect(() => {
     if (user?.role?.name === "admin") {
@@ -78,29 +80,51 @@ export default function Header() {
         <div className="hidden lg:flex lg:items-center justify-between space-x-4">
           {menuItems.map((item) => {
             return (
-              <Link
-                to={item.link}
+              <div
                 key={item.name}
                 onClick={() => {
-                  console.log("Clicked on menu item:", item.name);
+                  navigate(item.link);
+                  setTab(item.name);
                   setIsMenuOpen(false);
                 }}
+                className="cursor-pointer"
               >
-                <p className="text-lg text-gray-700 hover:text-primary font-medium">
+                <p
+                  className={cn(
+                    `text-lg text-gray-700 hover:text-primary font-medium`,
+                    tab === item.name && "text-primary"
+                  )}
+                >
                   {item.name}
                 </p>
-              </Link>
+              </div>
             );
           })}
           <Dropdown
-            menu={{ items }}
+            menu={{
+              items,
+              onClick: () => {
+                setIsMenuOpen(false);
+                setTab("Người dùng");
+              },
+            }}
             trigger={["click"]}
             className="flex cursor-pointer"
           >
-            <a onClick={(e) => e.preventDefault()}>Người dùng</a>
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+              className={cn(
+                "flex cursor-pointer text-lg font-semibold text-gray-700 hover:text-primary",
+                tab === "Người dùng" && "text-primary"
+              )}
+            >
+              Người dùng
+            </a>
           </Dropdown>
           <button
-            className="px-4 py-2 rounded-md bg-primary text-white transition hover:bg-primary-600"
+            className="px-4 py-2 cursor-pointer rounded-md bg-primary text-white transition hover:bg-primary-600"
             onClick={() => {
               logout();
             }}
@@ -128,9 +152,13 @@ export default function Header() {
                   key={item.name}
                   onClick={() => {
                     setIsMenuOpen(false);
+                    setTab(item.name);
                     navigate(item.link);
                   }}
-                  className="text-lg text-gray-700 hover:text-primary font-medium"
+                  className={cn(
+                    `text-lg text-gray-700 hover:text-primary font-medium cursor-pointer`,
+                    tab === item.name && "text-primary"
+                  )}
                 >
                   {item.name}
                 </p>
@@ -139,7 +167,13 @@ export default function Header() {
             })}
           </div>
           <Dropdown
-            menu={{ items, onClick: () => setIsMenuOpen(false) }}
+            menu={{
+              items,
+              onClick: () => {
+                setIsMenuOpen(false);
+                setTab("Người dùng");
+              },
+            }}
             trigger={["click"]}
             className="flex cursor-pointer mt-4 text-lg font-semibold text-gray-700 hover:text-primary"
           >
@@ -147,6 +181,7 @@ export default function Header() {
               onClick={(e) => {
                 e.preventDefault();
               }}
+              className={cn(tab === "Người dùng" && "text-primary")}
             >
               Người dùng
             </a>

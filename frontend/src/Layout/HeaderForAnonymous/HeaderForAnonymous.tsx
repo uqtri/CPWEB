@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { X, CodeIcon, Menu } from "lucide-react";
-
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 const menuItems = [
   {
@@ -30,6 +30,7 @@ const menuItems = [
 ];
 export default function HeaderForAnonymous() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [tab, setTab] = useState("Trang chủ");
   const navigate = useNavigate();
   return (
     <nav className="fixed top-0 left-0 right-0 z-50">
@@ -50,9 +51,13 @@ export default function HeaderForAnonymous() {
                 key={item.name}
                 onClick={() => {
                   setIsMenuOpen(false);
+                  setTab(item.name);
                   navigate(item.link);
                 }}
-                className="text-lg text-gray-700 hover:text-primary font-medium"
+                className={cn(
+                  `text-lg cursor-pointer text-gray-700 hover:text-primary font-medium`,
+                  tab === item.name && "text-primary"
+                )}
               >
                 {item.name}
               </p>
@@ -60,7 +65,7 @@ export default function HeaderForAnonymous() {
           })}
           <Link to="/login">
             <button
-              className="w-full px-4 py-2 rounded-md text-primary-700 border border-primary-200 transition hover:bg-primary cursor-pointer"
+              className="w-full px-4 py-2 rounded-md text-primary-700 border border-primary-200 transition hover:bg-primary hover:text-white cursor-pointer"
               onClick={() => {
                 setIsMenuOpen(false);
               }}
@@ -79,7 +84,7 @@ export default function HeaderForAnonymous() {
             </button>
           </Link>
         </div>
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <button
             onClick={() => {
               setIsMenuOpen(!isMenuOpen);
@@ -95,7 +100,7 @@ export default function HeaderForAnonymous() {
             {menuItems.map((item) => {
               return (
                 <Link to={item.link} key={item.name}>
-                  <p className="text-lg text-gray-700 hover:text-primary font-medium">
+                  <p className="text-lg cursor-pointer text-gray-700 hover:text-primary font-medium">
                     {item.name}
                   </p>
                 </Link>

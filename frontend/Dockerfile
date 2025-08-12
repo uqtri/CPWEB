@@ -32,5 +32,3 @@ RUN if [ "$ENV" = "production" ]; then \
     fi
 
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-CMD ["npm", "run", "dev"]

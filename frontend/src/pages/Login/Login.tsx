@@ -102,8 +102,8 @@ export default function Login() {
             <p>Hoặc đăng nhập bằng</p>
             <p className="flex-1 h-[1px] bg-gray-300"></p>
           </div>
-          <div className="auth grid grid-cols-3 gap-3 mt-3">
-            <Link to={import.meta.env.VITE_BACKEND_URL + "/auth/google"}>
+          <div className="auth grid grid-cols-1 lg:grid-cols-3 gap-3 mt-3">
+            <a href={import.meta.env.VITE_BACKEND_URL + "/auth/google"}>
               <div className="flex cursor-pointer gap-3 items-center font-semibold border-1 rounded-full justify-center py-1">
                 <img
                   src={Google}
@@ -112,7 +112,7 @@ export default function Login() {
                 />
                 <p>Đăng nhập bằng Google</p>
               </div>
-            </Link>
+            </a>
           </div>
         </form>
       </div>

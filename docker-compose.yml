@@ -1,7 +1,7 @@
 services:
   frontend:
     container_name: codeforge_frontend
-    image: uqtri/codeforge_frontend:latest
+    image: uqtri/codeforge_frontend:dev
     build:
       context: ./frontend
       target: dev
@@ -19,7 +19,7 @@ services:
 
   backend:
     container_name: codeforge_backend
-    image: uqtri/codeforge_backend:latest
+    image: uqtri/codeforge_backend:dev
     build:
       context: ./backend
       args:

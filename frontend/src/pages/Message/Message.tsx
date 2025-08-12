@@ -149,11 +149,10 @@ export default function Message() {
       }
     };
   }, [socket, conversationId]);
-  console.log(anotherUser, " ANOTHER");
   return (
     <div className="flex-1 flex flex-col border border-gray-200 shadow-md rounded-lg overflow-hidden relative h-full">
       {/* <h1>kkkk</h1> */}
-      <div className="p-2 flex gap-4 items-center bg-gray-100 shadow-md h-[75px]">
+      <div className="p-2 flex bg-primary text-white gap-4 items-center shadow-md h-[75px]">
         <ArrowLeftToLine
           className="cursor-pointer block lg:hidden"
           onClick={() => {
@@ -161,7 +160,7 @@ export default function Message() {
           }}
         />
         <img
-          className="w-12 h-12 rounded-full"
+          className="w-12 h-12 rounded-full border-1 border-white"
           src={
             isDirectConversation
               ? anotherUser?.avatarUrl || GroupAvatar
@@ -221,7 +220,7 @@ export default function Message() {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-0 left-0 h-[50px] bg-gray-200 flex items-center gap-4 p-4 w-full">
+      <div className="absolute bottom-0 left-0 h-[50px] bg-primary flex items-center gap-4 p-4 w-full">
         {/* <Image className="cursor-pointer" /> */}
         <input
           type="text"
@@ -236,7 +235,7 @@ export default function Message() {
           }}
         />
         <SendHorizonal
-          className="cursor-pointer"
+          className="cursor-pointer text-white"
           onClick={() => {
             handleSendMessage({ sentByCurrentUser: true });
           }}
