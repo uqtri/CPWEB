@@ -17,6 +17,7 @@ model User {
   address          String?
   isBanned         Boolean             @default(false)
   isDeleted        Boolean             @default(false)
+  isActive        Boolean             @default(false)
   points           Int                 @default(0)
   roleId           Int
   location        String?

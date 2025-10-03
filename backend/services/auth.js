@@ -21,7 +21,8 @@ export const loginWithGoogle = async (authorization_code) => {
       },
     }
   ).then((response) => response.json());
-
+  console.log(data, "data");
+  
   const foundUser = await userService.getUserByEmail(userData.email);
   let token;
   if (!foundUser) {
@@ -30,6 +31,7 @@ export const loginWithGoogle = async (authorization_code) => {
       avatarUrl: userData.picture,
       fullName: userData.name,
       username: userData.email.split("@")[0],
+      isActive: true,
     };
     const imgBuffer = await fetch(userData.picture).then((res) =>
       res.arrayBuffer()

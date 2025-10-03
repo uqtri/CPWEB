@@ -92,10 +92,13 @@ const getProblemBySlug = async (req, res) => {
   }
 };
 const getProblems = async (req, res) => {
-  const { hideSolved, userId, title, difficulty, categories, pointRange } =
+  let { hideSolved, userId, title, difficulty, categories, pointRange } =
     req.query;
   // const skip = (page - 1) * limit;
-  console.log(categories, "@@@");
+  
+  if(typeof categories === 'string') {
+    categories = categories.split(',');
+  }
   let { limit, page, skip, take } = req.query;
   if (page === undefined) {
     skip = undefined;

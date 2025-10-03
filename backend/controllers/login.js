@@ -24,7 +24,6 @@ export const redirectToGoogleAuth = (req, res) => {
 export const handleGoogleCallback = async (req, res) => {
   try {
     const code = req.query.code;
-
     const token = await loginWithGoogle(code);
     res.setHeader(
       "Set-Cookie",
@@ -32,7 +31,7 @@ export const handleGoogleCallback = async (req, res) => {
     );
     return res.redirect(process.env.FRONTEND_URL);
   } catch (error) {
-    console.log(error.toString());
+    console.log(error);
   }
 };
 
@@ -63,7 +62,7 @@ const login = async (req, res) => {
   if (!email || !password) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,
-      message: "Email and password are required",
+      message: "Email và mật khẩu là bắt buộc",
     });
   }
   try {
@@ -81,16 +80,22 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Email hoặc mật khẩu không đúng",
       });
     }
-
+    console.log(user,"!!!");
+    if(!user.isActive) {
+      return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({
+        success: false,
+        message: "Tài khoản chưa được kích hoạt. Vui lòng kiểm tra email để kích hoạt tài khoản.",
+      });
+    }
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(HTTP_STATUS.UNAUTHORIZED.code).json({
         success: false,
-        message: "Invalid email or password",
+        message: "Email hoặc mật khẩu không đúng",
       });
     }
 
