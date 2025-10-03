@@ -14,18 +14,18 @@ const menuItems = [
     name: "Thử thách",
     link: "/problemset",
   },
-  {
-    name: "Cuộc thi",
-    link: "/contests",
-  },
+  // {
+  //   name: "Cuộc thi",
+  //   link: "/contests",
+  // },
   {
     name: "Bảng xếp hạng",
     link: "/leaderboard",
   },
-  {
-    name: "Nhắn tin",
-    link: "/chat",
-  },
+  // {
+  //   name: "Nhắn tin",
+  //   link: "/chat",
+  // },
   // {
   //   name: "Cộng đồng",
   //   link: "/community",

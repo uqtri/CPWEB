@@ -1,16 +1,69 @@
 import { CodeIcon, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import WaitingScreen from "../../components/WaitingScreen/WaitingScreen";
 import { useAppStore } from "../../store/index";
 import Google from "@/assets/google.png";
+import { useMutation } from "@tanstack/react-query";
+import { sendActivationEmail, sendChangePasswordEmail } from "@/api/auth.api";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
   const login = useAppStore((state) => state.login);
   const user = useAppStore((state) => state.user);
+  const interval = useRef<any>(null);
+
+  const sendActivationEmailMutation = useMutation({
+    mutationFn: (email: string) => {
+      return sendActivationEmail(email);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success("Đã gửi email kích hoạt. Vui lòng kiểm tra hộp thư đến.");
+    },
+    onError: (error: any) => {
+      if (error instanceof AxiosError) {
+        toast.error(
+          error?.response?.data?.message ||
+            "Gửi email kích hoạt thất bại. Vui lòng thử lại sau."
+        );
+        return;
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            "Gửi email kích hoạt thất bại. Vui lòng thử lại sau."
+        );
+      }
+    },
+  });
+  const changePasswordMutation = useMutation({
+    mutationFn: (email: string) => {
+      return sendChangePasswordEmail(email);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success(
+        "Đã gửi email thay đổi mật khẩu. Vui lòng kiểm tra hộp thư đến."
+      );
+    },
+    onError: (error: any) => {
+      if (error instanceof AxiosError) {
+        toast.error(
+          error?.response?.data?.message ||
+            "Gửi email thay đổi mật khẩu thất bại. Vui lòng thử lại sau."
+        );
+        return;
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            "Gửi email thay đổi mật khẩu thất bại. Vui lòng thử lại sau."
+        );
+      }
+    },
+  });
   const fields = [
     {
       name: "username",
@@ -54,7 +107,7 @@ export default function Login() {
         <p className="text-lg text-center mt-2 text-gray-500">
           Nhập thông tin đăng nhập của bạn để tiếp tục
         </p>
-        <form onSubmit={handleSubmit}>
+        <form id="login-form" onSubmit={handleSubmit}>
           {fields &&
             fields.map((field) => {
               return (
@@ -76,11 +129,66 @@ export default function Login() {
                 </div>
               );
             })}
-          <Link to="/">
-            <p className="text-sm text-primary mt-3 underline  font-semibold">
-              Quên mật khẩu
-            </p>
-          </Link>
+
+          <button
+            className="text-sm cursor-pointer text-primary mt-3 underline  font-semibold block"
+            onClick={async (e) => {
+              e.preventDefault();
+              const email = (
+                document.getElementsByName("username")[0] as HTMLInputElement
+              ).value;
+              if (!email) {
+                toast.error(
+                  "Vui lòng nhập email hoặc username để gửi lại email thay đổi mật khẩu."
+                );
+                return;
+              }
+              if (interval.current) {
+                toast.error(
+                  "Vui lòng chờ 2 giây trước khi gửi lại email thay đổi mật khẩu."
+                );
+                return;
+              }
+              try {
+                interval.current = setTimeout(() => {
+                  interval.current = null;
+                }, 2000);
+                await changePasswordMutation.mutateAsync(email);
+              } catch (error) {}
+            }}
+          >
+            Quên mật khẩu
+          </button>
+
+          <button
+            className="text-sm cursor-pointer text-primary mt-3 underline  font-semibold"
+            onClick={async (e) => {
+              e.preventDefault();
+              const email = (
+                document.getElementsByName("username")[0] as HTMLInputElement
+              ).value;
+              if (!email) {
+                toast.error(
+                  "Vui lòng nhập email hoặc username để gửi lại email kích hoạt."
+                );
+                return;
+              }
+              if (interval.current) {
+                toast.error(
+                  "Vui lòng chờ 2 giây trước khi gửi lại email kích hoạt."
+                );
+                return;
+              }
+              try {
+                interval.current = setTimeout(() => {
+                  interval.current = null;
+                }, 2000);
+                await sendActivationEmailMutation.mutateAsync(email);
+              } catch (error) {}
+            }}
+          >
+            Gửi lại email kích hoạt
+          </button>
 
           <button
             type="submit"
