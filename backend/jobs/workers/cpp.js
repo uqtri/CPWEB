@@ -15,7 +15,6 @@ const cppWorker = new Worker(
   async (job) => {
     const data = job.data;
     const submissionId = data.submissionId;
-    console.log("JOBS");
     try {
       await judgeService.judgeSubmission(submissionId);
     } catch (error) {

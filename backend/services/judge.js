@@ -9,7 +9,6 @@ import { rootPath } from "../utils/path.js";
 import path from "path";
 import { shellCommand } from "../utils/shell.js";
 import { emitTestResults } from "../socket/emitters/submission.js";
-import { console } from "inspector";
 const savedTestCasesPath = path.join(rootPath, "..", "test-cases"); // Path to save all test cases of problems
 const savedSubmissionsPath = path.join(rootPath, "..", "submissions"); // Path to save all submissions
 const readDirAsync = promisify(fs.readdir);
@@ -17,12 +16,11 @@ const mkdirAsync = promisify(fs.mkdir);
 const writeFileAsync = promisify(fs.writeFile);
 const rmdirAsync = promisify(fs.rm);
 
-console.log("ASD");
 export const judgeSubmission = async (submissionId) => {
   const submisisonPath = path.join(
     savedSubmissionsPath,
     "submission-" + submissionId.toString()
-  ); // path to save submission
+  );
   let problem;
   let submission;
   let testCasesRecord;
@@ -47,7 +45,9 @@ export const judgeSubmission = async (submissionId) => {
     problem.slug,
     testCasesRecord.path.replace(".zip", "")
   ); // path to save test cases of the problem
-  const testCases = await readDirAsync(testCasesPath);
+  const inputFolder = path.join(testCasesPath, "input");
+  const outputFolder = path.join(testCasesPath, "output");
+  const testCases = await readDirAsync(inputFolder);
 
   // const command =
   //   `docker run --name submission-${submissionId} -d ` +
@@ -99,8 +99,11 @@ export const judgeSubmission = async (submissionId) => {
   let testCasePassed = 0;
 
   for (const testCase of testCases) {
-    const inputFile = path.join(testCasesPath, testCase, "input.INP");
-    const outputFile = path.join(testCasesPath, testCase, "output.OUT");
+    const inputFile = path.join(inputFolder, testCase);
+    const outputFile = path.join(
+      outputFolder,
+      testCase.replace("input", "output")
+    );
     const commandRun = `ulimit -v ${problem.memoryLimit * 1000} && timeout ${
       problem.executionTime
     }s ${binaryFile} < ${inputFile} > output.out && diff ${outputFile} output.out`;

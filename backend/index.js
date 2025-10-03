@@ -7,6 +7,7 @@ import "./jobs/workers/cpp.js";
 import routeApp from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import { app, server } from "./socket/socket.js";
+import { readdirAsync } from "./utils/fs.js";
 const PORT = process.env.PORT || 5002;
 app.use(
   cors({
@@ -25,3 +26,9 @@ routeApp(app);
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// console.log(
+//   readdirAsync("D:\\TAILIEU\\CPWEB\\backend\\middlewares").then((files) => {
+//     console.log(files);
+//   })
+// );
