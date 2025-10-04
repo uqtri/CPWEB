@@ -5,7 +5,7 @@ import contestsRouter from "./contests.js";
 import messagesRouter from "./messages.js";
 import testCasesRouter from "./testCases.js";
 import rolesRouter from "./roles.js";
-import loginRouter from "./login.js";
+import authRouter from "./auth.js";
 import categoriesRouter from "./categories.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import { isUser } from "../middlewares/isUser.js";
@@ -23,7 +23,7 @@ const routeApp = function (app) {
   app.use("/api/v1/categories", categoriesRouter);
   app.use("/api/v1/test-cases", testCasesRouter);
   app.use("/api/v1/roles", rolesRouter);
-  app.use("/api/v1/auth", loginRouter);
+  app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/submission-results", submissionResultsRouter);
   app.use("/api/v1/conversations", conversationsRouter);
   // app.use("/api/v1/auth", authRouter);

@@ -1,6 +1,7 @@
 import userService from "../services/user.js";
 import jwt from "jsonwebtoken";
 import { uploadStream } from "../libs/cloudinary.js";
+import e from "express";
 export const loginWithGoogle = async (authorization_code) => {
   const data = await fetch(process.env.GOOGLE_TOKEN_URI, {
     method: "POST",
@@ -22,7 +23,7 @@ export const loginWithGoogle = async (authorization_code) => {
     }
   ).then((response) => response.json());
   console.log(data, "data");
-  
+
   const foundUser = await userService.getUserByEmail(userData.email);
   let token;
   if (!foundUser) {
@@ -45,3 +46,47 @@ export const loginWithGoogle = async (authorization_code) => {
   }
   return token;
 };
+
+const handleActivation = async ({ email, token }) => {
+  const request = await requestService.getRequestByToken({
+    token,
+    type: "activate_account",
+  });
+  if (request.email !== email) {
+    throw new Error("Token không hợp lệ");
+  }
+  if (request.isUsed) {
+    throw new Error("Token đã được sử dụng");
+  }
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    throw new Error("Không tìm thấy người dùng");
+  }
+  if (user.isActive) {
+    throw new Error("Tài khoản đã được kích hoạt");
+  }
+  await userService.updateUser(user.id, { isActive: true });
+  await requestService.deleteRequest(token);
+  return true;
+};
+const handleChangePassword = async ({ email, token, newPassword }) => {
+  const request = await requestService.getRequestByToken({
+    token,
+    type: "change_password",
+  });
+  if (request.email !== email) {
+    throw new Error("Token không hợp lệ");
+  }
+  if (request.isUsed) {
+    throw new Error("Token đã được sử dụng");
+  }
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    throw new Error("Không tìm thấy người dùng");
+  }
+  await userService.updateUser(user.id, { password: newPassword });
+  await requestService.deleteRequest(token);
+  return true;
+};
+
+export default { loginWithGoogle, handleActivation, handleChangePassword };

@@ -16,8 +16,11 @@ export const sendActivationEmail = async (email: string) => {
   return response.data;
 };
 export const sendChangePasswordEmail = async (email: string) => {
-  const response = await axiosInstance.post("/auth/change-password", {
-    email,
-  });
+  const response = await axiosInstance.post(
+    "/auth/send-change-password-email",
+    {
+      email,
+    }
+  );
   return response.data;
 };
