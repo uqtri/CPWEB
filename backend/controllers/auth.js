@@ -141,6 +141,7 @@ const sendActivationEmail = async (req, res) => {
     });
   }
   try {
+    console.log("IN");
     await nodemailerService.sendActivationEmail(email);
     return res.status(HTTP_STATUS.OK.code).json({
       success: true,
@@ -200,7 +201,7 @@ const handleActivation = async (req, res) => {
 };
 const handleChangePassword = async (req, res) => {
   const { email, token, newPassword } = req.body;
-
+  console.log(email, token, newPassword);
   if (!email || !token || !newPassword) {
     return res.status(HTTP_STATUS.BAD_REQUEST.code).json({
       success: false,

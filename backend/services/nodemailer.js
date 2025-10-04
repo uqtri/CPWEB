@@ -3,7 +3,7 @@ import { prisma } from "../prisma/prisma-client.js";
 import { randomString } from "../utils/randomString.js";
 import requestService from "./request.js";
 const sendChangePasswordEmail = async (email) => {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.findFirst({
     where: {
       OR: [{ email }, { username: email }],
     },
@@ -46,7 +46,7 @@ const sendActivationEmail = async (email) => {
 
   const mailOptions = {
     from: process.env.SMTP_USER,
-    to: email,
+    to: user.email,
     subject: "Kích hoạt tài khoản",
     text: `Chào mừng! Vui lòng kích hoạt tài khoản của bạn bằng cách nhấp vào liên kết bên dưới:\n\n${process.env.FRONTEND_URL}/activate?email=${email}&token=${token} \n\nNếu bạn không đăng ký tài khoản, vui lòng bỏ qua email này.`,
   };

@@ -15,7 +15,7 @@ const difficulty = [
   { label: "Trung bình", value: "Trung bình" },
   { label: "Khó", value: "Khó" },
 ];
-const size = 10;
+const size = 20;
 export default function Problemset() {
   const [query, setSearchQuery] = useSearchParams();
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export default function Problemset() {
     hideSolved: false,
     userId: null,
     page: 1,
-    
+
     limit: size,
   });
   useEffect(() => {
@@ -71,8 +71,8 @@ export default function Problemset() {
     query.limit = searchTerm.limit;
     setSearchQuery(query);
   };
- 
-return (
+
+  return (
     <div className="mb-[100px] lg:mb-0">
       <p className="text-3xl font-semibold border-b pb-1">Các thử thách</p>
       <div className="flex flex-col lg:flex-row lg:gap-4 justify-center mt-4">
@@ -104,7 +104,10 @@ return (
                       <TableCell className="">{value.difficulty}</TableCell>
                       <TableCell className="py-4">{value?.points}</TableCell>
                       <TableCell className="py-4">
-                        {user && user?.solvedProblems?.find((cur :any) => value.id == cur.problem.id) ? (
+                        {user &&
+                        user?.solvedProblems?.find(
+                          (cur: any) => value.id == cur.problem.id
+                        ) ? (
                           <CircleCheck color="hsl(221.2 83.2% 53.3%)" />
                         ) : null}
                       </TableCell>
@@ -123,9 +126,8 @@ return (
                 const newSearchTerm = {
                   ...searchTerm,
                   page: page,
-                }
+                };
                 setSearchTerm(newSearchTerm);
-              
               }}
             />
           </div>
@@ -155,7 +157,7 @@ return (
                   const newSearchTerm = {
                     ...searchTerm,
                     hideSolved: !searchTerm.hideSolved,
-                    page: 1
+                    page: 1,
                   };
                   setSearchTerm(newSearchTerm);
                   handleSeachProblems(newSearchTerm);
@@ -208,22 +210,20 @@ return (
                 defaultValue={[0, 500]}
                 max={500}
                 min={0}
-                onChange={(e) => { 
+                onChange={(e) => {
                   setSearchTerm((prev) => ({
                     ...prev,
                     pointRange: e,
                   }));
-
                 }}
               />
             </div>
             <button
               className="text-primary border border-primary rounded-md px-4 py-2 mt-4 w-full cursor-pointer"
               onClick={() => {
-                  handleSeachProblems({...searchTerm, page: 1});
-                }
-              }
-                >
+                handleSeachProblems({ ...searchTerm, page: 1 });
+              }}
+            >
               Tìm
             </button>
           </div>

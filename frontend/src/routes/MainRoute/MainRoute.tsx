@@ -28,6 +28,8 @@ import ContestProblemDetail from "@/pages/Contest/Partials/ProblemDetail/Problem
 import Chat from "@/pages/Chat/Chat";
 import Message from "@/pages/Message/Message";
 import SubmissionForSpecificProblem from "@/pages/SubmissionsForSpecificProblem/SubmissionForSpecificProblem";
+import ActivatePage from "@/pages/ActivatePage/ActivatePage";
+import ChangePassword from "@/pages/ChangePassword/ChangePassword";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -87,6 +89,10 @@ const router = createBrowserRouter([
         element: <ContestProblemDetail />,
       },
       {
+        path: "/change-password",
+        element: <ChangePassword />,
+      },
+      {
         path: "/chat/",
         element: <Chat />,
         children: [
@@ -140,6 +146,10 @@ const router = createBrowserRouter([
       { path: "/admin/test-case", element: <TestCase /> },
       { path: "/admin/test-case/:problemSlug", element: <TestCaseDetail /> },
     ],
+  },
+  {
+    path: "/activate",
+    element: <ActivatePage />,
   },
   // {
   //   path: "/login",

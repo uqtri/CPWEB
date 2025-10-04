@@ -11,5 +11,6 @@ router.post(
   "/send-change-password-email",
   authController.sendChangePasswordEmail
 );
-
+router.post("/handle-activation", authController.handleActivation);
+router.post("/handle-change-password", authController.handleChangePassword);
 export default router;

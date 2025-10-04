@@ -9,6 +9,7 @@ import { sendActivationEmail, sendChangePasswordEmail } from "@/api/auth.api";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 
+const seconds = 5000; // 5 seconds
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -145,14 +146,14 @@ export default function Login() {
               }
               if (interval.current) {
                 toast.error(
-                  "Vui lòng chờ 2 giây trước khi gửi lại email thay đổi mật khẩu."
+                  "Vui lòng chờ một thời gian trước khi gửi lại email thay đổi mật khẩu."
                 );
                 return;
               }
               try {
                 interval.current = setTimeout(() => {
                   interval.current = null;
-                }, 2000);
+                }, seconds);
                 await changePasswordMutation.mutateAsync(email);
               } catch (error) {}
             }}
@@ -182,7 +183,7 @@ export default function Login() {
               try {
                 interval.current = setTimeout(() => {
                   interval.current = null;
-                }, 2000);
+                }, seconds);
                 await sendActivationEmailMutation.mutateAsync(email);
               } catch (error) {}
             }}

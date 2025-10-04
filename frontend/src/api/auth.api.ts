@@ -24,3 +24,22 @@ export const sendChangePasswordEmail = async (email: string) => {
   );
   return response.data;
 };
+
+export const handleActivation = async (data: {
+  email: string;
+  token: string;
+}) => {
+  const response = await axiosInstance.post("/auth/handle-activation", data);
+  return response.data;
+};
+export const handleChangePassword = async (data: {
+  email: string;
+  token: string;
+  newPassword: string;
+}) => {
+  const response = await axiosInstance.post(
+    "/auth/handle-change-password",
+    data
+  );
+  return response.data;
+};

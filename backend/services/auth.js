@@ -1,7 +1,7 @@
 import userService from "../services/user.js";
 import jwt from "jsonwebtoken";
 import { uploadStream } from "../libs/cloudinary.js";
-import e from "express";
+import requestService from "./request.js";
 export const loginWithGoogle = async (authorization_code) => {
   const data = await fetch(process.env.GOOGLE_TOKEN_URI, {
     method: "POST",
@@ -62,6 +62,9 @@ const handleActivation = async ({ email, token }) => {
   if (!user) {
     throw new Error("Không tìm thấy người dùng");
   }
+  if (request.createdAt.getTime() + 15 * 60 * 1000 < Date.now()) {
+    throw new Error("Token đã hết hạn");
+  }
   if (user.isActive) {
     throw new Error("Tài khoản đã được kích hoạt");
   }
@@ -70,23 +73,29 @@ const handleActivation = async ({ email, token }) => {
   return true;
 };
 const handleChangePassword = async ({ email, token, newPassword }) => {
-  const request = await requestService.getRequestByToken({
-    token,
-    type: "change_password",
-  });
-  if (request.email !== email) {
-    throw new Error("Token không hợp lệ");
+  try {
+    const request = await requestService.getRequestByToken({
+      token,
+      type: "change_password",
+    });
+    if (request.email !== email) {
+      throw new Error("Token không hợp lệ");
+    }
+    if (request.createdAt.getTime() + 15 * 60 * 1000 < Date.now()) {
+      throw new Error("Token đã hết hạn");
+    }
+    if (request.isUsed) {
+      throw new Error("Token đã được sử dụng");
+    }
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      throw new Error("Không tìm thấy người dùng");
+    }
+    await userService.updateUser(user.id, { password: newPassword });
+    // await requestService.deleteRequest(token);
+  } catch (error) {
+    throw new Error("Error updating password: " + error.message);
   }
-  if (request.isUsed) {
-    throw new Error("Token đã được sử dụng");
-  }
-  const user = await userService.getUserByEmail(email);
-  if (!user) {
-    throw new Error("Không tìm thấy người dùng");
-  }
-  await userService.updateUser(user.id, { password: newPassword });
-  await requestService.deleteRequest(token);
-  return true;
 };
 
 export default { loginWithGoogle, handleActivation, handleChangePassword };

@@ -218,7 +218,7 @@ model Message {
 
 model Request {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
+  email     String  
   token     String   @unique
   type      String
   createdAt DateTime @default(now())

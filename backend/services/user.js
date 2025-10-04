@@ -1,4 +1,5 @@
 import { prisma } from "../prisma/prisma-client.js";
+import bcrypt from "bcrypt";
 
 const getUserById = async (id) => {
   try {
@@ -75,8 +76,12 @@ const createUser = async (data) => {
   }
 };
 const updateUser = async (id, data) => {
-  if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
+  try {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+  } catch (error) {
+    throw new Error("Error hashing password: " + error.message);
   }
   try {
     const user = await prisma.user.update({

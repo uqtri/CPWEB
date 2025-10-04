@@ -1,5 +1,6 @@
+import { prisma } from "../prisma/prisma-client.js";
 const createRequest = async (data) => {
-  const request = prisma.request.create({
+  const request = await prisma.request.create({
     data,
   });
   return request;
