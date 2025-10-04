@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/ui/Table";
 import { Select, Slider, Pagination } from "antd";
 
 import { CircleCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 const difficulty = [
   { label: "Tất cả", value: "" },
@@ -32,6 +32,7 @@ export default function Problemset() {
     hideSolved: false,
     userId: null,
     page: 1,
+    
     limit: size,
   });
   useEffect(() => {
@@ -42,8 +43,10 @@ export default function Problemset() {
       }));
     }
   }, [user]);
-
-  const handleSeachProblems = () => {
+  useEffect(() => {
+    handleSeachProblems(searchTerm);
+  }, [searchTerm.page]);
+  const handleSeachProblems = (searchTerm: any) => {
     const query: any = {};
     if (searchTerm.title) {
       query.title = searchTerm.title;
@@ -68,7 +71,8 @@ export default function Problemset() {
     query.limit = searchTerm.limit;
     setSearchQuery(query);
   };
-  return (
+ 
+return (
     <div className="mb-[100px] lg:mb-0">
       <p className="text-3xl font-semibold border-b pb-1">Các thử thách</p>
       <div className="flex flex-col lg:flex-row lg:gap-4 justify-center mt-4">
@@ -100,7 +104,9 @@ export default function Problemset() {
                       <TableCell className="">{value.difficulty}</TableCell>
                       <TableCell className="py-4">{value?.points}</TableCell>
                       <TableCell className="py-4">
-                        <CircleCheck color="hsl(221.2 83.2% 53.3%)" />
+                        {user && user?.solvedProblems?.find((cur :any) => value.id == cur.problem.id) ? (
+                          <CircleCheck color="hsl(221.2 83.2% 53.3%)" />
+                        ) : null}
                       </TableCell>
                     </TableRow>
                   );
@@ -112,12 +118,14 @@ export default function Problemset() {
               className="flex items-center justify-center"
               total={getProblemListQuery?.data?.totalProblems || 0}
               pageSize={size}
+              current={searchTerm.page}
               onChange={(page) => {
-                setSearchTerm((prev) => ({
-                  ...prev,
+                const newSearchTerm = {
+                  ...searchTerm,
                   page: page,
-                }));
-                handleSeachProblems();
+                }
+                setSearchTerm(newSearchTerm);
+              
               }}
             />
           </div>
@@ -144,17 +152,20 @@ export default function Problemset() {
                 type="checkbox"
                 id="hideSolvedProblems"
                 onChange={() => {
-                  setSearchTerm((prev) => ({
-                    ...prev,
-                    hideSolved: !prev.hideSolved,
-                  }));
+                  const newSearchTerm = {
+                    ...searchTerm,
+                    hideSolved: !searchTerm.hideSolved,
+                    page: 1
+                  };
+                  setSearchTerm(newSearchTerm);
+                  handleSeachProblems(newSearchTerm);
                 }}
               />
               <label htmlFor="hideSolvedProblem"> Ẩn các bài đã giải</label>
             </div>
             <div className="mt-4">
               <label className="" htmlFor="category">
-                Chọn dạng bài
+                Chọn dạng bài hoặc công ty
               </label>
               <Select
                 id="category"
@@ -197,18 +208,22 @@ export default function Problemset() {
                 defaultValue={[0, 500]}
                 max={500}
                 min={0}
-                onChange={(e) => {
+                onChange={(e) => { 
                   setSearchTerm((prev) => ({
                     ...prev,
                     pointRange: e,
                   }));
+
                 }}
               />
             </div>
             <button
               className="text-primary border border-primary rounded-md px-4 py-2 mt-4 w-full cursor-pointer"
-              onClick={handleSeachProblems}
-            >
+              onClick={() => {
+                  handleSeachProblems({...searchTerm, page: 1});
+                }
+              }
+                >
               Tìm
             </button>
           </div>

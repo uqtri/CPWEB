@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { login, logout } from "@/api/auth.api";
 import { toast } from "react-toastify";
 import { updateUser } from "@/api/user.api";
+import { AxiosError } from "axios";
 
 export const createUserSlice: StateCreator<
   UserSlice,
@@ -53,11 +54,16 @@ export const createUserSlice: StateCreator<
       console.log("Login response:", response);
       if (!empty) toast.success("Đăng nhập thành công!");
     } catch (error) {
-      if (user)
+  
         if (!empty)
-          toast.error(
-            "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập."
-          );
+          if (error instanceof AxiosError) {
+            toast.error(
+              error?.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại sau."
+            );
+          }
+          else {
+            toast.error("Đăng nhập thất bại. Vui lòng thử lại sau.");
+          }
     }
     set((state) => {
       state.isUserLoading = false;

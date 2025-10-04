@@ -128,6 +128,9 @@ const updateUser = async (req, res) => {
       });
     }
   }
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+  }
   try {
     const user = await prisma.user.update({
       where: { id: parseInt(id) },

@@ -74,9 +74,24 @@ const createUser = async (data) => {
     throw new Error("Error creating user: " + error.message);
   }
 };
+const updateUser = async (id, data) => {
+  if (data.password) {
+    data.password = await bcrypt.hash(data.password, 10);
+  }
+  try {
+    const user = await prisma.user.update({
+      where: { id: parseInt(id) },
+      data,
+    });
+    return user;
+  } catch (error) {
+    throw new Error("Error updating user: " + error.message);
+  }
+};
 export default {
   getUserById,
   getUsersByUsername,
   getUserByEmail,
   createUser,
+  updateUser,
 };
