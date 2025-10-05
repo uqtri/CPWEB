@@ -12,6 +12,7 @@ import { isUser } from "../middlewares/isUser.js";
 import submissionResultsRouter from "./submissionResults.js";
 import contestRegistrationRouter from "./contestRegistration.js";
 import conversationsRouter from "./conversation.js";
+import companiesRouter from "./company.js";
 // import authRouter from "./auth.js";
 const routeApp = function (app) {
   app.use("/api/v1/users", usersRouter);
@@ -26,7 +27,7 @@ const routeApp = function (app) {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/submission-results", submissionResultsRouter);
   app.use("/api/v1/conversations", conversationsRouter);
-  // app.use("/api/v1/auth", authRouter);
+  app.use("/api/v1/companies", isAdmin, companiesRouter);
 };
 
 export default routeApp;

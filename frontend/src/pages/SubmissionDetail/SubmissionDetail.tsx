@@ -133,7 +133,17 @@ export default function SubmissionDetail() {
       </div>
       {/* Source Code */}
       <div className="bg-white rounded-xl shadow p-4 border">
-        <h2 className="text-lg font-semibold mb-4">Source Code</h2>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-lg font-semibold mb-4">Source Code</h2>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(submission?.code || "");
+            }}
+            className="mb-2 bg-gray-200 text-black hover:bg-gray-300 text-sm p-2 rounded focus:outline-none"
+          >
+            Copy source
+          </button>
+        </div>
         <div className="bg-gray-100 p-3 rounded overflow-auto max-h-96">
           <pre className="text-sm text-gray-800 whitespace-pre-wrap">
             {submission?.code}

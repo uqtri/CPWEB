@@ -79,6 +79,7 @@ model Problem {
   // contests          Contest[]           @relation("ContestToProblem")
   status         ProblemStatus           @default(active)
   inContests      ContestProblem[] 
+  companies      Company[]
 }
 
 model ProblemCategory {
@@ -224,7 +225,14 @@ model Request {
   createdAt DateTime @default(now())
   isUsed    Boolean  @default(false)
 }
+model Company {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
 
+  problems Problem[]
+}
 enum ProblemStatus {
   active
   inactive

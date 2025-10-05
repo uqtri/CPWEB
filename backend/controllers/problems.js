@@ -92,12 +92,19 @@ const getProblemBySlug = async (req, res) => {
   }
 };
 const getProblems = async (req, res) => {
-  let { hideSolved, userId, title, difficulty, categories, pointRange } =
-    req.query;
+  let {
+    hideSolved,
+    userId,
+    title,
+    difficulty,
+    categories,
+    pointRange,
+    companies,
+  } = req.query;
   // const skip = (page - 1) * limit;
-  
-  if(typeof categories === 'string') {
-    categories = categories.split(',');
+
+  if (typeof categories === "string") {
+    categories = categories.split(",");
   }
   let { limit, page, skip, take } = req.query;
   if (page === undefined) {
