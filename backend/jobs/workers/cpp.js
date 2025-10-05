@@ -21,5 +21,9 @@ const cppWorker = new Worker(
       console.log(error);
     }
   },
-  { connection }
+  { connection, lockDuration: 24 * 60 * 60 * 1000, concurrency: 5 }
 );
+cppWorker.on("ready", () => console.log("Worker is ready"));
+cppWorker.on("error", (err) => console.error("Worker error:", err));
+cppWorker.on("active", (job) => console.log("Worker active:", job.id));
+cppWorker.on("waiting", (jobId) => console.log("Job waiting:", jobId));

@@ -112,7 +112,7 @@ export default function Login() {
           {fields &&
             fields.map((field) => {
               return (
-                <div>
+                <div key={field.name} className="mt-5 flex flex-col gap-2">
                   <label
                     className="font-normal"
                     key={field.name}
@@ -132,6 +132,7 @@ export default function Login() {
             })}
 
           <button
+            type="button"
             className="text-sm cursor-pointer text-primary mt-3 underline  font-semibold block"
             onClick={async (e) => {
               e.preventDefault();
@@ -145,9 +146,7 @@ export default function Login() {
                 return;
               }
               if (interval.current) {
-                toast.error(
-                  "Vui lòng chờ một thời gian trước khi gửi lại email thay đổi mật khẩu."
-                );
+                toast.error("Vui lòng chờ một thời gian...");
                 return;
               }
               try {
@@ -162,7 +161,8 @@ export default function Login() {
           </button>
 
           <button
-            className="text-sm cursor-pointer text-primary mt-3 underline  font-semibold"
+            type="button"
+            className="text-sm cursor-pointer text-primary mt-3 underline font-semibold"
             onClick={async (e) => {
               e.preventDefault();
               const email = (
@@ -175,9 +175,7 @@ export default function Login() {
                 return;
               }
               if (interval.current) {
-                toast.error(
-                  "Vui lòng chờ 2 giây trước khi gửi lại email kích hoạt."
-                );
+                toast.error("Vui lòng chờ một thời gian...");
                 return;
               }
               try {

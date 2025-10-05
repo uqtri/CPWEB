@@ -117,7 +117,8 @@ export default function TestCaseDetail() {
           <TableHeader>
             <TableRow>
               <TableHead>STT</TableHead>
-              <TableHead>Tên thư mục</TableHead>
+              <TableHead>Input</TableHead>
+              <TableHead>Output</TableHead>
               <TableHead>Thao tác</TableHead>
             </TableRow>
           </TableHeader>
@@ -126,8 +127,12 @@ export default function TestCaseDetail() {
               <TableRow key={index}>
                 <TableCell className="font-semibold">{index + 1}</TableCell>
                 <TableCell>
-                  <span className="font-light">{testCase.name}</span>
+                  <span className="font-light">{testCase?.input}</span>
                 </TableCell>
+                <TableCell>
+                  <span className="font-light">{testCase?.output}</span>
+                </TableCell>
+
                 <TableCell>
                   <a
                     href={

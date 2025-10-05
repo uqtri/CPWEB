@@ -54,16 +54,16 @@ export const createUserSlice: StateCreator<
       console.log("Login response:", response);
       if (!empty) toast.success("Đăng nhập thành công!");
     } catch (error) {
-  
-        if (!empty)
-          if (error instanceof AxiosError) {
-            toast.error(
-              error?.response?.data?.message || "Đăng nhập thất bại. Vui lòng thử lại sau."
-            );
-          }
-          else {
-            toast.error("Đăng nhập thất bại. Vui lòng thử lại sau.");
-          }
+      console.error("Login error:", error);
+      if (!empty)
+        if (error instanceof AxiosError) {
+          toast.error(
+            error?.response?.data?.message ||
+              "Đăng nhập thất bại. Vui lòng thử lại sau."
+          );
+        } else {
+          toast.error("Đăng nhập thất bại. Vui lòng thử lại sau.");
+        }
     }
     set((state) => {
       state.isUserLoading = false;
@@ -83,7 +83,7 @@ export const createUserSlice: StateCreator<
   },
   connectSocket: () => {
     const user = get().user;
-    console.log(get().socket);
+    // console.log(get().socket, "!");
     if (!user) return;
     const existingSocket = get().socket;
     if (existingSocket && existingSocket.connected) {
@@ -94,6 +94,7 @@ export const createUserSlice: StateCreator<
         userId: user.id,
       },
     });
+    console.log(socket, "!!");
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
       // toast.success("Kết nối đến máy chủ thành công!");

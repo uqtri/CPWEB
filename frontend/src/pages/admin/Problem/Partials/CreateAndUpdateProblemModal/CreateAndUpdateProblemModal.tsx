@@ -36,6 +36,7 @@ export default function CreateAndUpdateProblemModal({
       setSelectedCategories(initialCategories);
     }
   }, [problem]);
+  console.log(data.points, "DATA");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const { createProblemMutation, updateProblemMutation } = useProblem({});
   const { getCategoryListQuery } = useCategory();
@@ -52,9 +53,9 @@ export default function CreateAndUpdateProblemModal({
   ) => {
     const { name, value, type } = e.target;
 
-    console.log(name, value, type, "name, value, type");
+    // console.log(name, value, type, "name, value, type");
     // console.log(name, value, "name, value");
-    console.log(type, "type @@");
+    // console.log(type, "type @@");
     setData((prev) => ({
       ...prev,
       [name]: type === "number" ? Number(value) : value,
@@ -79,7 +80,7 @@ export default function CreateAndUpdateProblemModal({
               className="w-full p-2 border rounded"
               required
               minLength={5}
-              defaultValue={data.title}
+              value={data.title}
               onChange={handleChange}
             />
           </div>
@@ -91,7 +92,7 @@ export default function CreateAndUpdateProblemModal({
               className="w-full p-2 border rounded"
               required
               minLength={5}
-              defaultValue={data.slug}
+              value={data?.slug}
               onChange={handleChange}
             />
           </div>
@@ -101,7 +102,7 @@ export default function CreateAndUpdateProblemModal({
               <input
                 name="points"
                 type="number"
-                defaultValue={data.points}
+                value={data?.points || 100}
                 className="w-full p-2 border rounded"
                 required
                 onChange={handleChange}
@@ -116,6 +117,7 @@ export default function CreateAndUpdateProblemModal({
                 name="executionTime"
                 className="w-full p-2 border rounded"
                 required
+                value={data?.executionTime || 1}
                 onChange={handleChange}
               />
             </div>
@@ -126,8 +128,8 @@ export default function CreateAndUpdateProblemModal({
                 name="memoryLimit"
                 className="w-full p-2 border rounded"
                 required
-                defaultValue={data.memoryLimit}
                 onChange={handleChange}
+                value={data?.memoryLimit || 256}
                 // defaultValue={problem ? problem.title : ""}
               />
             </div>
@@ -137,7 +139,7 @@ export default function CreateAndUpdateProblemModal({
                 className="w-full p-2 border rounded"
                 required
                 name="difficulty"
-                defaultValue={data?.difficulty}
+                value={data?.difficulty}
                 onChange={handleChange}
                 // defaultValue={problem ? problem.title : ""}
               >
@@ -169,7 +171,7 @@ export default function CreateAndUpdateProblemModal({
           </div>
           <textarea
             name="content"
-            defaultValue={data.content}
+            value={data.content}
             className="w-[100%] border-1 border-gray-300 text-lg max-h-[300px]"
             rows={10}
             onChange={handleChange}

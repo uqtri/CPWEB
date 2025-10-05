@@ -98,7 +98,7 @@ model Submission {
   createdAt     DateTime           @default(now())
   userId        Int
   problemId     Int
-  status        String?
+  status        String? @default("Pending")
   executionTime Float?
   memoryUsed    Int?
   Score         Float?

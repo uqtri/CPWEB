@@ -7,17 +7,18 @@ import { getSubmissionById } from "@/api/submissions.api";
 import { getSubmissionResultBySubmissionId } from "@/api/submissionResult.api";
 import { Submission } from "@/types/submission";
 
-import { getTestCaseByProblemSlug } from "@/api/testCase.api";
+// import { getTestCaseByProblemSlug } from "@/api/testCase.api";
 
 export default function SubmissionDetail() {
   const socket = useAppStore((state) => state.socket);
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [submissionResult, setSubmissionResult] = useState<any[]>([]);
   const [status, setStatus] = useState<string>("Pending");
-  const [testCases, setTestCases] = useState<any>(null);
+  // const [testCases, setTestCases] = useState<any>(null);
   let { submissionId } = useParams();
   submissionId = parseInt(submissionId as string) as any;
 
+  console.log(submissionResult, "@!#@#!@");
   useEffect(() => {
     const fetchTestCase = async () => {
       try {
@@ -26,17 +27,17 @@ export default function SubmissionDetail() {
             parseInt(submissionId!)
           );
 
-          const data = await getTestCaseByProblemSlug(
-            submission?.problem?.slug!
-          );
-          if (data.directories.length === submissionResult.length) {
+          // const data = await getTestCaseByProblemSlug(
+          //   submission?.problem?.slug!
+          // );
+          if (submission.status !== "Pending") {
             setSubmissionResult(submissionResult);
             setStatus(submission.status);
           }
-          setTestCases(data);
+          // setTestCases(data);
         }
       } catch (error) {
-        console.log(error);
+        console.log(error, "@@@");
       }
     };
     fetchTestCase();
@@ -50,11 +51,12 @@ export default function SubmissionDetail() {
             if (data.result.result === "Compilation Error") {
               setStatus(data.result.result);
               return prev;
-            } else setStatus("Wrong Answer");
-          } else if (
-            testCases &&
-            testCases.directories.length === prev.length + 1
-          ) {
+            } else if (data.result.result === "Time Limit Exceeded") {
+              setStatus(data.result.result);
+            } else {
+              setStatus("Wrong Answer");
+            }
+          } else if (data.result.done) {
             setStatus("Accepted");
           }
           return [...prev, data.result];
@@ -64,7 +66,7 @@ export default function SubmissionDetail() {
         socket.off("getSubmissionResult");
       };
     }
-  }, [socket, testCases]);
+  }, [socket]);
 
   useEffect(() => {
     const fetchSubmissionResultAndSubmission = async () => {
@@ -83,11 +85,11 @@ export default function SubmissionDetail() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       {/* Title */}
-      <h1 className="text-2xl font-bold mb-6">Submission #{submission?.id}</h1>
+      <h1 className="text-2xl font-bold mb-6">Bài nộp #{submission?.id}</h1>
 
       {/* Submission Info */}
       <div className="bg-white rounded-xl shadow p-4 mb-6 border">
-        <h2 className="text-lg font-semibold mb-4">Submission Info</h2>
+        <h2 className="text-lg font-semibold mb-4">Thông tin</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
           <div>
             <span className="font-medium">User:</span>{" "}
@@ -105,7 +107,7 @@ export default function SubmissionDetail() {
             <span className="font-medium">Kết quả:</span>
             <span
               className={cn(
-                `ml-2 px-2 py-1 rounded text-white text-xs`,
+                `ml-2 px-2 py-1 rounded text-white text-xs bg-gray-600`,
                 status === "Accepted" && "bg-green-600",
                 status === "Wrong Answer" && "bg-red-600",
                 (status === "Pending" || status === "Compilation Error") &&

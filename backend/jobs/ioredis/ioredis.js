@@ -10,4 +10,11 @@ const connection = new IORedis({
   maxRetriesPerRequest: null,
 });
 
+connection.on("connect", () => {
+  console.log("Connected to Redis");
+});
+
+connection.on("error", (err) => {
+  console.error("Redis connection error:", err);
+});
 export { connection };

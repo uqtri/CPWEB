@@ -17,6 +17,7 @@ const writeFileAsync = promisify(fs.writeFile);
 const rmdirAsync = promisify(fs.rm);
 
 export const judgeSubmission = async (submissionId) => {
+  console.log("TEST CASE RECORD");
   const submisisonPath = path.join(
     savedSubmissionsPath,
     "submission-" + submissionId.toString()
@@ -39,7 +40,6 @@ export const judgeSubmission = async (submissionId) => {
     await rmdirAsync(submisisonPath, { recursive: true, force: true });
     throw error;
   }
-
   const testCasesPath = path.join(
     savedTestCasesPath,
     problem.slug,
@@ -49,27 +49,6 @@ export const judgeSubmission = async (submissionId) => {
   const outputFolder = path.join(testCasesPath, "output");
   const testCases = await readDirAsync(inputFolder);
 
-  // const command =
-  //   `docker run --name submission-${submissionId} -d ` +
-  //   `-v ${testCasesPath}:/test-cases ` +
-  //   `-v ${submisisonPath}:/code ` +
-  //   `-w /code ` +
-  //   `--memory ${problem.memoryLimit}M ` +
-  //   `frolvlad/alpine-gxx tail -f /dev/null`;
-
-  // try {
-  //   await shellCommand(`docker rm -f submission-${submissionId}`);
-  // } catch (error) {
-  //   throw error;
-  // }
-  // run container
-
-  // try {
-  //   await shellCommand(command);
-  // } catch (error) {
-  //   // await rmdirAsync(submisisonPath, { recursive: true, force: true });
-  //   throw error;
-  // }
   // compile the code
   const sourceFile = path.join(submisisonPath, "main.cpp");
   const binaryFile = path.join(submisisonPath, "main");
@@ -98,7 +77,9 @@ export const judgeSubmission = async (submissionId) => {
   let status = "Accepted";
   let testCasePassed = 0;
 
-  for (const testCase of testCases) {
+  for (let i = 0; i < testCases.length; i++) {
+    const testCase = testCases[i];
+
     const inputFile = path.join(inputFolder, testCase);
     const outputFile = path.join(
       outputFolder,
@@ -116,7 +97,11 @@ export const judgeSubmission = async (submissionId) => {
         submissionId: submission.id,
       };
       testCasePassed++;
-      emitTestResults("submission-" + submission.id.toString(), data);
+      emitTestResults("submission-" + submission.id.toString(), {
+        ...data,
+        done: i === testCases.length - 1,
+      });
+      console.log(data, "DATA");
       await submissionResultsService.createSubmissionResult(data);
     } catch (error) {
       accepted = false;
@@ -143,7 +128,11 @@ export const judgeSubmission = async (submissionId) => {
         data.result = "Wrong Answer"; // Wrong Answer
         status = "Wrong Answer";
       }
-      emitTestResults("submission-" + submission.id.toString(), data);
+      console.log(data, "DATA");
+      emitTestResults("submission-" + submission.id.toString(), {
+        ...data,
+        done: i === testCases.length - 1,
+      });
       await submissionResultsService.createSubmissionResult(data);
     }
     index++;

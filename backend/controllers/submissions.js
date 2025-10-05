@@ -1,8 +1,9 @@
 import { HTTP_STATUS } from "../constants/httpStatus.js";
 import { prisma } from "../prisma/prisma-client.js";
-import { flowProducer } from "../jobs/flow/flow.js";
+// import { flowProducer } from "../jobs/flow/flow.js";
 import { parseJwt } from "../utils/parseJwt.js";
 import submissionService from "../services/submisison.js";
+import { cppQueue } from "../jobs/queues/cpp.js";
 const getSubmissionById = async (req, res) => {
   const submissionId = parseInt(req.params.submissionId);
   if (isNaN(submissionId)) {
@@ -85,14 +86,23 @@ const createSubmission = async (req, res) => {
         status: "Pending",
       },
     });
-
-    await flowProducer.add({
-      name: `submission-${submission.id}`,
-      data: {
+    console.log(submission, "NEW SUBMISSION");
+    // await flowProducer.add({
+    //   name: `submission-${submission.id}`,
+    //   data: {
+    //     submissionId: submission.id,
+    //   },
+    //   queueName: "cpp-submissions",
+    // });
+    // console.log("Job added to the queue",);
+    const job = await cppQueue
+      .add(`submission-${submission.id}`, {
         submissionId: submission.id,
-      },
-      queueName: "cpp-submissions",
-    });
+      })
+      .then(() => console.log("Job added to the queue"))
+      .catch((err) => console.error("Failed to add job to the queue:", err));
+    console.log(job, "JOB");
+    console.log("Job added to the queue");
 
     return res.status(HTTP_STATUS.OK.code).json({
       data: submission,
