@@ -4,6 +4,7 @@ import { generateSlug } from "../libs/slug.js";
 import { parseJwt } from "../utils/parseJwt.js";
 import problemService from "../services/problems.js";
 import userSolvedProblem from "../services/userSolvedProblem.js";
+import company from "../services/company.js";
 
 const createProblem = async (req, res) => {
   let problemData = req.body;
@@ -14,6 +15,7 @@ const createProblem = async (req, res) => {
     problemData.userId = payload.id;
   }
   if (!problemData.slug) problemData.slug = generateSlug(problemData.title);
+  // if()
   try {
     const problem = await prisma.problem.create({
       data: {
@@ -21,6 +23,11 @@ const createProblem = async (req, res) => {
         categories: {
           connect: problemData.categories.map((category) => ({
             name: category.name,
+          })),
+        },
+        companies: {
+          connect: problemData.companies.map((company) => ({
+            name: company.name,
           })),
         },
       },
@@ -70,6 +77,7 @@ const getProblemBySlug = async (req, res) => {
       where: { slug },
       include: {
         categories: true,
+        companies: true,
       },
     });
 
@@ -106,6 +114,9 @@ const getProblems = async (req, res) => {
   if (typeof categories === "string") {
     categories = categories.split(",");
   }
+  if (typeof companies === "string") {
+    companies = companies.split(",");
+  }
   let { limit, page, skip, take } = req.query;
   if (page === undefined) {
     skip = undefined;
@@ -117,11 +128,7 @@ const getProblems = async (req, res) => {
   }
   const whereConditions = {
     isDeleted: false,
-    categories: {
-      some: {
-        name: { in: categories ? categories : undefined },
-      },
-    },
+
     title: {
       contains: title ? title : undefined,
       mode: "insensitive",
@@ -134,7 +141,22 @@ const getProblems = async (req, res) => {
       lte: pointRange ? parseInt(pointRange.split(",")[1]) : undefined,
     },
   };
-
+  if (categories && categories.length > 0) {
+    whereConditions.categories = {
+      some: {
+        name: { in: categories },
+      },
+    };
+  }
+  if (companies && companies.length > 0) {
+    whereConditions.companies = {
+      some: {
+        name: { in: companies },
+      },
+    };
+  }
+  // console.log(whereConditions.companies, "WHERE COMPANIES");
+  // console.log(whereConditions.categories, "WHERE CATEGORIES");
   if (hideSolved && hideSolved === "1" && userId) {
     console.log("Hide solved problems for userId:", hideSolved, userId);
 
@@ -151,6 +173,7 @@ const getProblems = async (req, res) => {
     const problems = await prisma.problem.findMany({
       include: {
         categories: true,
+        companies: true,
       },
       where: whereConditions,
       skip,
@@ -188,6 +211,11 @@ const updateProblem = async (req, res) => {
         categories: {
           connect: problemData.categories.map((category) => ({
             name: category.name,
+          })),
+        },
+        companies: {
+          connect: problemData.companies.map((company) => ({
+            name: company.name,
           })),
         },
       },

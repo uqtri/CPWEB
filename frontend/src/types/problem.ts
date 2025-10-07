@@ -7,6 +7,7 @@ export type Problem = {
   user: any;
   submissions: Submission[];
   categories: Category[];
+  companies: any[];
   testCases: any[];
   executionTime: number;
   memoryLimit: number;
@@ -37,6 +38,7 @@ export type CreateProblemData = {
   memoryLimit: number;
   points: number;
   slug?: string;
+  companies: any[];
   difficulty: "Dễ" | "Trung bình" | "Khó";
 };
 
@@ -49,4 +51,5 @@ export type UpdateProblemData = {
   points: number;
   slug?: string;
   difficulty: "Dễ" | "Trung bình" | "Khó";
+  companies: any[];
 };

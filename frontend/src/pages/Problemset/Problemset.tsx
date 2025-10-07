@@ -1,4 +1,5 @@
 import { useCategory } from "@/hooks/useCategory";
+import useCompany from "@/hooks/useCompany";
 import { useProblem } from "@/hooks/useProblem";
 import { useAppStore } from "@/store";
 import { Category } from "@/types/category";
@@ -7,7 +8,7 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/ui/Table";
 import { Select, Slider, Pagination } from "antd";
 
 import { CircleCheck } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 const difficulty = [
   { label: "Tất cả", value: "" },
@@ -21,8 +22,10 @@ export default function Problemset() {
   const navigate = useNavigate();
   const { getProblemListQuery } = useProblem({ params: query.toString() });
   const { getCategoryListQuery } = useCategory();
+  const { getCompanyQuery } = useCompany();
   const problems = getProblemListQuery?.data?.problems || [];
   const categories = getCategoryListQuery?.data || [];
+  const companies = getCompanyQuery?.data || [];
   const user = useAppStore((state) => state.user);
   const [searchTerm, setSearchTerm] = useState({
     title: "",
@@ -32,9 +35,10 @@ export default function Problemset() {
     hideSolved: false,
     userId: null,
     page: 1,
-
+    companies: [],
     limit: size,
   });
+  console.log(searchTerm, "SEARCHTERM");
   useEffect(() => {
     if (user) {
       setSearchTerm((prev) => ({
@@ -66,6 +70,9 @@ export default function Problemset() {
 
     if (searchTerm.userId) {
       query.userId = searchTerm.userId;
+    }
+    if (searchTerm.companies.length > 0) {
+      query.companies = searchTerm.companies;
     }
     query.page = searchTerm.page;
     query.limit = searchTerm.limit;
@@ -167,7 +174,7 @@ export default function Problemset() {
             </div>
             <div className="mt-4">
               <label className="" htmlFor="category">
-                Chọn dạng bài hoặc công ty
+                Chọn dạng bài
               </label>
               <Select
                 id="category"
@@ -181,6 +188,25 @@ export default function Problemset() {
                 }}
                 options={categories.map((category: Category) => {
                   return { label: category.name, value: category.name };
+                })}
+              />
+            </div>
+            <div className="mt-4">
+              <label className="" htmlFor="companies">
+                Chọn công ty
+              </label>
+              <Select
+                id="companies"
+                mode="multiple"
+                style={{ width: "100%" }}
+                onChange={(value) => {
+                  setSearchTerm((prev) => ({
+                    ...prev,
+                    companies: value,
+                  }));
+                }}
+                options={companies.map((company: any) => {
+                  return { label: company.name, value: company.name };
                 })}
               />
             </div>

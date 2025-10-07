@@ -8,6 +8,7 @@ import { useProblem } from "@/hooks/useProblem";
 import { toast } from "react-toastify";
 import { useCategory } from "@/hooks/useCategory";
 import { omit } from "lodash";
+import useCompany from "@/hooks/useCompany";
 export default function CreateAndUpdateProblemModal({
   problem,
   setModal,
@@ -25,6 +26,7 @@ export default function CreateAndUpdateProblemModal({
     points: 0,
     difficulty: "Dễ",
     categories: [],
+    companies: [],
   });
   useEffect(() => {
     console.log(problem);
@@ -33,17 +35,28 @@ export default function CreateAndUpdateProblemModal({
       const initialCategories = problem.categories.map(
         (category) => category.name
       );
+      const initialCompanies = problem.companies.map(
+        (company: any) => company.name
+      );
+      setSelectedCompanies(initialCompanies);
       setSelectedCategories(initialCategories);
     }
   }, [problem]);
-  console.log(data.points, "DATA");
+  // console.log(data.points, "DATA");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const { createProblemMutation, updateProblemMutation } = useProblem({});
   const { getCategoryListQuery } = useCategory();
+  const { getCompanyQuery } = useCompany();
   const categories =
     getCategoryListQuery.data?.map((category) => ({
       label: category.name,
       value: category.name,
+    })) || [];
+  const companies =
+    getCompanyQuery.data?.map((company: any) => ({
+      label: company.name,
+      value: company.name,
     })) || [];
   const handleChange = (
     e:
@@ -169,6 +182,26 @@ export default function CreateAndUpdateProblemModal({
               options={categories}
             />
           </div>
+          <div className="mb-4">
+            <label className="text-xl font-medium mb-4">Các công ty</label>
+            <Select
+              id="companies"
+              className="w-full h-[40px]"
+              mode="multiple"
+              value={selectedCompanies}
+              onChange={(value) => {
+                setSelectedCompanies(value as string[]);
+                setData((prev) => ({
+                  ...prev,
+                  companies: value.map((company: any) => ({
+                    name: company,
+                  })),
+                }));
+              }}
+              options={companies}
+            />
+          </div>
+
           <textarea
             name="content"
             value={data.content}

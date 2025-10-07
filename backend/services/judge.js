@@ -128,7 +128,6 @@ export const judgeSubmission = async (submissionId) => {
         data.result = "Wrong Answer"; // Wrong Answer
         status = "Wrong Answer";
       }
-      console.log(data, "DATA");
       emitTestResults("submission-" + submission.id.toString(), {
         ...data,
         done: i === testCases.length - 1,

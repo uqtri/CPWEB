@@ -27,7 +27,7 @@ const routeApp = function (app) {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/submission-results", submissionResultsRouter);
   app.use("/api/v1/conversations", conversationsRouter);
-  app.use("/api/v1/companies", isAdmin, companiesRouter);
+  app.use("/api/v1/companies", companiesRouter);
 };
 
 export default routeApp;

@@ -14,12 +14,16 @@ const createCompany = async (data) => {
   }
 };
 const getCompanies = async () => {
+  console.log("Fetching companies...");
+  console.log(Object.keys(prisma));
+
   try {
     const companies = await prisma.company.findMany({
       where: { isDeleted: false },
     });
     return companies;
   } catch (error) {
+    console.error("Error fetching companies:", error);
     throw new Error(error.message);
   }
 };

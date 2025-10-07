@@ -2,7 +2,7 @@ import { Dot } from "lucide-react";
 
 export default function WaitingScreen() {
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-gray-200 z-50 bg-opacity-50">
+    <div className="modal-overlay flex items-center justify-center">
       <div className="loader flex">
         <Dot
           size={50}
